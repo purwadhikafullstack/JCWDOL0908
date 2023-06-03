@@ -34,7 +34,14 @@ db.Transaction = require('./Transaction')(sequelize);
 db.TransactionProductRlt = require('./TransactionProductRlt')(sequelize);
 db.Cart = require('./Cart')(sequelize);
 
-// DEFINE RELATIONSHIPS
+// Initialize table relationships (associations) for each of the models
+Object.values(db).forEach(model => {
+  if (model.associate) {
+    model.associate(db);
+  }
+});
+
+// db.User.hasMany(db.Address, { foreignKey: 'user_id' });
 
 
 module.exports = db;

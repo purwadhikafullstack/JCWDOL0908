@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  return sequelize.define("user", {
+  const User = sequelize.define("user", {
     id_user: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -37,7 +37,7 @@ module.exports = (sequelize) => {
     id_role: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: null
+      defaultValue: null,
     },
     is_verify: {
       type: DataTypes.BOOLEAN,
@@ -49,4 +49,15 @@ module.exports = (sequelize) => {
     tableName: "user",
     timestamps: false,
   });
+
+
+  // DEFINE RELATIONSHIPS WITH OTHER MODELS
+  User.associate = (models) => {
+    User.hasMany(models.Address, { foreignKey: 'user_id' });
+    User.hasMany(models.Cart, { foreignKey: 'user_id' });
+    User.hasMany(models.Transaction, { foreignKey: 'user_id' });
+    User.belongsTo(models.AdminRole, { foreignKey: 'id_role' });
+  };
+
+  return User;
 };
