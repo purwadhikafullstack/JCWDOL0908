@@ -1,38 +1,50 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  return sequelize.define("product_journal", {
-    id_journal: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+  const ProductJournal = sequelize.define(
+    "product_journal",
+    {
+      id_journal: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      id_product: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "products",
+          key: "id_product",
+        },
+      },
+      id_warehouse: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "warehouses",
+          key: "id_warehouse",
+        },
+      },
+      id_activity: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "activity_type_journal",
+          key: "id_activity",
+        },
+      },
+      quantity: {
+        type: DataTypes.INTEGER,
+      },
     },
-    product_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "product",
-        key: "id_product",
-      }
+    {
+      tableName: "product_journal",
+      timestamps: false,
     },
-    warehouse_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "warehouse",
-        key: "id_warehouse",
-      }
-    },
-    activity_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "activity_type_journal",
-        key: "id_activity",
-      }
-    },
-    quantity: {
-      type: DataTypes.INTEGER,
-    },
-  }, {
-    tableName: "product_journal",
-    timestamps: false,
-  });
+  );
+
+  ProductJournal.associate = (models) => {
+    ProductJournal.belongsTo(models.ActivityTypeJournal, { foreignKey: "id_activity" });
+    ProductJournal.belongsTo(models.Product, { foreignKey: "id_product" });
+    ProductJournal.belongsTo(models.Warehouse, { foreignKey: "id_warehouse" });
+  };
+
+  return ProductJournal;
 };

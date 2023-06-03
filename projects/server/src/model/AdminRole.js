@@ -1,25 +1,36 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  return sequelize.define("admin_role", {
-    id_role: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    role_admin: {
-      type: DataTypes.STRING,
-    },
-    warehouse: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: "warehouse",
-        key: "id_warehouse",
+  const AdminRole = sequelize.define(
+    "admin_role",
+    {
+      id_role: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      role_admin: {
+        type: DataTypes.STRING,
+      },
+      id_warehouse: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "warehouses",
+          key: "id_warehouse",
+        },
       },
     },
-  }, {
-    tableName: "admin_role",
-    timestamps: false,
-  });
+    {
+      tableName: "admin_roles",
+      timestamps: false,
+    },
+  );
+
+  AdminRole.associate = (models) => {
+    AdminRole.hasMany(models.User, { foreignKey: "id_role" });
+    AdminRole.belongsTo(models.Warehouse, { foreignKey: "id_warehouse" });
+  };
+
+  return AdminRole;
 };

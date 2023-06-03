@@ -1,37 +1,54 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  return sequelize.define("warehouse", {
-    id_warehouse: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+  const Warehouse = sequelize.define(
+    "warehouse",
+    {
+      id_warehouse: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      warehouse_name: {
+        type: DataTypes.INTEGER,
+        unique: true,
+      },
+      address: {
+        type: DataTypes.STRING,
+      },
+      id_city: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "cities",
+          key: "id_city",
+        },
+      },
+      longitude: {
+        type: DataTypes.STRING,
+      },
+      latitude: {
+        type: DataTypes.STRING,
+      },
+      is_deleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 0,
+      },
     },
-    warehouse_name: {
-      type: DataTypes.INTEGER,
-      unique: true,
+    {
+      tableName: "warehouses",
+      timestamps: false,
     },
-    address: {
-      type: DataTypes.STRING,
-    },
-    city_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "city",
-        key: "id_city",
-      }
-    },
-    longitude: {
-      type: DataTypes.STRING,
-    },
-    latitude: {
-      type: DataTypes.STRING,
-    },
-    is_deleted: {
-      type: DataTypes.BOOLEAN,
-    },
-  }, {
-    tableName: "warehouse",
-    timestamps: false,
-  });
+  );
+
+  Warehouse.associate = (models) => {
+    Warehouse.hasMany(models.AdminRole, { foreignKey: "id_warehouse" });
+    Warehouse.hasMany(models.MutationProcess, { foreignKey: "from_id_warehouse" });
+    Warehouse.hasMany(models.MutationProcess, { foreignKey: "to_id_warehouse" });
+    Warehouse.hasMany(models.Transaction, { foreignKey: "id_warehouse" });
+    Warehouse.hasMany(models.ProductWarehouseRlt, { foreignKey: "id_warehouse" });
+    Warehouse.hasMany(models.ProductJournal, { foreignKey: "id_warehouse" });
+    Warehouse.belongsTo(models.City, { foreignKey: "id_city" });
+  };
+
+  return Warehouse;
 };

@@ -1,47 +1,46 @@
-const dbConfig = require('../config/MysqlConfig')
-const { Sequelize} = require('sequelize')
+const dbConfig = require("../config/MysqlConfig");
+const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASS, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
-  operatorsAliases: false,
+  operatorsAliases: 0,
   pool: {
     max: dbConfig.pool.max,
     min: dbConfig.pool.min,
     acquire: dbConfig.pool.acquire,
     idle: dbConfig.pool.idle,
   },
-})
+});
 
-const db = {}
+const db = {};
 
-db.Sequelize = Sequelize
-db.sequelize = sequelize
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
-db.User = require('./User')(sequelize);
-db.Address = require('./Address')(sequelize);
-db.Province = require('./Province')(sequelize);
-db.City = require('./City')(sequelize);
-db.Product = require('./Product')(sequelize);
-db.Category = require('./Category')(sequelize);
-db.AdminRole = require('./AdminRole')(sequelize);
-db.Warehouse = require('./Warehouse')(sequelize);
-db.ProductWarehouseRlt = require('./ProductWarehouseRlt')(sequelize);
-db.ActivityTypeJournal = require('./ActivityTypeJournal')(sequelize);
-db.ProductJournal = require('./ProductJournal')(sequelize);
-db.MutationProcess = require('./MutationProcess')(sequelize);
-db.Transaction = require('./Transaction')(sequelize);
-db.TransactionProductRlt = require('./TransactionProductRlt')(sequelize);
-db.Cart = require('./Cart')(sequelize);
+db.User = require("./User")(sequelize);
+db.Address = require("./Address")(sequelize);
+db.Province = require("./Province")(sequelize);
+db.City = require("./City")(sequelize);
+db.Product = require("./Product")(sequelize);
+db.Category = require("./Category")(sequelize);
+db.AdminRole = require("./AdminRole")(sequelize);
+db.Warehouse = require("./Warehouse")(sequelize);
+db.ProductWarehouseRlt = require("./ProductWarehouseRlt")(sequelize);
+db.ActivityTypeJournal = require("./ActivityTypeJournal")(sequelize);
+db.ProductJournal = require("./ProductJournal")(sequelize);
+db.MutationProcess = require("./MutationProcess")(sequelize);
+db.Transaction = require("./Transaction")(sequelize);
+db.TransactionProductRlt = require("./TransactionProductRlt")(sequelize);
+db.Cart = require("./Cart")(sequelize);
 
 // Initialize table relationships (associations) for each of the models
-Object.values(db).forEach(model => {
+Object.values(db).forEach((model) => {
   if (model.associate) {
     model.associate(db);
   }
 });
 
 // db.User.hasMany(db.Address, { foreignKey: 'user_id' });
-
 
 module.exports = db;

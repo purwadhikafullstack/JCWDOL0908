@@ -1,64 +1,75 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  return sequelize.define("mutation_process", {
-    id_mutation: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    product_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "product",
-        key: "id_product",
+  const MutationProcess = sequelize.define(
+    "mutation_process",
+    {
+      id_mutation: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      id_product: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "products",
+          key: "id_product",
+        },
+      },
+      quantity: {
+        type: DataTypes.INTEGER,
+      },
+      from_id_warehouse: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "warehouses",
+          key: "id_warehouse",
+        },
+      },
+      to_id_warehouse: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "warehouses",
+          key: "id_warehouse",
+        },
+      },
+      is_approve: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 0,
+      },
+      is_sending: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 0,
+      },
+      is_accepted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 0,
+      },
+      created_by: {
+        type: DataTypes.INTEGER,
+      },
+      approved_by: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      accepted_by: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
     },
-    quantity: {
-      type: DataTypes.INTEGER,
+    {
+      tableName: "mutation_processes",
+      timestamps: true,
     },
-    from_id_warehouse: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "warehouse",
-        key: "id_warehouse",
-      },
-    },
-    to_id_warehouse: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "warehouse",
-        key: "id_warehouse",
-      },
-    },
-    is_approve: {
-      type: DataTypes.BOOLEAN,
-    },
-    is_sending: {
-      type: DataTypes.BOOLEAN,
-    },
-    is_accepted: {
-      type: DataTypes.BOOLEAN,
-    },
-    created_by: {
-      type: DataTypes.INTEGER,
-    },
-    approved_by: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    accepted_by: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    created_at: {
-      type: DataTypes.DATE,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-    },
-  }, {
-    tableName: "mutation_process",
-    timestamps: false,
-  });
+  );
+
+  MutationProcess.associate = (models) => {
+    MutationProcess.belongsTo(models.Product, { foreignKey: "id_product" });
+    MutationProcess.belongsTo(models.Warehouse, { foreignKey: "from_id_warehouse" });
+    MutationProcess.belongsTo(models.Warehouse, { foreignKey: "to_id_warehouse" });
+    MutationProcess.belongsTo(models.User, { foreignKey: "created_by" });
+    MutationProcess.belongsTo(models.User, { foreignKey: "approved_by" });
+  };
+
+  return MutationProcess;
 };
