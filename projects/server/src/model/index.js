@@ -34,5 +34,7 @@ db.Transaction = require('./Transaction')(sequelize);
 db.TransactionProductRlt = require('./TransactionProductRlt')(sequelize);
 db.Cart = require('./Cart')(sequelize);
 
+// DEFINE RELATIONSHIPS
+
 
 module.exports = db;

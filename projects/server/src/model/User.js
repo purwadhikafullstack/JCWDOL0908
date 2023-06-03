@@ -32,10 +32,12 @@ module.exports = (sequelize) => {
     },
     is_admin: {
       type: DataTypes.BOOLEAN,
+      defaultValue: 0,
     },
     id_role: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      defaultValue: null
     },
     is_verify: {
       type: DataTypes.BOOLEAN,
