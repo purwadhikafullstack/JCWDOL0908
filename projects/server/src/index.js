@@ -11,7 +11,7 @@ app.use(cors());
 
 // Init Database
 db.sequelize
-  .sync({ alter: true })
+  .sync()
   .then(() => {
     console.log("Synced db.");
   })
