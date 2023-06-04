@@ -47,10 +47,18 @@ module.exports = (sequelize) => {
       },
       created_by: {
         type: DataTypes.INTEGER,
+        references: {
+          model: "users",
+          key: "id_user",
+        },
       },
       approved_by: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        references: {
+          model: "users",
+          key: "id_user",
+        },
       },
       accepted_by: {
         type: DataTypes.INTEGER,

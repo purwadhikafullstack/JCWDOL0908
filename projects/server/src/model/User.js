@@ -40,6 +40,10 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: null,
+        references: {
+          model: "admin_roles",
+          key: "id_role",
+        },
       },
       is_verify: {
         type: DataTypes.BOOLEAN,
