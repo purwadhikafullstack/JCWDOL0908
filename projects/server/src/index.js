@@ -3,10 +3,21 @@ require("dotenv").config({ path: join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
 const { UserRouter } = require("./router");
+const db = require("./model");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
 app.use(cors());
+
+// Init Database
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("Synced db.");
+  })
+  .catch((err) => {
+    console.log("Failed to sync db: " + err.message);
+  });
 
 app.use(express.json());
 app.use("/", express.static(__dirname + "/public"));
