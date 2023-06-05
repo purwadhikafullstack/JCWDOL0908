@@ -28,7 +28,7 @@ function NavbarAdmin() {
     },
   ];
 
-  const renderIcon = () => {
+  const RenderIcon = () => {
     return listNav.map((navItem) => {
       return (
         <li
@@ -68,7 +68,7 @@ function NavbarAdmin() {
             className="grid grid-cols-3 gap-4 text-lg text-slate-700 md:grid 
       md:grid-rows-6 md:grid-cols-1 md:gap-8 md:text-2xl py-8 lg:text-3xl"
           >
-            {renderIcon()}
+            <RenderIcon />
             <li className="md:invisible"></li>
             <li className="text-center hover:text-black hover:cursor-pointer">
               <i className="uil uil-signout"></i>
