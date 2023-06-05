@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
         autoIncrement: true,
       },
       warehouse_name: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         unique: true,
       },
       address: {

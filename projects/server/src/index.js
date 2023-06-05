@@ -4,10 +4,11 @@ const express = require("express");
 const cors = require("cors");
 const { UserRouter, AdminRouter } = require("./router");
 const db = require("./model");
-
+const bearerToken = require("express-bearer-token");
 const PORT = process.env.PORT || 8000;
 const app = express();
 app.use(cors());
+app.use(bearerToken());
 
 // Init Database
 db.sequelize
