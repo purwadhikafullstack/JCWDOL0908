@@ -10,6 +10,9 @@ module.exports = (sequelize) => {
         autoIncrement: true,
       },
       city: {
+        type: DataTypes.STRING(255),
+      },
+      type_city: {
         type: DataTypes.STRING(45),
       },
       id_province: {
