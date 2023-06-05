@@ -2,10 +2,12 @@ import axios from "axios";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import LayoutClient from "./components/LayoutClient";
-import LayoutAdmin from "./components/LayoutAdmin";
 import AdminDashboard from "./pages/AdminDashboard";
 import Homepage from "./pages/Homepage";
+import UserManagement from "./pages/UserManagement";
+import ProductManagement from "./pages/ProductManagement";
+import ProductOrder from "./pages/ProductOrder";
+import ProductReport from "./pages/ProductReport";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -16,11 +18,16 @@ function App() {
       setMessage(data?.message || "");
     })();
   }, []);
+
   return (
     <div>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="admin/dashboard/user-management" element={<UserManagement />} />
+        <Route path="admin/dashboard/product-management" element={<ProductManagement />} />
+        <Route path="admin/dashboard/order" element={<ProductOrder />} />
+        <Route path="admin/dashboard/report" element={<ProductReport />} />
       </Routes>
     </div>
   );
