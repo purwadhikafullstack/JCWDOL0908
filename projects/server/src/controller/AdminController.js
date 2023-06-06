@@ -4,6 +4,7 @@ const User = db.User;
 const Warehouse = db.Warehouse;
 const Admin = db.AdminRole;
 const { Op } = require("sequelize");
+const sequelize = db.sequelize;
 
 // As an admin, I want to manage user data
 // Requirements :
@@ -36,20 +37,35 @@ const getAllAdminUser = async (req, res, next) => {
     });
     return res.status(200).send({ isSuccess: true, result: allAdminUser, message: "success retrieve data" });
   } catch (error) {
-    next();
+    next(error);
   }
 };
 
 const getAllUser = async (req, res, next) => {
   const { offset, limit, page } = req.query;
   try {
+    const users = await User.findAll({
+      where: {
+        is_deleted: 0,
+      },
+      attributes: [[sequelize.fn("COUNT", sequelize.col("id_user")), "user_count"]],
+    });
+
     const allUser = await User.findAll({
+      where: {
+        is_deleted: 0,
+      },
       offset: parseInt(offset) * (parseInt(page) - 1),
       limit: parseInt(limit),
     });
-    return res.status(200).send({ isSuccess: true, result: allUser, message: "success retrieve data" });
+
+    const userCount = users[0].dataValues.user_count;
+    const totalPage = Math.ceil(userCount / limit);
+    const result = { totalPage, dataAll: allUser };
+
+    return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
   } catch (error) {
-    next();
+    next(error);
   }
 };
 
@@ -95,7 +111,8 @@ const getAllWarehouse = async (req, res, next) => {
     });
     return res.status(200).send({ isSuccess: true, result: allAdminWarehouse, message: "success retrieve data" });
   } catch (error) {
-    next();
+    // next(error);
+    next({ statusCode: 500, message: "Error get warehouse" });
   }
 };
 

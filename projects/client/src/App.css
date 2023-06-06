@@ -1,3 +1,11 @@
 .maxvh {
   height: 100vh;
 }
+
+.maxvw {
+  width: 100vw;
+}
+
+.modal-container {
+  background-color: rgba(0, 0, 0, 0.3);
+}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function NavbarAdmin() {
-  const [toggleNav, setToggleNav] = useState(true);
+  const [toggleNav, setToggleNav] = useState(false);
   const navigate = useNavigate();
 
   const listNav = [
@@ -49,12 +49,12 @@ function NavbarAdmin() {
       <div
         className={
           toggleNav
-            ? `visible md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
+            ? `visible z-50 md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
             rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-full md:shadow-slate-800 md:shadow-md
-            md:py-0 lg:px-10 md:visible`
-            : `invisible md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
+            md:py-0 lg:px-10 md:visible bg-slate-50`
+            : `invisible z-50 md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
             rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-full md:shadow-slate-800 md:shadow-md
-            md:py-0 lg:px-10 md:visible`
+            md:py-0 lg:px-10 md:visible bg-slate-50`
         }
       >
         <div className="relative">
@@ -89,9 +89,13 @@ function NavbarAdmin() {
         className={
           toggleNav
             ? `invisible fixed bottom-4 right-4 text-2xl text-center
-            md:invisible hover:cursor-pointer z-0`
+            md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-slate-800
+             self-center text-white rounded-full flex flex-row justify-center
+              items-center`
             : `visible fixed bottom-4 right-4 text-2xl text-center
-            md:invisible hover:cursor-pointer z-0`
+            md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-slate-800
+             self-center text-white rounded-full flex flex-row justify-center
+              items-center`
         }
         onClick={() => {
           setToggleNav(true);
