@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUserData } from "../../feature/admin/AdminSlice";
+import { getAllUserData, getSingleUser } from "../../feature/admin/AdminSlice";
 import SingleUserModal from "./SingleUserModal";
 
 function UserMgtUserData() {
@@ -12,6 +12,11 @@ function UserMgtUserData() {
   const dataRender = async () => {
     await dispatch(getAllUserData(pageNum));
     setIsLoading(false);
+  };
+
+  const dataClicked = async (id, isAdmin, idRole) => {
+    await dispatch(getSingleUser(id, isAdmin, idRole));
+    setIsModalPop(true);
   };
 
   useEffect(() => {
@@ -37,9 +42,7 @@ function UserMgtUserData() {
         <div
           className="row-span-1 bg-slate-100 px-2 grid
             grid-cols-6 items-center"
-          onClick={() => {
-            setIsModalPop(true);
-          }}
+          onClick={() => dataClicked(data.id_user, data.is_admin, data.id_role)}
         >
           <p className="col-span-1">{data.id_user}</p>
           <p className="col-span-2">{cutString(data.username)}</p>

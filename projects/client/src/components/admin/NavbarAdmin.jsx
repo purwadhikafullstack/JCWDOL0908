@@ -51,10 +51,10 @@ function NavbarAdmin() {
           toggleNav
             ? `visible z-50 md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
             rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-full md:shadow-slate-800 md:shadow-md
-            md:py-0 lg:px-10 md:visible bg-slate-50`
+            md:py-0 lg:px-10 md:visible bg-slate-50 md:rounded-none`
             : `invisible z-50 md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
             rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-full md:shadow-slate-800 md:shadow-md
-            md:py-0 lg:px-10 md:visible bg-slate-50`
+            md:py-0 lg:px-10 md:visible bg-slate-50 md:rounded-none`
         }
       >
         <div className="relative">

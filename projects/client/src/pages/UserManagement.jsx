@@ -15,14 +15,15 @@ function UserManagement() {
           </h1>
           <div className="grid grid-cols-2 row-span-1 gap-20">
             <button
-              className="py-1 px-1 bg-slate-800 text-white text-xs 
-          font-semibold"
+              className="py-1 px-1 bg-slate-800 text-white text-sm 
+          font-semibold hover:bg-slate-900"
             >
               All Data
             </button>
             <button
-              className="py-1 px-1 bg-slate-800 text-white text-xs 
-          font-semibold"
+              className="py-1 px-1 bg-white text-slate-800 text-sm 
+            font-semibold border-slate-800 border-2 hover:bg-slate-950 
+          hover:text-white"
             >
               Create Admin
             </button>

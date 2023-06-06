@@ -9,5 +9,6 @@ router.get("/single-user/:name", AdminController.getMyUser);
 router.get("/all-user", tokenDecoder, isSuperAdmin, AdminController.getAllUser);
 router.get("/all-warehouse", tokenDecoder, isSuperAdmin, AdminController.getAllWarehouse);
 router.patch("/change-warehouse", tokenDecoder, isSuperAdmin, AdminController.changeAdminWarehouse);
+router.get("/single-user", tokenDecoder, isSuperAdmin, AdminController.getSingleUser);
 
 module.exports = router;

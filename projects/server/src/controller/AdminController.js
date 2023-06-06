@@ -5,19 +5,7 @@ const Warehouse = db.Warehouse;
 const Admin = db.AdminRole;
 const { Op } = require("sequelize");
 const sequelize = db.sequelize;
-
-// As an admin, I want to manage user data
-// Requirements :
-
-// Admin dapat melihat, membuat, memperbarui dan menghapus data user dengan role admin
-// Admin dapat melihat semua data user yang telah teregistrasi (bukan hanya admin)
-// Warehouse admin tidak dapat mengakses fitur ini
-
-// As an admin, I want to be able to assign admin user to selected warehouse
-// Requirements :
-
-// Admin dapat menempatkan warehouse admin user pada gudang tertentu
-// Warehouse admin tidak dapat mengakses fitur ini
+const City = db.City;
 
 const getAllAdminUser = async (req, res, next) => {
   const { offset, limit, page } = req.query;
@@ -38,6 +26,66 @@ const getAllAdminUser = async (req, res, next) => {
     return res.status(200).send({ isSuccess: true, result: allAdminUser, message: "success retrieve data" });
   } catch (error) {
     next(error);
+  }
+};
+
+const getSingleUser = async (req, res, next) => {
+  const { id, isAdmin, idRole } = req.query;
+  let singleUser;
+  let result;
+  try {
+    if (isAdmin === "true") {
+      if (idRole != 1) {
+        singleUser = await User.findOne({
+          where: {
+            id_user: id,
+          },
+          include: {
+            model: Admin,
+            include: {
+              model: Warehouse,
+              include: {
+                model: City,
+              },
+            },
+          },
+        });
+        console.log(singleUser);
+        const { id_user, username, email, phone_number, admin_role } = singleUser;
+        result = {
+          id_user,
+          username,
+          email,
+          phone_number,
+          role: admin_role.role_admin,
+          warehouse: admin_role.warehouse.warehouse_name,
+          city: admin_role.warehouse.city.city,
+          cityType: admin_role.warehouse.city.type_city,
+        };
+      } else {
+        singleUser = await User.findOne({
+          where: {
+            id_user: id,
+          },
+          include: {
+            model: Admin,
+          },
+        });
+        const { id_user, username, email, phone_number, admin_role } = singleUser;
+        result = { id_user, username, email, phone_number, role: admin_role.role_admin };
+      }
+    } else {
+      singleUser = await User.findOne({
+        where: {
+          id_user: id,
+        },
+      });
+      const { id_user, username, email, phone_number } = singleUser;
+      result = { id_user, username, email, phone_number, role: "user" };
+    }
+    return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
+  } catch (error) {
+    next();
   }
 };
 
@@ -111,7 +159,6 @@ const getAllWarehouse = async (req, res, next) => {
     });
     return res.status(200).send({ isSuccess: true, result: allAdminWarehouse, message: "success retrieve data" });
   } catch (error) {
-    // next(error);
     next({ statusCode: 500, message: "Error get warehouse" });
   }
 };
@@ -132,4 +179,5 @@ module.exports = {
   getAllUser,
   getAllWarehouse,
   changeAdminWarehouse,
+  getSingleUser,
 };
