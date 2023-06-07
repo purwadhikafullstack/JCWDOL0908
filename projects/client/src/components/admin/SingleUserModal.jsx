@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 function SingleUserModal(props) {
   const singleUser = useSelector((state) => state.admin.singleUser);
   const [editState, setEditState] = useState(false);
+  const [isAdminClicked, setIsAdminClicked] = useState(false);
 
   console.log(singleUser);
 
@@ -66,6 +67,7 @@ function SingleUserModal(props) {
                         className="px-2 py-1 text-xs bg-slate-700 text-white disabled:bg-slate-100 
                         disabled:text-slate-400 disabled:cursor-auto"
                         disabled={!editState}
+                        onClick={() => setIsAdminClicked(true)}
                       >
                         revoke admin
                       </button>
@@ -84,12 +86,24 @@ function SingleUserModal(props) {
               </div>
             ) : null}
           </div>
-          {editState ? (
+          {isAdminClicked ? (
             <div className="flex flex-row gap-4">
-              <button className="py-1 px-2 text-sm bg-green-800 text-white" onClick={() => setEditState(false)}>
+              <button
+                className="py-1 px-2 text-sm bg-green-800 text-white"
+                onClick={() => {
+                  setEditState(false);
+                  setIsAdminClicked(false);
+                }}
+              >
                 confirm
               </button>
-              <button className="py-1 px-2 text-sm bg-red-800 text-white" onClick={() => setEditState(false)}>
+              <button
+                className="py-1 px-2 text-sm bg-red-800 text-white"
+                onClick={() => {
+                  setEditState(false);
+                  setIsAdminClicked(false);
+                }}
+              >
                 cancel
               </button>
             </div>
