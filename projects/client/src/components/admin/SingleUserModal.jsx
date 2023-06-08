@@ -6,8 +6,6 @@ function SingleUserModal(props) {
   const [editState, setEditState] = useState(false);
   const [isAdminClicked, setIsAdminClicked] = useState(false);
 
-  console.log(singleUser);
-
   return (
     <div
       className="fixed maxvh maxvw bg-white z-30 top-0 left-0 modal-container
@@ -51,7 +49,7 @@ function SingleUserModal(props) {
             </div>
             <div className="flex flex-rows gap-2 text-sm">
               <div>role : </div>
-              <div>{singleUser.role === "user" ? "user / non-admin" : `${singleUser.role} / admin`}</div>
+              <div>{singleUser.role === "user" ? "non-admin" : `${singleUser.role}`}</div>
               <div>
                 {singleUser.role === "user" ? (
                   <button
@@ -80,7 +78,7 @@ function SingleUserModal(props) {
               <div className="flex flex-rows gap-2 text-sm">
                 <div>warehouse : </div>
                 <div>
-                  {singleUser.warehouse}, {singleUser.cityType} {singleUser.city}
+                  {singleUser.warehouse}, {singleUser.city}
                 </div>
                 <div></div>
               </div>

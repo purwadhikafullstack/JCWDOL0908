@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LayoutAdmin from "../components/LayoutAdmin";
 import UserMgtUserData from "../components/admin/UserMgtUserData";
 import ManageAdmin from "../components/admin/ManageAdmin";
+import { useDispatch } from "react-redux";
+import { getAllAdmin } from "../feature/admin/AdminSlice";
 
 function UserManagement() {
   const [allDataBtnClicked, setAllDataBtnClicked] = useState(true);
   const [mngAdminBtnClicked, setMngAdminBtnClicked] = useState(false);
+  const [adminPageNum, setAdminPageNum] = useState(1);
+  const dispatch = useDispatch();
+
+  const getData = async () => {
+    await dispatch(getAllAdmin(adminPageNum));
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <LayoutAdmin>
       <div className="grid grid-rows-8 maxvh pt-2 pb-6 px-8 gap-4">
@@ -26,7 +39,7 @@ function UserManagement() {
                 setAllDataBtnClicked(true);
               }}
             >
-              All Data
+              All User
             </button>
             <button
               className="py-1 px-1 bg-white text-slate-800 text-sm 
@@ -43,7 +56,7 @@ function UserManagement() {
             </button>
           </div>
         </div>
-        {allDataBtnClicked ? <UserMgtUserData /> : <ManageAdmin />}
+        {allDataBtnClicked ? <UserMgtUserData /> : <ManageAdmin page={adminPageNum} setPage={setAdminPageNum} />}
       </div>
     </LayoutAdmin>
   );

@@ -32,6 +32,7 @@ function NavbarAdmin() {
     return listNav.map((navItem) => {
       return (
         <li
+          key={navItem.text}
           className="text-center hover:text-black hover:cursor-pointer"
           onClick={() => {
             navigate(navItem.navlink);

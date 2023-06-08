@@ -4,27 +4,17 @@ const User = db.User;
 const Warehouse = db.Warehouse;
 const Admin = db.AdminRole;
 const { Op } = require("sequelize");
-const sequelize = db.sequelize;
-const City = db.City;
 const { AdminUserMgtService } = require("../service");
 
 const getAllAdminUser = async (req, res, next) => {
   const { offset, limit, page } = req.query;
   try {
-    const allAdminUser = await User.findAll({
-      where: {
-        [Op.and]: [{ is_admin: 1 }, { id_role: { [Op.not]: 1 } }],
-      },
-      include: {
-        model: Admin,
-        include: {
-          model: Warehouse,
-        },
-      },
-      offset: parseInt(offset) * (parseInt(page) - 1),
-      limit: parseInt(limit),
-    });
-    return res.status(200).send({ isSuccess: true, result: allAdminUser, message: "success retrieve data" });
+    const allAdminCount = await AdminUserMgtService.getAllAdminCount();
+    const allAdminUser = await AdminUserMgtService.getAllAdmin(offset, limit, page);
+    const adminCount = allAdminCount[0].dataValues.user_count;
+    const totalPage = Math.ceil(adminCount / limit);
+    const result = { totalPage, dataAll: allAdminUser };
+    return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
   } catch (error) {
     next(error);
   }
@@ -49,6 +39,16 @@ const getSingleUser = async (req, res, next) => {
     return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
   } catch (error) {
     next();
+  }
+};
+
+const getSingleWarehouseAdmin = async (req, res, next) => {
+  const { id } = req.query;
+  try {
+    const result = await AdminUserMgtService.getSingleWarehouseAdmin(id);
+    return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -122,6 +122,27 @@ const changeAdminWarehouse = async (req, res, next) => {
   }
 };
 
+const getAllWarehouseCity = async (req, res, next) => {
+  try {
+    const result = await AdminUserMgtService.getAllWarehouseCity();
+    return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getSpecWarehouseByIdCity = async (req, res, next) => {
+  const { id_city } = req.query;
+  try {
+    const warehouse = await AdminUserMgtService.getSpecificWarehouseByIdCity(id_city);
+    return res.status(200).send({ isSuccess: true, result: warehouse, message: "success retrieve data" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateAdminWarehouse = async (req, res, next) => {};
+
 module.exports = {
   getAllAdminUser,
   getMyUser,
@@ -129,4 +150,7 @@ module.exports = {
   getAllWarehouse,
   changeAdminWarehouse,
   getSingleUser,
+  getSingleWarehouseAdmin,
+  getAllWarehouseCity,
+  getSpecWarehouseByIdCity,
 };

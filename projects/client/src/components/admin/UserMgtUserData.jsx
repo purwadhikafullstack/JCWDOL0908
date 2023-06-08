@@ -40,6 +40,7 @@ function UserMgtUserData() {
     return allUserData.dataAll.map((data) => {
       return (
         <div
+          key={data.id_user}
           className="row-span-1 bg-slate-100 px-2 grid
             grid-cols-6 items-center"
           onClick={() => dataClicked(data.id_user, data.is_admin, data.id_role)}
