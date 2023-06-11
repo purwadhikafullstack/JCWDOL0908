@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import NavbarRenderIcon from "./navbar/NavbarRenderIcon";
 
 function NavbarAdmin() {
   const [toggleNav, setToggleNav] = useState(false);
-  const navigate = useNavigate();
 
   const listNav = [
     {
@@ -27,23 +26,6 @@ function NavbarAdmin() {
       navlink: "/admin/dashboard/report",
     },
   ];
-
-  const RenderIcon = () => {
-    return listNav.map((navItem) => {
-      return (
-        <li
-          key={navItem.text}
-          className="text-center hover:text-black hover:cursor-pointer"
-          onClick={() => {
-            navigate(navItem.navlink);
-          }}
-        >
-          <i className={navItem.class}></i>
-          <h2 className=" text-sm md:text-lg">{navItem.text}</h2>
-        </li>
-      );
-    });
-  };
 
   return (
     <>
@@ -69,7 +51,7 @@ function NavbarAdmin() {
             className="grid grid-cols-3 gap-4 text-lg text-slate-700 md:grid 
       md:grid-rows-6 md:grid-cols-1 md:gap-8 md:text-2xl py-8 lg:text-3xl"
           >
-            <RenderIcon />
+            <NavbarRenderIcon listNav={listNav} />
             <li className="md:invisible"></li>
             <li className="text-center hover:text-black hover:cursor-pointer">
               <i className="uil uil-signout"></i>

@@ -24,16 +24,14 @@ export const adminSlice = createSlice({
   },
 });
 
+const axiosInstance = axios.create({ baseURL: API_ADMIN, headers: { Authorization: `Bearer ${TOKEN}` } });
 export default adminSlice.reducer;
-
 export const { setSingleUser, setAllAdmin, setSingleAdminWarehouse } = adminSlice.actions;
 
 export function getAllUserData(page) {
   return async (dispatch) => {
     try {
-      let response = await axios.get(`${API_ADMIN}/all-user?limit=8&page=${page}&offset=8`, {
-        headers: { Authorization: `Bearer ${TOKEN}` },
-      });
+      let response = await axiosInstance.get(`/users?limit=8&page=${page}&offset=8`);
       const data = response.data.result;
       return data;
     } catch (error) {
@@ -45,9 +43,7 @@ export function getAllUserData(page) {
 export function getSingleUser(id, isAdmin, idRole) {
   return async (dispatch) => {
     try {
-      let response = await axios.get(`${API_ADMIN}/single-user?id=${id}&isAdmin=${isAdmin}&idRole=${idRole}`, {
-        headers: { Authorization: `Bearer ${TOKEN}` },
-      });
+      let response = await axiosInstance.get(`/user/${id}?isAdmin=${isAdmin}&idRole=${idRole}`);
       dispatch(setSingleUser(response.data.result));
     } catch (error) {
       console.log(error);
@@ -58,9 +54,7 @@ export function getSingleUser(id, isAdmin, idRole) {
 export function getAllAdmin(page) {
   return async (dispatch) => {
     try {
-      let response = await axios.get(`${API_ADMIN}?limit=7&page=${page}&offset=7`, {
-        headers: { Authorization: `Bearer ${TOKEN}` },
-      });
+      let response = await axiosInstance.get(`?limit=7&page=${page}&offset=7`);
       dispatch(setAllAdmin(response.data.result));
     } catch (error) {
       console.log(error);
@@ -71,9 +65,7 @@ export function getAllAdmin(page) {
 export function getSingleWarehouseAdmin(id) {
   return async (dispatch) => {
     try {
-      let response = await axios.get(`${API_ADMIN}/single-admin-warehouse?id=${id}`, {
-        headers: { Authorization: `Bearer ${TOKEN}` },
-      });
+      let response = await axiosInstance.get(`/admin-warehouse/${id}`);
       dispatch(setSingleAdminWarehouse(response.data.result));
       return response.data.result;
     } catch (error) {
@@ -84,7 +76,7 @@ export function getSingleWarehouseAdmin(id) {
 
 export const getWarehouseCities = async () => {
   try {
-    let response = await axios.get(`${API_ADMIN}/warehouse/all-city`, {
+    let response = await axiosInstance.get(`/warehouse/cities`, {
       headers: { Authorization: `Bearer ${TOKEN}` },
     });
     return response.data.result;
@@ -95,7 +87,7 @@ export const getWarehouseCities = async () => {
 
 export const getWarehouses = async (id_city) => {
   try {
-    let response = await axios.get(`${API_ADMIN}/warehouse/id-city?id_city=${id_city}`, {
+    let response = await axios.get(`${API_ADMIN}/warehouse/city/${id_city}`, {
       headers: { Authorization: `Bearer ${TOKEN}` },
     });
     return response.data.result;

@@ -21,7 +21,8 @@ const getAllAdminUser = async (req, res, next) => {
 };
 
 const getSingleUser = async (req, res, next) => {
-  const { id, isAdmin, idRole } = req.query;
+  const { isAdmin, idRole } = req.query;
+  const { id } = req.params;
   let result;
   try {
     if ((isAdmin === "true" && idRole == "null") || isAdmin === "false") {
@@ -40,7 +41,7 @@ const getSingleUser = async (req, res, next) => {
 };
 
 const getSingleWarehouseAdmin = async (req, res, next) => {
-  const { id } = req.query;
+  const { id } = req.params;
   try {
     const result = await AdminWarehouseService.getSingleWarehouseAdmin(id);
     return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
@@ -103,7 +104,7 @@ const getAllWarehouseCity = async (req, res, next) => {
 };
 
 const getSpecWarehouseByIdCity = async (req, res, next) => {
-  const { id_city } = req.query;
+  const { id_city } = req.params;
   try {
     const warehouse = await AdminWarehouseService.getSpecificWarehouseByIdCity(id_city);
     return res.status(200).send({ isSuccess: true, result: warehouse, message: "success retrieve data" });
@@ -135,7 +136,7 @@ const updateAdminWarehouse = async (req, res, next) => {
       transaction,
     );
     await transaction.commit();
-    return res.status(200).send({ isSuccess: true, message: "data updated" });
+    return res.status(204).send({ isSuccess: true, message: "data updated" });
   } catch (error) {
     await transaction.rollback();
     next(error);

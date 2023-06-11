@@ -6,11 +6,11 @@ const { isSuperAdmin } = require("../middleware/IsSuperAdmin");
 
 router.get("/", tokenDecoder, isSuperAdmin, AdminController.getAllAdminUser);
 router.get("/single/:name", AdminController.getMyUser);
-router.get("/all-user", tokenDecoder, isSuperAdmin, AdminController.getAllUser);
-router.get("/single-user", tokenDecoder, isSuperAdmin, AdminController.getSingleUser);
-router.get("/single-admin-warehouse", tokenDecoder, isSuperAdmin, AdminController.getSingleWarehouseAdmin);
-router.get("/warehouse/all-city", tokenDecoder, isSuperAdmin, AdminController.getAllWarehouseCity);
-router.get("/warehouse/id-city", tokenDecoder, isSuperAdmin, AdminController.getSpecWarehouseByIdCity);
+router.get("/users", tokenDecoder, isSuperAdmin, AdminController.getAllUser);
+router.get("/user/:id", tokenDecoder, isSuperAdmin, AdminController.getSingleUser);
+router.get("/admin-warehouse/:id", tokenDecoder, isSuperAdmin, AdminController.getSingleWarehouseAdmin);
+router.get("/warehouse/cities", tokenDecoder, isSuperAdmin, AdminController.getAllWarehouseCity);
+router.get("/warehouse/city/:id_city", tokenDecoder, isSuperAdmin, AdminController.getSpecWarehouseByIdCity);
 router.patch("/", tokenDecoder, isSuperAdmin, AdminController.updateAdminWarehouse);
 
 module.exports = router;

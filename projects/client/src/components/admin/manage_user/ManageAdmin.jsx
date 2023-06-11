@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SingleAdminModal from "./all_admin/SingleAdminModal";
 import { getSingleWarehouseAdmin, getWarehouseCities } from "../../../feature/admin/AdminSlice";
+import RenderAdminsData from "./all_admin/RenderAdminsData";
+import Pagination from "./all_admin/Pagination";
 
 function ManageAdmin(props) {
   const dispatch = useDispatch();
@@ -34,35 +36,7 @@ function ManageAdmin(props) {
     props.setPage(props.page - 1);
   };
 
-  const cutString = (string) => {
-    return string.length > 15 ? string.slice(0, 10) + "..." : string;
-  };
-
   const allAdmin = useSelector((state) => state.admin.allAdmin);
-
-  const RenderAdminData = () => {
-    return allAdmin.dataAll.map((data) => {
-      return (
-        <div
-          key={data.id_user}
-          className="row-span-1 bg-slate-100 grid
-              grid-cols-6 items-center text-xs pl-2"
-        >
-          <p className="col-span-1">{cutString(data.username)}</p>
-          <p className="col-span-2 text-center">{cutString(data.admin_role.warehouse.warehouse_name)}</p>
-          <p className="col-span-2">
-            {cutString(data.admin_role.warehouse.city.type_city + " " + data.admin_role.warehouse.city.city)}
-          </p>
-          <button
-            className="col-span-1 bg-slate-200 text-slate-800 h-full px-2"
-            onClick={() => editBtnHndler(data.id_user)}
-          >
-            <i className="uil uil-pen"></i>edit
-          </button>
-        </div>
-      );
-    });
-  };
 
   return (
     <>
@@ -84,7 +58,7 @@ function ManageAdmin(props) {
               <p className="col-span-2">location</p>
               <p className="text-center">action</p>
             </div>
-            <RenderAdminData />
+            <RenderAdminsData allAdmin={allAdmin} editBtnHndler={editBtnHndler} />
           </div>
         </div>
         <div className="row-span-1 grid items-center">
@@ -97,30 +71,9 @@ function ManageAdmin(props) {
         </div>
         <div
           className="items-center row-span-1 py-2 grid grid-cols-7 text-slate-800
-    text-lg"
+          text-lg"
         >
-          <div
-            className="col-span-1 col-start-3 flex items-center 
-      justify-center"
-          >
-            <button onClick={minusPageNum} disabled={props.page === 1}>
-              <i className="uil uil-arrow-left hover:cursor-pointer"></i>
-            </button>
-          </div>
-          <div
-            className="col-span-1 col-start-4 flex items-center 
-      justify-center"
-          >
-            <p>{props.page}</p>
-          </div>
-          <div
-            className="col-span-1 col-start-5 flex items-center 
-      justify-center"
-          >
-            <button onClick={addPageNum} disabled={props.page === allAdmin.totalPage}>
-              <i className="uil uil-arrow-right hover:cursor-pointer"></i>
-            </button>
-          </div>
+          <Pagination minusPageNum={minusPageNum} page={props.page} addPageNum={addPageNum} allAdmin={allAdmin} />
         </div>
       </div>
     </>
