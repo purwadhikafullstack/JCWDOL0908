@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllUserData, getSingleUser } from "../../feature/admin/AdminSlice";
-import SingleUserModal from "./SingleUserModal";
+import { useDispatch } from "react-redux";
+import { getAllUserData, getSingleUser } from "../../../feature/admin/AdminSlice";
+import SingleUserModal from "./all_user/SingleUserModal";
 
 function UserMgtUserData() {
   const dispatch = useDispatch();
   const [pageNum, setPageNum] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalPop, setIsModalPop] = useState(false);
+  const [allUserData, setAllUserData] = useState({});
 
   const dataRender = async () => {
-    await dispatch(getAllUserData(pageNum));
+    const data = await dispatch(getAllUserData(pageNum));
+    await setAllUserData({ ...data });
     setIsLoading(false);
   };
 
@@ -31,7 +33,6 @@ function UserMgtUserData() {
     setPageNum(pageNum - 1);
   };
 
-  const allUserData = useSelector((state) => state.admin.allUser);
   const cutString = (string) => {
     return string.length > 12 ? string.slice(0, 10) + "..." : string;
   };
@@ -42,7 +43,7 @@ function UserMgtUserData() {
         <div
           key={data.id_user}
           className="row-span-1 bg-slate-100 px-2 grid
-            grid-cols-6 items-center"
+            grid-cols-6 items-center hover:cursor-pointer"
           onClick={() => dataClicked(data.id_user, data.is_admin, data.id_role)}
         >
           <p className="col-span-1">{data.id_user}</p>

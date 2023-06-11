@@ -2,20 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const API_ADMIN = process.env.REACT_APP_ADMIN_URL;
-const TOKEN = process.env.REACT_APP_ADMIN_TOKEN;
+const TOKEN = localStorage.getItem("user_token");
 
 export const adminSlice = createSlice({
   name: "admin",
   initialState: {
-    allUser: [],
     singleUser: {},
     allAdmin: [],
     singleAdminWarehouse: {},
   },
   reducers: {
-    setAllUserData: (state, action) => {
-      state.allUser = action.payload;
-    },
     setSingleUser: (state, action) => {
       state.singleUser = action.payload;
     },
@@ -23,21 +19,14 @@ export const adminSlice = createSlice({
       state.allAdmin = action.payload;
     },
     setSingleAdminWarehouse: (state, action) => {
-      state.singleAdminWarehouse = action.payload;
+      state.singleAdminWarehouse = { ...state.singleAdminWarehouse, ...action.payload };
     },
   },
 });
 
 export default adminSlice.reducer;
 
-export const {
-  setAllUserData,
-  setSingleUser,
-  setAllAdmin,
-  setSingleAdminWarehouse,
-  setWarehouseCities,
-  setWarehouses,
-} = adminSlice.actions;
+export const { setSingleUser, setAllAdmin, setSingleAdminWarehouse } = adminSlice.actions;
 
 export function getAllUserData(page) {
   return async (dispatch) => {
@@ -46,7 +35,7 @@ export function getAllUserData(page) {
         headers: { Authorization: `Bearer ${TOKEN}` },
       });
       const data = response.data.result;
-      dispatch(setAllUserData(data));
+      return data;
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +104,13 @@ export const getWarehouses = async (id_city) => {
   }
 };
 
-export const updateAdminWarehouse = async (data) => {
-  try {
-  } catch (error) {}
-};
+export function updateAdminWarehouse(data) {
+  return async (dispatch) => {
+    try {
+      let response = await axios.patch(`${API_ADMIN}/`, { ...data }, { headers: { Authorization: `Bearer ${TOKEN}` } });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}

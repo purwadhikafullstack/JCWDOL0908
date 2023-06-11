@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useSelector } from "react-redux";
-import CustomForm from "./CustomForm";
-import CustomSelect from "./CustomSelect";
-import { getWarehouses } from "../../feature/admin/AdminSlice";
+import { useDispatch, useSelector } from "react-redux";
+import CustomForm from "../CustomForm";
+import CustomSelect from "../CustomSelect";
+import { getAllAdmin, getWarehouses, updateAdminWarehouse } from "../../../../feature/admin/AdminSlice";
+import ConfirmationModal from "./ConfirmationModal";
 
 function SingleAdminModal(props) {
   const { warehouseCities } = props;
   const [selectCity, setCity] = useState();
+  const [secondButtonValue, setSecondButtonValue] = useState(false);
   const [warehouses, setWarehouses] = useState([]);
+  const [confirmationModal, setConfirmationModal] = useState(false);
+  const dispatch = useDispatch();
   const singleData = useSelector((state) => state.admin.singleAdminWarehouse);
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -57,7 +61,15 @@ function SingleAdminModal(props) {
   });
 
   const onSubmit = async (values, action) => {
-    console.log(values);
+    if (secondButtonValue) {
+      setConfirmationModal(true);
+      setSecondButtonValue(false);
+    } else {
+      let result = await dispatch(updateAdminWarehouse({ id_user: singleData.id_user, ...values }));
+      setConfirmationModal(false);
+      await dispatch(getAllAdmin(props.page));
+      props.setModal(false);
+    }
   };
 
   return (
@@ -84,8 +96,8 @@ function SingleAdminModal(props) {
           validationSchema={editSchema}
           onSubmit={onSubmit}
         >
-          {(props) => {
-            setCity(props.values.id_city);
+          {(formikProps) => {
+            setCity(formikProps.values.id_city);
             return (
               <Form className="grid grid-rows-8 py-4 text-slate-800 gap-3 overflow-auto">
                 <h1 className="font-semibold">Edit Data</h1>
@@ -93,7 +105,7 @@ function SingleAdminModal(props) {
                 <CustomForm label="email" name="email" type="email" id="email" />
                 <CustomForm label="reset password" name="password" type="password" id="password" />
                 <CustomForm label="phone" name="phoneNumber" type="text" id="phoneNumber" />
-                <CustomSelect onChange={props.handleChange} label="city" name="id_city">
+                <CustomSelect onChange={formikProps.handleChange} label="city" name="id_city">
                   <option value="">Select City</option>
                   <RenderCity />
                 </CustomSelect>
@@ -104,9 +116,12 @@ function SingleAdminModal(props) {
 
                 <div className="row-start-8 row-span-1">
                   <div className="grid grid-cols-2 gap-8 text-sm h-5/6 mt-4">
-                    <button className="bg-green-800 text-white" type="submit" disabled={props.isSubmitting}>
-                      confirm
+                    <button className="bg-green-800 text-white" type="" onClick={() => setSecondButtonValue(true)}>
+                      Submit
                     </button>
+                    {confirmationModal ? (
+                      <ConfirmationModal setConfirmationModal={setConfirmationModal} formikProps={formikProps} />
+                    ) : null}
                   </div>
                 </div>
               </Form>

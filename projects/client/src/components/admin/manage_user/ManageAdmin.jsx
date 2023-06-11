@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import SingleAdminModal from "./SingleAdminModal";
-import { getSingleWarehouseAdmin, getWarehouseCities } from "../../feature/admin/AdminSlice";
+import SingleAdminModal from "./all_admin/SingleAdminModal";
+import { getSingleWarehouseAdmin, getWarehouseCities } from "../../../feature/admin/AdminSlice";
 
 function ManageAdmin(props) {
   const dispatch = useDispatch();
@@ -21,6 +21,10 @@ function ManageAdmin(props) {
   useEffect(() => {
     getDataWarehouseCities();
   }, []);
+
+  useEffect(() => {
+    getDataWarehouseCities();
+  }, [editClicked]);
 
   const addPageNum = () => {
     props.setPage(props.page + 1);
@@ -62,7 +66,9 @@ function ManageAdmin(props) {
 
   return (
     <>
-      {editClicked ? <SingleAdminModal setModal={setEditClicked} warehouseCities={warehouseCities} /> : null}
+      {editClicked ? (
+        <SingleAdminModal setModal={setEditClicked} page={props.page} warehouseCities={warehouseCities} />
+      ) : null}
       <div className="row-span-6 grid grid-rows-8 gap-2">
         <div className="row-span-6 grid grid-rows-6">
           <div className="row-span-1 flex text-center items-center">

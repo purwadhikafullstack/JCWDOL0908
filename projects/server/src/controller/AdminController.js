@@ -4,7 +4,7 @@ const User = db.User;
 const Warehouse = db.Warehouse;
 const Admin = db.AdminRole;
 const { Op } = require("sequelize");
-const { AdminUserMgtService } = require("../service");
+const { AdminUserMgtService, AdminWarehouseService } = require("../service");
 
 const getAllAdminUser = async (req, res, next) => {
   const { offset, limit, page } = req.query;
@@ -23,15 +23,12 @@ const getAllAdminUser = async (req, res, next) => {
 const getSingleUser = async (req, res, next) => {
   const { id, isAdmin, idRole } = req.query;
   let result;
-  console.log(idRole == "null");
-  console.log(isAdmin === "true");
-  console.log((isAdmin === "true" && idRole == "null") || isAdmin === "false");
   try {
     if ((isAdmin === "true" && idRole == "null") || isAdmin === "false") {
       result = await AdminUserMgtService.getSingleUser(id);
     } else if (isAdmin === "true") {
       if (idRole != 1) {
-        result = await AdminUserMgtService.getSingleWarehouseAdmin(id);
+        result = await AdminWarehouseService.getSingleWarehouseAdmin(id);
       } else {
         result = await AdminUserMgtService.getSingleSuperAdmin(id);
       }
@@ -45,7 +42,7 @@ const getSingleUser = async (req, res, next) => {
 const getSingleWarehouseAdmin = async (req, res, next) => {
   const { id } = req.query;
   try {
-    const result = await AdminUserMgtService.getSingleWarehouseAdmin(id);
+    const result = await AdminWarehouseService.getSingleWarehouseAdmin(id);
     return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
   } catch (error) {
     next(error);
@@ -96,35 +93,9 @@ const getMyUser = async (req, res, next) => {
   });
 };
 
-const getAllWarehouse = async (req, res, next) => {
-  try {
-    const allAdminWarehouse = await Admin.findAll({
-      where: {
-        id_role: { [Op.not]: 1 },
-      },
-      include: {
-        model: Warehouse,
-      },
-    });
-    return res.status(200).send({ isSuccess: true, result: allAdminWarehouse, message: "success retrieve data" });
-  } catch (error) {
-    next({ statusCode: 500, message: "Error get warehouse" });
-  }
-};
-
-const changeAdminWarehouse = async (req, res, next) => {
-  const { id_user, id_role_change } = req.body;
-  try {
-    const changeWarehouse = await Admin.update({ id_role: id_role_change }, { where: { id_user } });
-    return res.status(200).send({ isSuccess: true, result: changeWarehouse, message: "success update data" });
-  } catch (error) {
-    next();
-  }
-};
-
 const getAllWarehouseCity = async (req, res, next) => {
   try {
-    const result = await AdminUserMgtService.getAllWarehouseCity();
+    const result = await AdminWarehouseService.getAllWarehouseCity();
     return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
   } catch (error) {
     next(error);
@@ -134,23 +105,50 @@ const getAllWarehouseCity = async (req, res, next) => {
 const getSpecWarehouseByIdCity = async (req, res, next) => {
   const { id_city } = req.query;
   try {
-    const warehouse = await AdminUserMgtService.getSpecificWarehouseByIdCity(id_city);
+    const warehouse = await AdminWarehouseService.getSpecificWarehouseByIdCity(id_city);
     return res.status(200).send({ isSuccess: true, result: warehouse, message: "success retrieve data" });
   } catch (error) {
     next(error);
   }
 };
 
-const updateAdminWarehouse = async (req, res, next) => {};
+const updateAdminWarehouse = async (req, res, next) => {
+  const transaction = await db.sequelize.transaction();
+  const { id_user, username, email, password, phoneNumber, id_warehouse } = req.body;
+  let newRole;
+  try {
+    if (password !== "") {
+      const updatePassword = await AdminUserMgtService.updateDataAdminPassword(id_user, password, transaction);
+    }
+    const isRoleAdminExist = await AdminUserMgtService.findAdminRoleByIdWarehouse(id_warehouse);
+    if (!isRoleAdminExist) {
+      const createRole = await AdminUserMgtService.createAdminRoleWarehouse(id_warehouse, transaction);
+      newRole = createRole.dataValues.id_role;
+    }
+    newRole = isRoleAdminExist.dataValues.id_role;
+    const updatePersonalData = await AdminUserMgtService.updateDataAdmin(
+      id_user,
+      username,
+      email,
+      phoneNumber,
+      newRole,
+      transaction,
+    );
+    await transaction.commit();
+    return res.status(200).send({ isSuccess: true, message: "data updated" });
+  } catch (error) {
+    await transaction.rollback();
+    next(error);
+  }
+};
 
 module.exports = {
   getAllAdminUser,
   getMyUser,
   getAllUser,
-  getAllWarehouse,
-  changeAdminWarehouse,
   getSingleUser,
   getSingleWarehouseAdmin,
   getAllWarehouseCity,
   getSpecWarehouseByIdCity,
+  updateAdminWarehouse,
 };

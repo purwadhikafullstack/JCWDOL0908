@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LayoutAdmin from "../components/LayoutAdmin";
-import UserMgtUserData from "../components/admin/UserMgtUserData";
-import ManageAdmin from "../components/admin/ManageAdmin";
+import UserMgtUserData from "../components/admin/manage_user/UserMgtUserData";
+import ManageAdmin from "../components/admin/manage_user/ManageAdmin";
 import { useDispatch } from "react-redux";
 import { getAllAdmin } from "../feature/admin/AdminSlice";
 

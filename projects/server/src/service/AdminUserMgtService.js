@@ -2,6 +2,11 @@ const db = require("../model");
 const { User, Address, City, AdminRole, Warehouse, sequelize } = db;
 const { Op } = require("sequelize");
 const { QueryTypes } = require("sequelize");
+const bcrypt = require("bcrypt");
+const { join } = require("path");
+const { type } = require("os");
+require("dotenv").config({ path: join(__dirname, "../.env") });
+const env = process.env;
 
 const getAllUserWithoutAddress = async (offset, limit, page) => {
   const allUser = await User.findAll({
@@ -33,29 +38,6 @@ const getAllAdminCount = async () => {
     attributes: [[sequelize.fn("COUNT", sequelize.col("id_user")), "user_count"]],
   });
   return users;
-};
-
-const getSingleWarehouseAdmin = async (id) => {
-  let singleUser = await User.findOne({
-    where: { id_user: id },
-    include: { model: AdminRole, include: { model: Warehouse, include: { model: City } } },
-  });
-
-  const { id_user, username, email, phone_number, admin_role } = singleUser;
-  result = {
-    id_user,
-    username,
-    email,
-    phone_number,
-    id_role: admin_role.id_role,
-    role: admin_role.role_admin,
-    id_warehouse: admin_role.warehouse.id_warehouse,
-    warehouse: admin_role.warehouse.warehouse_name,
-    id_city: admin_role.warehouse.city.id_city,
-    city: admin_role.warehouse.city.city,
-    cityType: admin_role.warehouse.city.type_city,
-  };
-  return result;
 };
 
 const getSingleSuperAdmin = async (id) => {
@@ -93,34 +75,43 @@ const getAllAdmin = async (offset, limit, page) => {
   return allAdminUser;
 };
 
-const getAllWarehouseCity = async () => {
-  let allWarehouseCity = await sequelize.query(
-    `SELECT w.id_city, c.type_city, c.city, COUNT(*) as total_warehouse 
-    FROM warehouses w JOIN cities c ON w.id_city = c.id_city GROUP BY w.id_city`,
-    { type: QueryTypes.SELECT },
-  );
-  return allWarehouseCity;
+const hashingPassword = async (password) => {
+  const salt = await bcrypt.genSalt(parseInt(env.GENSALT));
+  const hashedPassword = await bcrypt.hash(password, salt);
+  return hashedPassword;
 };
 
-const getSpecificWarehouseByIdCity = async (id_city) => {
-  const warehouses = await Warehouse.findAll({ where: { id_city } });
-  return warehouses;
+const updateDataAdmin = async (id_user, username, email, phone_number, id_role, transaction) => {
+  const update = await User.update({ username, email, phone_number, id_role }, { where: { id_user }, transaction });
+  return update;
 };
 
-const updateDataAdmin = async () => {};
+const updateDataAdminPassword = async (id_user, password, transaction) => {
+  let hashedPassword = await hashingPassword(password);
+  const update = await User.update({ password: hashedPassword }, { where: { id_user }, transaction });
+  return update;
+};
 
-const updateDataAdminPassword = async () => {};
+const findAdminRoleByIdWarehouse = async (id_warehouse) => {
+  let findAdmin = await AdminRole.findOne({ where: { id_warehouse } });
+  return findAdmin;
+};
+
+const createAdminRoleWarehouse = async (id_warehouse, transaction) => {
+  let createRole = await AdminRole.create({ role_admin: "admin-warehouse", id_warehouse }, { transaction });
+  return createRole;
+};
 
 module.exports = {
   getAllUserCount,
   getAllUserWithoutAddress,
   getSingleSuperAdmin,
-  getSingleWarehouseAdmin,
   getSingleUser,
   getAllAdmin,
   getAllAdminCount,
-  getAllWarehouseCity,
-  getSpecificWarehouseByIdCity,
   updateDataAdmin,
   updateDataAdminPassword,
+  hashingPassword,
+  findAdminRoleByIdWarehouse,
+  createAdminRoleWarehouse,
 };
