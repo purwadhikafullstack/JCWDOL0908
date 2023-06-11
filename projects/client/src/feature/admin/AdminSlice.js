@@ -87,9 +87,7 @@ export const getWarehouseCities = async () => {
 
 export const getWarehouses = async (id_city) => {
   try {
-    let response = await axios.get(`${API_ADMIN}/warehouse/city/${id_city}`, {
-      headers: { Authorization: `Bearer ${TOKEN}` },
-    });
+    let response = await axiosInstance.get(`/warehouse/city/${id_city}`);
     return response.data.result;
   } catch (error) {
     console.log(error);
@@ -99,7 +97,7 @@ export const getWarehouses = async (id_city) => {
 export function updateAdminWarehouse(data) {
   return async (dispatch) => {
     try {
-      let response = await axios.patch(`${API_ADMIN}/`, { ...data }, { headers: { Authorization: `Bearer ${TOKEN}` } });
+      let response = await axiosInstance.patch("/", { ...data });
       return response.data;
     } catch (error) {
       console.log(error);
