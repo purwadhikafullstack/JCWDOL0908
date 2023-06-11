@@ -164,6 +164,7 @@ const createNewAdmin = async (req, res, next) => {
   const { username, email, phone_number, password, id_warehouse } = req.body;
   const transaction = await db.sequelize.transaction();
   try {
+    console.log(id_warehouse);
     const { error, value } = AdminDataValidation.CreateDataAdmin.validate({
       username,
       email,
@@ -172,6 +173,7 @@ const createNewAdmin = async (req, res, next) => {
       id_warehouse,
     });
     if (error) throw error;
+    console.log("lewat dong");
     let result = await AdminUserMgtService.createNewAdmin(
       username,
       email,

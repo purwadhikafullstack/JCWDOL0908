@@ -6,6 +6,8 @@ import CustomForm from "../CustomForm";
 import CustomSelect from "../CustomSelect";
 import { getAllAdmin, getWarehouses, updateAdminWarehouse } from "../../../../feature/admin/AdminSlice";
 import ConfirmationModal from "./ConfirmationModal";
+import RenderCity from "./RenderCity";
+import RenderWarehouse from "./RenderWarehouse";
 
 function SingleAdminModal(props) {
   const { warehouseCities, setModal, page } = props;
@@ -31,26 +33,6 @@ function SingleAdminModal(props) {
   useEffect(() => {
     getDataWarehouse(singleData.id_city);
   }, []);
-
-  const RenderCity = () => {
-    return warehouseCities.map((data) => {
-      return (
-        <option key={data.id_city} value={data.id_city}>
-          {data.type_city} {data.city}
-        </option>
-      );
-    });
-  };
-
-  const RenderWarehouse = () => {
-    return warehouses.map((warehouse) => {
-      return (
-        <option key={warehouse.id_warehouse} value={warehouse.id_warehouse}>
-          {warehouse.warehouse_name}
-        </option>
-      );
-    });
-  };
 
   const editSchema = Yup.object().shape({
     username: Yup.string().required("must not blank"),
@@ -111,13 +93,12 @@ function SingleAdminModal(props) {
                 <CustomForm label="phone" name="phoneNumber" type="text" id="phoneNumber" />
                 <CustomSelect onChange={formikProps.handleChange} label="city" name="id_city">
                   <option value="">Select City</option>
-                  <RenderCity />
+                  <RenderCity warehouseCities={warehouseCities} />
                 </CustomSelect>
                 <CustomSelect label="warehouse" name="id_warehouse">
                   <option value="">Select Warehouse</option>
-                  <RenderWarehouse />
+                  <RenderWarehouse warehouses={warehouses} />
                 </CustomSelect>
-
                 <div className="row-start-8 row-span-1">
                   <div className="grid grid-cols-2 gap-8 text-sm h-5/6 mt-4">
                     <button className="bg-green-800 text-white" type="" onClick={() => setSecondButtonValue(true)}>
