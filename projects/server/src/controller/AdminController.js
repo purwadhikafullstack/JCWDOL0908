@@ -3,8 +3,8 @@ const { createToken } = require("../helper/CreateToken");
 const User = db.User;
 const Warehouse = db.Warehouse;
 const Admin = db.AdminRole;
-const { Op } = require("sequelize");
 const { AdminUserMgtService, AdminWarehouseService } = require("../service");
+const { AdminDataValidation } = require("../validation");
 
 const getAllAdminUser = async (req, res, next) => {
   const { offset, limit, page } = req.query;
@@ -118,8 +118,12 @@ const updateAdminWarehouse = async (req, res, next) => {
   const { id_user, username, email, password, phoneNumber, id_warehouse } = req.body;
   let newRole;
   try {
+    const { error, value } = AdminDataValidation.EditDataAdmin.validate({ username, email, phoneNumber, id_warehouse });
+    if (error) throw `${error}`;
     if (password !== "") {
-      const updatePassword = await AdminUserMgtService.updateDataAdminPassword(id_user, password, transaction);
+      const { error, value } = AdminDataValidation.EditDataAdmin.validate({ password });
+      if (error) throw `${error}`;
+      await AdminUserMgtService.updateDataAdminPassword(id_user, password, transaction);
     }
     const isRoleAdminExist = await AdminUserMgtService.findAdminRoleByIdWarehouse(id_warehouse);
     if (!isRoleAdminExist) {

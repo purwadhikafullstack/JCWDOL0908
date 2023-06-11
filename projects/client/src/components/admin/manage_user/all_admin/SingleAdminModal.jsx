@@ -17,6 +17,7 @@ function SingleAdminModal(props) {
   const singleData = useSelector((state) => state.admin.singleAdminWarehouse);
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const passwordRegex = /^(?=.*\d).{6,}$/;
 
   const getDataWarehouse = async (input) => {
     const data = await getWarehouses(input);
@@ -54,7 +55,9 @@ function SingleAdminModal(props) {
   const editSchema = Yup.object().shape({
     username: Yup.string().required("must not blank"),
     email: Yup.string().required("must not blank").email("invalid email format"),
-    password: Yup.string().min(5, "password is too short - at least 5 chars minimum"),
+    password: Yup.string()
+      .min(6, "password is too short - at least 6 chars minimum")
+      .matches(passwordRegex, "must contain 1 number"),
     phoneNumber: Yup.string().required("must not blank").matches(phoneRegExp, "phone number is not valid"),
     id_city: Yup.number("required").required("required"),
     id_warehouse: Yup.number("required").required("required"),
@@ -65,7 +68,7 @@ function SingleAdminModal(props) {
       setConfirmationModal(true);
       setSecondButtonValue(false);
     } else {
-      let result = await dispatch(updateAdminWarehouse({ id_user: singleData.id_user, ...values }));
+      let result = await updateAdminWarehouse({ id_user: singleData.id_user, ...values });
       setConfirmationModal(false);
       await dispatch(getAllAdmin(props.page));
       props.setModal(false);

@@ -67,7 +67,6 @@ export function getSingleWarehouseAdmin(id) {
     try {
       let response = await axiosInstance.get(`/admin-warehouse/${id}`);
       dispatch(setSingleAdminWarehouse(response.data.result));
-      return response.data.result;
     } catch (error) {
       console.log(error);
     }
@@ -94,13 +93,11 @@ export const getWarehouses = async (id_city) => {
   }
 };
 
-export function updateAdminWarehouse(data) {
-  return async (dispatch) => {
-    try {
-      let response = await axiosInstance.patch("/", { ...data });
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-}
+export const updateAdminWarehouse = async (data) => {
+  try {
+    let response = await axiosInstance.patch("/", { ...data });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
