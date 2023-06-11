@@ -1,7 +1,11 @@
 import React from "react";
 
 function DetailUser(props) {
-  const { editState, singleUser, setIsAdminClicked } = props;
+  const {
+    // editState,
+    singleUser,
+    //  setIsAdminClicked
+  } = props;
 
   return (
     <>
@@ -20,7 +24,7 @@ function DetailUser(props) {
       <div className="flex flex-rows gap-2 text-sm">
         <div>role : </div>
         <div>{singleUser.role === "user" ? "non-admin" : `${singleUser.role}`}</div>
-        <div>
+        {/* <div>
           {singleUser.role === "user" ? (
             <button
               className="px-2 py-1 text-xs bg-slate-700 text-white disabled:bg-slate-100 disabled:text-slate-400"
@@ -43,7 +47,7 @@ function DetailUser(props) {
               ) : null}
             </>
           )}
-        </div>
+        </div> */}
       </div>
       {singleUser.role === "admin-warehouse" ? (
         <div className="flex flex-rows gap-2 text-sm">

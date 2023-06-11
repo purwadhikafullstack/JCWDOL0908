@@ -4,11 +4,16 @@ import SingleAdminModal from "./all_admin/SingleAdminModal";
 import { getSingleWarehouseAdmin, getWarehouseCities } from "../../../feature/admin/AdminSlice";
 import RenderAdminsData from "./all_admin/RenderAdminsData";
 import Pagination from "./all_admin/Pagination";
+import AddNewAdmin from "./all_admin/AddNewAdmin";
+import DeleteAdminModal from "./all_admin/DeleteAdminModal";
 
 function ManageAdmin(props) {
+  let { page } = props;
   const dispatch = useDispatch();
   const [editClicked, setEditClicked] = useState(false);
+  const [deletedClicked, setDeleteClicked] = useState(false);
   const [warehouseCities, setWarehouseCities] = useState([]);
+  const [addNewAdminClicked, setNewAdminClicked] = useState(false);
 
   const editBtnHndler = async (id) => {
     await dispatch(getSingleWarehouseAdmin(id));
@@ -29,11 +34,11 @@ function ManageAdmin(props) {
   }, [editClicked]);
 
   const addPageNum = () => {
-    props.setPage(props.page + 1);
+    props.setPage(page + 1);
   };
 
   const minusPageNum = () => {
-    props.setPage(props.page - 1);
+    props.setPage(page - 1);
   };
 
   const allAdmin = useSelector((state) => state.admin.allAdmin);
@@ -41,8 +46,12 @@ function ManageAdmin(props) {
   return (
     <>
       {editClicked ? (
-        <SingleAdminModal setModal={setEditClicked} page={props.page} warehouseCities={warehouseCities} />
+        <SingleAdminModal setModal={setEditClicked} page={page} warehouseCities={warehouseCities} />
       ) : null}
+      {addNewAdminClicked ? (
+        <AddNewAdmin setNewAdminClicked={setNewAdminClicked} warehouseCities={warehouseCities} page={page} />
+      ) : null}
+      {deletedClicked ? <DeleteAdminModal setDeleteClicked={setDeleteClicked} page={page} /> : null}
       <div className="row-span-6 grid grid-rows-8 gap-2">
         <div className="row-span-6 grid grid-rows-6">
           <div className="row-span-1 flex text-center items-center">
@@ -58,13 +67,14 @@ function ManageAdmin(props) {
               <p className="col-span-2">location</p>
               <p className="text-center">action</p>
             </div>
-            <RenderAdminsData allAdmin={allAdmin} editBtnHndler={editBtnHndler} />
+            <RenderAdminsData allAdmin={allAdmin} editBtnHndler={editBtnHndler} setDeleteClicked={setDeleteClicked} />
           </div>
         </div>
         <div className="row-span-1 grid items-center">
           <button
             className="bg-green-800 text-white px-2 py-1 text-base 
           font-semibold"
+            onClick={() => setNewAdminClicked(true)}
           >
             <i className="uil uil-plus"></i> New Admin
           </button>
@@ -73,7 +83,7 @@ function ManageAdmin(props) {
           className="items-center row-span-1 py-2 grid grid-cols-7 text-slate-800
           text-lg"
         >
-          <Pagination minusPageNum={minusPageNum} page={props.page} addPageNum={addPageNum} allAdmin={allAdmin} />
+          <Pagination minusPageNum={minusPageNum} page={page} addPageNum={addPageNum} allAdmin={allAdmin} />
         </div>
       </div>
     </>

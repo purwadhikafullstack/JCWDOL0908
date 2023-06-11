@@ -12,5 +12,7 @@ router.get("/admin-warehouse/:id", tokenDecoder, isSuperAdmin, AdminController.g
 router.get("/warehouse/cities", tokenDecoder, isSuperAdmin, AdminController.getAllWarehouseCity);
 router.get("/warehouse/city/:id_city", tokenDecoder, isSuperAdmin, AdminController.getSpecWarehouseByIdCity);
 router.patch("/", tokenDecoder, isSuperAdmin, AdminController.updateAdminWarehouse);
+router.patch("/user/:id", tokenDecoder, isSuperAdmin, AdminController.deleteUser);
+router.post("/", tokenDecoder, isSuperAdmin, AdminController.createNewAdmin);
 
 module.exports = router;

@@ -8,7 +8,7 @@ import { getAllAdmin, getWarehouses, updateAdminWarehouse } from "../../../../fe
 import ConfirmationModal from "./ConfirmationModal";
 
 function SingleAdminModal(props) {
-  const { warehouseCities } = props;
+  const { warehouseCities, setModal, page } = props;
   const [selectCity, setCity] = useState();
   const [secondButtonValue, setSecondButtonValue] = useState(false);
   const [warehouses, setWarehouses] = useState([]);
@@ -69,9 +69,10 @@ function SingleAdminModal(props) {
       setSecondButtonValue(false);
     } else {
       let result = await updateAdminWarehouse({ id_user: singleData.id_user, ...values });
+      alert(result.message);
       setConfirmationModal(false);
-      await dispatch(getAllAdmin(props.page));
-      props.setModal(false);
+      await dispatch(getAllAdmin(page));
+      setModal(false);
     }
   };
 
@@ -84,7 +85,7 @@ function SingleAdminModal(props) {
         className="px-4 w-5/6 bg-slate-50 relative md:translate-x-24 md:w-1/2
       lg:w-1/3 py-4"
       >
-        <button onClick={() => props.setModal(false)} className="text-red-700 absolute top-0 right-1 font-bold text-xl">
+        <button onClick={() => setModal(false)} className="text-red-700 absolute top-0 right-1 font-bold text-xl">
           <i className="uil uil-times-circle"></i>
         </button>
         <Formik

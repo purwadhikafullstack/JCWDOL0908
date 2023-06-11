@@ -119,10 +119,10 @@ const updateAdminWarehouse = async (req, res, next) => {
   let newRole;
   try {
     const { error, value } = AdminDataValidation.EditDataAdmin.validate({ username, email, phoneNumber, id_warehouse });
-    if (error) throw `${error}`;
+    if (error) throw error;
     if (password !== "") {
       const { error, value } = AdminDataValidation.EditDataAdmin.validate({ password });
-      if (error) throw `${error}`;
+      if (error) throw error;
       await AdminUserMgtService.updateDataAdminPassword(id_user, password, transaction);
     }
     const isRoleAdminExist = await AdminUserMgtService.findAdminRoleByIdWarehouse(id_warehouse);
@@ -147,6 +147,48 @@ const updateAdminWarehouse = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  const { id } = req.params;
+  const transaction = await db.sequelize.transaction();
+  try {
+    const result = await AdminUserMgtService.deleteUser(id, transaction);
+    await transaction.commit();
+    return res.status(204).send({ isSuccess: true, message: "data deleted" });
+  } catch (error) {
+    await transaction.rollback();
+    next(error);
+  }
+};
+
+const createNewAdmin = async (req, res, next) => {
+  const { username, email, phone_number, password, id_warehouse } = req.body;
+  const transaction = await db.sequelize.transaction();
+  try {
+    const { error, value } = AdminDataValidation.CreateDataAdmin.validate({
+      username,
+      email,
+      phone_number,
+      password,
+      id_warehouse,
+    });
+    if (error) throw error;
+    let result = await AdminUserMgtService.createNewAdmin(
+      username,
+      email,
+      phone_number,
+      password,
+      id_warehouse,
+      transaction,
+    );
+    console.log(result);
+    await transaction.commit();
+    return res.status(201).send({ isSuccess: true, message: "data succesfully created" });
+  } catch (error) {
+    await transaction.rollback();
+    next(error);
+  }
+};
+
 module.exports = {
   getAllAdminUser,
   getMyUser,
@@ -156,4 +198,6 @@ module.exports = {
   getAllWarehouseCity,
   getSpecWarehouseByIdCity,
   updateAdminWarehouse,
+  deleteUser,
+  createNewAdmin,
 };

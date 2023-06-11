@@ -98,6 +98,24 @@ export const updateAdminWarehouse = async (data) => {
     let response = await axiosInstance.patch("/", { ...data });
     return response.data;
   } catch (error) {
-    console.log(error);
+    alert(error);
+  }
+};
+
+export const deleteUserData = async (id_user) => {
+  try {
+    let response = await axiosInstance.patch(`/user/${id_user}`);
+    return response.data;
+  } catch (error) {
+    alert(error);
+  }
+};
+
+export const createNewAdmin = async (data) => {
+  try {
+    let response = await axiosInstance.post("/", { ...data });
+    return response.data;
+  } catch (error) {
+    alert(error);
   }
 };

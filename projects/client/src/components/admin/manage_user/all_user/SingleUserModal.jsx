@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import DetailUser from "./DetailUser";
 import HeaderModal from "./HeaderModal";
 
 function SingleUserModal(props) {
   const singleUser = useSelector((state) => state.admin.singleUser);
-  const [editState, setEditState] = useState(false);
-  const [isAdminClicked, setIsAdminClicked] = useState(false);
+  // const [editState, setEditState] = useState(false);
+  // const [isAdminClicked, setIsAdminClicked] = useState(false);
 
   return (
     <div
@@ -27,12 +27,19 @@ function SingleUserModal(props) {
         </button>
         <div>
           <div className="flex justify-between items-center">
-            <HeaderModal singleUser={singleUser} setEditState={setEditState} />
+            <HeaderModal
+              singleUser={singleUser}
+              // setEditState={setEditState}
+            />
           </div>
           <div className="mt-10 mb-4 flex flex-col gap-2">
-            <DetailUser singleUser={singleUser} editState={editState} setIsAdminClicked={setIsAdminClicked} />
+            <DetailUser
+              singleUser={singleUser}
+              // editState={editState}
+              // setIsAdminClicked={setIsAdminClicked}
+            />
           </div>
-          {isAdminClicked ? (
+          {/* {isAdminClicked ? (
             <div className="flex flex-row gap-4">
               <button
                 className="py-1 px-2 text-sm bg-green-800 text-white"
@@ -53,7 +60,7 @@ function SingleUserModal(props) {
                 cancel
               </button>
             </div>
-          ) : null}
+          ) : null} */}
         </div>
       </div>
     </div>

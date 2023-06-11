@@ -12,6 +12,15 @@ const EditDataAdmin = Joi.object({
   id_warehouse: Joi.number(),
 });
 
+const CreateDataAdmin = Joi.object({
+  username: Joi.string().min(5).max(45).required(),
+  email: Joi.string().email({ minDomainSegments: 2 }).required(),
+  phone_number: Joi.string().pattern(phoneRegExp).required(),
+  password: Joi.string().pattern(passwordRegex).required(),
+  id_warehouse: Joi.number().required(),
+});
+
 module.exports = {
   EditDataAdmin,
+  CreateDataAdmin,
 };

@@ -57,7 +57,7 @@ const getSingleSuperAdmin = async (id) => {
 const getSingleUser = async (id) => {
   let singleUser = await User.findOne({
     where: {
-      id_user: id,
+      [Op.and]: [{ id_user: id }, { is_deleted: 0 }],
     },
   });
   const { id_user, username, email, phone_number, is_admin } = singleUser;
@@ -102,6 +102,30 @@ const createAdminRoleWarehouse = async (id_warehouse, transaction) => {
   return createRole;
 };
 
+const deleteUser = async (id_user, transaction) => {
+  let deleteUserData = await User.update({ is_deleted: 1 }, { where: { id_user }, transaction });
+  return deleteUserData;
+};
+
+const createNewAdmin = async (username, email, phone_number, password, id_warehouse, transaction) => {
+  const getAdminRole = await findAdminRoleByIdWarehouse(id_warehouse);
+  let adminRoleId = getAdminRole.dataValues.id_role;
+  let hashedPassword = await hashingPassword(password);
+  const createNewAdmin = await User.create(
+    {
+      username,
+      email,
+      phone_number,
+      password: hashedPassword,
+      is_admin: true,
+      id_role: adminRoleId,
+      is_verify: true,
+    },
+    { transaction },
+  );
+  return createNewAdmin;
+};
+
 module.exports = {
   getAllUserCount,
   getAllUserWithoutAddress,
@@ -114,4 +138,6 @@ module.exports = {
   hashingPassword,
   findAdminRoleByIdWarehouse,
   createAdminRoleWarehouse,
+  deleteUser,
+  createNewAdmin,
 };
