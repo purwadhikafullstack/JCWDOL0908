@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SingleAdminModal from "./all_admin/SingleAdminModal";
-import { getSingleWarehouseAdmin, getWarehouseCities } from "../../../feature/admin/AdminSlice";
+import { getAllAdmin, getSingleWarehouseAdmin, getWarehouseCities } from "../../../feature/admin/AdminSlice";
 import RenderAdminsData from "./all_admin/RenderAdminsData";
 import Pagination from "./all_admin/Pagination";
 import AddNewAdmin from "./all_admin/AddNewAdmin";
@@ -24,6 +24,12 @@ function ManageAdmin(props) {
     const data = await getWarehouseCities();
     setWarehouseCities([...data]);
   };
+
+  useEffect(() => {
+    (async () => {
+      await dispatch(getAllAdmin(page));
+    })();
+  }, [page]);
 
   useEffect(() => {
     getDataWarehouseCities();
