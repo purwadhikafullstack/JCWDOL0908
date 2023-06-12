@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const API_ADMIN = process.env.REACT_APP_ADMIN_URL;
-const TOKEN = localStorage.getItem("user_token");
+const TOKEN = localStorage.getItem("admin_token");
 
 export const adminSlice = createSlice({
   name: "admin",
@@ -26,7 +26,7 @@ export const adminSlice = createSlice({
 
 const axiosInstance = axios.create({ baseURL: API_ADMIN, headers: { Authorization: `Bearer ${TOKEN}` } });
 export default adminSlice.reducer;
-export const { setSingleUser, setAllAdmin, setSingleAdminWarehouse } = adminSlice.actions;
+export const { setSingleUser, setAllAdmin, setSingleAdminWarehouse, setLoggedInAdminData } = adminSlice.actions;
 
 export function getAllUserData(page) {
   return async (dispatch) => {

@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import NavbarRenderIcon from "./navbar/NavbarRenderIcon";
+import { useNavigate } from "react-router-dom";
+// import { keepAdminLoggedIn } from "../../feature/admin/AdminLogInSlice";
+// import { useDispatch } from "react-redux";
 
 function NavbarAdmin() {
+  // const dispatch = useDispatch();
   const [toggleNav, setToggleNav] = useState(false);
+  const navigate = useNavigate();
 
   const listNav = [
     {
@@ -26,6 +31,11 @@ function NavbarAdmin() {
       navlink: "/admin/dashboard/report",
     },
   ];
+
+  const logoutBtnHandler = () => {
+    localStorage.removeItem("admin_token");
+    navigate("/admin-login");
+  };
 
   return (
     <>
@@ -53,7 +63,7 @@ function NavbarAdmin() {
           >
             <NavbarRenderIcon listNav={listNav} />
             <li className="md:invisible"></li>
-            <li className="text-center hover:text-black hover:cursor-pointer">
+            <li className="text-center hover:text-black hover:cursor-pointer" onClick={logoutBtnHandler}>
               <i className="uil uil-signout"></i>
               <h2 className=" text-sm md:text-lg">logout</h2>
             </li>

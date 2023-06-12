@@ -10,7 +10,7 @@ module.exports = {
     return jwt.sign(
       payload, // making token: /*data untuk membuat token*/,
       env.TOKEN_SECRET_KEY, // secret-key to encode
-      { expiresIn: "48h" }, // token lifetime, in this case is 12 hours
+      { expiresIn: "48h" }, // token lifetime, in this case is ... hours
     );
   },
 };
