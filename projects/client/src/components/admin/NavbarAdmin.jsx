@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import NavbarRenderIcon from "./navbar/NavbarRenderIcon";
 import { useNavigate } from "react-router-dom";
-// import { keepAdminLoggedIn } from "../../feature/admin/AdminLogInSlice";
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setLoggedInAdminDataBack } from "../../feature/admin/AdminLogInSlice";
 
 function NavbarAdmin() {
-  // const dispatch = useDispatch();
   const [toggleNav, setToggleNav] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const listNav = [
     {
@@ -34,6 +34,7 @@ function NavbarAdmin() {
 
   const logoutBtnHandler = () => {
     localStorage.removeItem("admin_token");
+    dispatch(setLoggedInAdminDataBack());
     navigate("/admin-login");
   };
 

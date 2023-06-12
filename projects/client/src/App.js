@@ -25,7 +25,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    dispatch(keepAdminLoggedIn());
+    if (localStorage.getItem("admin_token")) dispatch(keepAdminLoggedIn());
   }, []);
 
   return (

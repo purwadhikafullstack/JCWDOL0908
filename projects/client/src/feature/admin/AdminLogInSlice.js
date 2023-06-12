@@ -13,12 +13,15 @@ export const adminLogInSlice = createSlice({
     setLoggedInAdminData: (state, action) => {
       state.loggedInAdminData = { ...action.payload };
     },
+    setLoggedInAdminDataBack: (state, action) => {
+      state.loggedInAdminData = { isLoggedIn: false };
+    },
   },
 });
 
 const axiosInstance = axios.create({ baseURL: API_ADMIN_LOGIN, headers: { Authorization: `Bearer ${TOKEN}` } });
 export default adminLogInSlice.reducer;
-export const { setLoggedInAdminData } = adminLogInSlice.actions;
+export const { setLoggedInAdminData, setLoggedInAdminDataBack } = adminLogInSlice.actions;
 
 export function loggingInAdmin(username, password) {
   return async (dispatch) => {
