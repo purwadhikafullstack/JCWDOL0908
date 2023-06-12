@@ -174,7 +174,7 @@ const createNewAdmin = async (req, res, next) => {
     });
     if (error) throw error;
     console.log("lewat dong");
-    let result = await AdminUserMgtService.createNewAdmin(
+    const result = await AdminUserMgtService.createNewAdmin(
       username,
       email,
       phone_number,
@@ -182,7 +182,6 @@ const createNewAdmin = async (req, res, next) => {
       id_warehouse,
       transaction,
     );
-    console.log(result);
     await transaction.commit();
     return res.status(201).send({ isSuccess: true, message: "data succesfully created" });
   } catch (error) {

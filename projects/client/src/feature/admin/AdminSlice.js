@@ -31,7 +31,7 @@ export const { setSingleUser, setAllAdmin, setSingleAdminWarehouse, setLoggedInA
 export function getAllUserData(page) {
   return async (dispatch) => {
     try {
-      let response = await axiosInstance.get(`/users?limit=8&page=${page}&offset=8`);
+      const response = await axiosInstance.get(`/users?limit=8&page=${page}&offset=8`);
       const data = response.data.result;
       return data;
     } catch (error) {
@@ -43,7 +43,7 @@ export function getAllUserData(page) {
 export function getSingleUser(id, isAdmin, idRole) {
   return async (dispatch) => {
     try {
-      let response = await axiosInstance.get(`/user/${id}?isAdmin=${isAdmin}&idRole=${idRole}`);
+      const response = await axiosInstance.get(`/user/${id}?isAdmin=${isAdmin}&idRole=${idRole}`);
       dispatch(setSingleUser(response.data.result));
     } catch (error) {
       console.log(error);
@@ -54,7 +54,7 @@ export function getSingleUser(id, isAdmin, idRole) {
 export function getAllAdmin(page) {
   return async (dispatch) => {
     try {
-      let response = await axiosInstance.get(`?limit=7&page=${page}&offset=7`);
+      const response = await axiosInstance.get(`?limit=7&page=${page}&offset=7`);
       dispatch(setAllAdmin(response.data.result));
     } catch (error) {
       console.log(error);
@@ -65,7 +65,7 @@ export function getAllAdmin(page) {
 export function getSingleWarehouseAdmin(id) {
   return async (dispatch) => {
     try {
-      let response = await axiosInstance.get(`/admin-warehouse/${id}`);
+      const response = await axiosInstance.get(`/admin-warehouse/${id}`);
       dispatch(setSingleAdminWarehouse(response.data.result));
     } catch (error) {
       console.log(error);
@@ -75,7 +75,7 @@ export function getSingleWarehouseAdmin(id) {
 
 export const getWarehouseCities = async () => {
   try {
-    let response = await axiosInstance.get(`/warehouse/cities`, {
+    const response = await axiosInstance.get(`/warehouse/cities`, {
       headers: { Authorization: `Bearer ${TOKEN}` },
     });
     return response.data.result;
@@ -86,7 +86,7 @@ export const getWarehouseCities = async () => {
 
 export const getWarehouses = async (id_city) => {
   try {
-    let response = await axiosInstance.get(`/warehouse/city/${id_city}`);
+    const response = await axiosInstance.get(`/warehouse/city/${id_city}`);
     return response.data.result;
   } catch (error) {
     console.log(error);
@@ -95,7 +95,7 @@ export const getWarehouses = async (id_city) => {
 
 export const updateAdminWarehouse = async (data) => {
   try {
-    let response = await axiosInstance.patch("/", { ...data });
+    const response = await axiosInstance.patch("/", { ...data });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -104,7 +104,7 @@ export const updateAdminWarehouse = async (data) => {
 
 export const deleteUserData = async (id_user) => {
   try {
-    let response = await axiosInstance.patch(`/user/${id_user}`);
+    const response = await axiosInstance.patch(`/user/${id_user}`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -113,7 +113,7 @@ export const deleteUserData = async (id_user) => {
 
 export const createNewAdmin = async (data) => {
   try {
-    let response = await axiosInstance.post("/", { ...data });
+    const response = await axiosInstance.post("/", { ...data });
     return response.data;
   } catch (error) {
     console.log(error);

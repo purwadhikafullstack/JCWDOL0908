@@ -9,7 +9,7 @@ function DeleteAdminModal(props) {
   const singleData = useSelector((state) => state.admin.singleUser);
 
   const delButtonHandler = async (id_user) => {
-    let result = await deleteUserData(id_user);
+    const result = await deleteUserData(id_user);
     await dispatch(getAllAdmin(page));
     setDeleteClicked(false);
   };

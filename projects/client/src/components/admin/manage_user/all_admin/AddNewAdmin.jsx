@@ -43,7 +43,7 @@ function AddNewAdmin(props) {
   });
 
   const onSubmit = async (values, action) => {
-    let result = await createNewAdmin(values);
+    const result = await createNewAdmin(values);
     alert(result.message);
     await dispatch(getAllAdmin(page));
     setNewAdminClicked(false);

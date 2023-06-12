@@ -50,7 +50,7 @@ function SingleAdminModal(props) {
       setConfirmationModal(true);
       setSecondButtonValue(false);
     } else {
-      let result = await updateAdminWarehouse({ id_user: singleData.id_user, ...values });
+      const result = await updateAdminWarehouse({ id_user: singleData.id_user, ...values });
       alert("success edit data");
       setConfirmationModal(false);
       await dispatch(getAllAdmin(page));

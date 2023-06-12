@@ -41,7 +41,7 @@ const getAllAdminCount = async () => {
 };
 
 const getSingleSuperAdmin = async (id) => {
-  let singleUser = await User.findOne({
+  const singleUser = await User.findOne({
     where: {
       id_user: id,
     },
@@ -55,7 +55,7 @@ const getSingleSuperAdmin = async (id) => {
 };
 
 const getSingleUser = async (id) => {
-  let singleUser = await User.findOne({
+  const singleUser = await User.findOne({
     where: {
       [Op.and]: [{ id_user: id }, { is_deleted: 0 }],
     },
@@ -88,30 +88,30 @@ const updateDataAdmin = async (id_user, username, email, phone_number, id_role, 
 };
 
 const updateDataAdminPassword = async (id_user, password, transaction) => {
-  let hashedPassword = await hashingPassword(password);
+  const hashedPassword = await hashingPassword(password);
   const update = await User.update({ password: hashedPassword }, { where: { id_user }, transaction });
   return update;
 };
 
 const findAdminRoleByIdWarehouse = async (id_warehouse) => {
-  let findAdmin = await AdminRole.findOne({ where: { id_warehouse } });
+  const findAdmin = await AdminRole.findOne({ where: { id_warehouse } });
   return findAdmin;
 };
 
 const createAdminRoleWarehouse = async (id_warehouse, transaction) => {
-  let createRole = await AdminRole.create({ role_admin: "admin-warehouse", id_warehouse }, { transaction });
+  const createRole = await AdminRole.create({ role_admin: "admin-warehouse", id_warehouse }, { transaction });
   return createRole;
 };
 
 const deleteUser = async (id_user, transaction) => {
-  let deleteUserData = await User.update({ is_deleted: 1 }, { where: { id_user }, transaction });
+  const deleteUserData = await User.update({ is_deleted: 1 }, { where: { id_user }, transaction });
   return deleteUserData;
 };
 
 const createNewAdmin = async (username, email, phone_number, password, id_warehouse, transaction) => {
   const getAdminRole = await findAdminRoleByIdWarehouse(id_warehouse);
-  let adminRoleId = getAdminRole.dataValues.id_role;
-  let hashedPassword = await hashingPassword(password);
+  const adminRoleId = getAdminRole.dataValues.id_role;
+  const hashedPassword = await hashingPassword(password);
   const createNewAdmin = await User.create(
     {
       username,

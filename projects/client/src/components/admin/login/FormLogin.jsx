@@ -15,7 +15,7 @@ function FormLogin() {
   });
 
   const onSubmit = async (values, action) => {
-    let result = await dispatch(loggingInAdmin(values.username, values.password));
+    const result = await dispatch(loggingInAdmin(values.username, values.password));
     if (result) navigate("/admin/dashboard");
   };
 

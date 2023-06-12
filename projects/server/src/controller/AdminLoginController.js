@@ -5,7 +5,7 @@ const loginAdmin = async (req, res, next) => {
   const { username, password } = req.body;
   const transaction = await db.sequelize.transaction();
   try {
-    let result = await AdminLoginService.loginAdmin(username, password);
+    const result = await AdminLoginService.loginAdmin(username, password);
     await transaction.commit();
     res.status(result.status).send(result);
   } catch (error) {
@@ -18,7 +18,7 @@ const keepLogin = async (req, res, next) => {
   const user = req.user;
   const transaction = await db.sequelize.transaction();
   try {
-    let result = await AdminLoginService.keepLogin(user.id_user, transaction);
+    const result = await AdminLoginService.keepLogin(user.id_user, transaction);
     await transaction.commit();
     res.status(result.status).send(result);
   } catch (error) {

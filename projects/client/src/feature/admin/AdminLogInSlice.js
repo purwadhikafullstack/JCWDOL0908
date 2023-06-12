@@ -26,7 +26,7 @@ export const { setLoggedInAdminData, setLoggedInAdminDataBack } = adminLogInSlic
 export function loggingInAdmin(username, password) {
   return async (dispatch) => {
     try {
-      let response = await axios.post(`${API_ADMIN_LOGIN}`, { username, password });
+      const response = await axios.post(`${API_ADMIN_LOGIN}`, { username, password });
       dispatch(setLoggedInAdminData({ ...response.data.result, isLoggedIn: true }));
       localStorage.setItem("admin_token", response.data.token);
       return response.data.isSuccess;
@@ -39,7 +39,7 @@ export function loggingInAdmin(username, password) {
 export function keepAdminLoggedIn() {
   return async (dispatch) => {
     try {
-      let response = await axiosInstance.post("/keep-logged");
+      const response = await axiosInstance.post("/keep-logged");
       dispatch(setLoggedInAdminData({ ...response.data.result, isLoggedIn: true }));
       localStorage.setItem("admin_token", response.data.token);
     } catch (error) {

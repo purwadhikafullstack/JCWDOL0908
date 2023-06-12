@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 const { QueryTypes } = require("sequelize");
 
 const getSingleWarehouseAdmin = async (id) => {
-  let singleUser = await User.findOne({
+  const singleUser = await User.findOne({
     where: { id_user: id },
     include: { model: AdminRole, include: { model: Warehouse, include: { model: City } } },
   });
@@ -27,7 +27,7 @@ const getSingleWarehouseAdmin = async (id) => {
 };
 
 const getAllWarehouseCity = async () => {
-  let allWarehouseCity = await sequelize.query(
+  const allWarehouseCity = await sequelize.query(
     `SELECT w.id_city, c.type_city, c.city, COUNT(*) as total_warehouse 
       FROM warehouses w JOIN cities c ON w.id_city = c.id_city GROUP BY w.id_city`,
     { type: QueryTypes.SELECT },
