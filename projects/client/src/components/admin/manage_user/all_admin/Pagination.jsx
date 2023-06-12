@@ -6,7 +6,7 @@ function Pagination(props) {
     <>
       <div
         className="col-span-1 col-start-3 flex items-center 
-            justify-center"
+            justify-center lg:col-start-5"
       >
         <button onClick={minusPageNum} disabled={page === 1}>
           <i className="uil uil-arrow-left hover:cursor-pointer"></i>
@@ -14,13 +14,13 @@ function Pagination(props) {
       </div>
       <div
         className="col-span-1 col-start-4 flex items-center 
-            justify-center"
+            justify-center lg:col-start-6"
       >
         <p>{page}</p>
       </div>
       <div
         className="col-span-1 col-start-5 flex items-center 
-            justify-center"
+            justify-center lg:col-start-7"
       >
         <button onClick={addPageNum} disabled={page === allAdmin.totalPage}>
           <i className="uil uil-arrow-right hover:cursor-pointer"></i>

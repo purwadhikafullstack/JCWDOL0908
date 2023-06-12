@@ -67,6 +67,7 @@ const getSingleUser = async (id) => {
 
 const getAllAdmin = async (offset, limit, page) => {
   const allAdminUser = await User.findAll({
+    attributes: { exclude: ["password"] },
     where: { [Op.and]: [{ is_admin: 1 }, { id_role: { [Op.not]: 1 } }, { is_deleted: 0 }] },
     include: { model: AdminRole, include: { model: Warehouse, include: { model: City } } },
     offset: parseInt(offset) * (parseInt(page) - 1),

@@ -40,11 +40,15 @@ function UserMgtUserData() {
       {!isLoading ? (
         <>
           {isModalPop ? <SingleUserModal someFunction={setIsModalPop} /> : null}
-          <div className="row-span-6 grid grid-rows-8 text-sm gap-2">
-            <div className="row-span-1 grid grid-cols-6 px-2 items-end font-semibold">
+          <div className="row-span-6 grid grid-rows-8 text-sm gap-2 lg:text-lg">
+            <div
+              className="row-span-1 grid grid-cols-6 px-2 items-end font-semibold
+            lg:font-bold lg:px-11 lg:grid-cols-5"
+            >
               <p className="col-span-1">id</p>
-              <p className="col-span-2">name</p>
-              <p className="col-span-2">email</p>
+              <p className="col-span-2 lg:col-span-1">name</p>
+              <p className="col-span-2 lg:col-span-1">email</p>
+              <p className="hidden lg:inline lg:col-span-1">phone</p>
               <p className="col-span-1 text-right">role</p>
             </div>
             <div className=" row-span-6 grid grid-rows-8 gap-2">
@@ -52,7 +56,7 @@ function UserMgtUserData() {
             </div>
             <div
               className="items-center row-span-1 py-2 grid grid-cols-7 text-slate-800
-              text-lg"
+              text-lg lg:grid-cols-11 lg:gap-0 lg:text-lg lg:font-bold"
             >
               <Pagination
                 allUserData={allUserData}

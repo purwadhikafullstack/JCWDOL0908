@@ -55,17 +55,18 @@ function ManageAdmin(props) {
       <div className="row-span-6 grid grid-rows-8 gap-2">
         <div className="row-span-6 grid grid-rows-6">
           <div className="row-span-1 flex text-center items-center">
-            <h1 className="text-lg font-semibold">Admin-Warehouse List</h1>
+            <h1 className="text-lg font-semibold lg:text-xl">Admin-Warehouse List</h1>
           </div>
-          <div className=" row-span-5 grid grid-rows-8 gap-3">
+          <div className=" row-span-5 grid grid-rows-8 gap-3 lg:gap-2">
             <div
-              className="row-span-1 font-semibold grid
-              grid-cols-6 items-center text-xs pl-2"
+              className="row-span-1 font-semibold grid lg:grid-cols-5
+              grid-cols-6 items-center text-xs pl-2 lg:text-base"
             >
               <p className="col-span-1">name</p>
-              <p className="col-span-2 text-center">warehouse</p>
-              <p className="col-span-2">location</p>
-              <p className="text-center">action</p>
+              <p className="hidden lg:inline lg:col-span-1">phone</p>
+              <p className="col-span-2 text-center lg:text-left lg:col-span-1">warehouse</p>
+              <p className="col-span-2 lg:col-span-1">location</p>
+              <p className="text-right">action</p>
             </div>
             <RenderAdminsData allAdmin={allAdmin} editBtnHndler={editBtnHndler} setDeleteClicked={setDeleteClicked} />
           </div>
@@ -73,7 +74,7 @@ function ManageAdmin(props) {
         <div className="row-span-1 grid items-center">
           <button
             className="bg-green-800 text-white px-2 py-1 text-base 
-          font-semibold"
+          font-semibold lg:w-1/3"
             onClick={() => setNewAdminClicked(true)}
           >
             <i className="uil uil-plus"></i> New Admin
@@ -81,7 +82,7 @@ function ManageAdmin(props) {
         </div>
         <div
           className="items-center row-span-1 py-2 grid grid-cols-7 text-slate-800
-          text-lg"
+          text-lg lg:grid-cols-11 lg:font-bold"
         >
           <Pagination minusPageNum={minusPageNum} page={page} addPageNum={addPageNum} allAdmin={allAdmin} />
         </div>

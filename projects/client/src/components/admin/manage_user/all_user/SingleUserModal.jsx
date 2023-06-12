@@ -5,8 +5,6 @@ import HeaderModal from "./HeaderModal";
 
 function SingleUserModal(props) {
   const singleUser = useSelector((state) => state.admin.singleUser);
-  // const [editState, setEditState] = useState(false);
-  // const [isAdminClicked, setIsAdminClicked] = useState(false);
 
   return (
     <div
@@ -15,7 +13,7 @@ function SingleUserModal(props) {
     >
       <div
         className="py-14 px-6 w-5/6 bg-slate-50 relative md:translate-x-24 md:w-1/2
-      lg:w-1/3 max-h-96"
+      lg:w-1/3 max-h-96 lg:text-xl"
       >
         <button
           className="text-red-700 absolute top-0 right-1 font-bold text-xl"
@@ -27,40 +25,11 @@ function SingleUserModal(props) {
         </button>
         <div>
           <div className="flex justify-between items-center">
-            <HeaderModal
-              singleUser={singleUser}
-              // setEditState={setEditState}
-            />
+            <HeaderModal singleUser={singleUser} />
           </div>
-          <div className="mt-10 mb-4 flex flex-col gap-2">
-            <DetailUser
-              singleUser={singleUser}
-              // editState={editState}
-              // setIsAdminClicked={setIsAdminClicked}
-            />
+          <div className="mt-10 mb-4 flex flex-col gap-2 text-sm lg:text-lg">
+            <DetailUser singleUser={singleUser} />
           </div>
-          {/* {isAdminClicked ? (
-            <div className="flex flex-row gap-4">
-              <button
-                className="py-1 px-2 text-sm bg-green-800 text-white"
-                onClick={() => {
-                  setEditState(false);
-                  setIsAdminClicked(false);
-                }}
-              >
-                confirm
-              </button>
-              <button
-                className="py-1 px-2 text-sm bg-red-800 text-white"
-                onClick={() => {
-                  setEditState(false);
-                  setIsAdminClicked(false);
-                }}
-              >
-                cancel
-              </button>
-            </div>
-          ) : null} */}
         </div>
       </div>
     </div>

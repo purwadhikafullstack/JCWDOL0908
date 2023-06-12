@@ -31,7 +31,7 @@ function DeleteAdminModal(props) {
         </button>
         <div className="grid grid-rows-8 gap-2">
           <h1 className="font-bold text-lg">Detail Admin</h1>
-          <div className="row-span-5">
+          <div className="row-span-5 text-sm lg:text-base">
             <RenderSingleAdminToDelete singleData={singleData} />
           </div>
           <h3 className="text-center">
