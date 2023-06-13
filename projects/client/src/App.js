@@ -8,9 +8,14 @@ import UserManagement from "./pages/UserManagement";
 import ProductManagement from "./pages/ProductManagement";
 import ProductOrder from "./pages/ProductOrder";
 import ProductReport from "./pages/ProductReport";
+import AdminLogin from "./pages/AdminLogin";
+import { useSelector, useDispatch } from "react-redux";
+import { keepAdminLoggedIn } from "./feature/admin/AdminLogInSlice";
 
 function App() {
   const [message, setMessage] = useState("");
+  const dispatch = useDispatch();
+  const loggedInAdmin = useSelector((state) => state.adminLogin.loggedInAdminData);
 
   useEffect(() => {
     (async () => {
@@ -19,15 +24,36 @@ function App() {
     })();
   }, []);
 
+  useEffect(() => {
+    if (localStorage.getItem("admin_token")) dispatch(keepAdminLoggedIn());
+  }, []);
+
   return (
     <div>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="admin/dashboard/user-management" element={<UserManagement />} />
-        <Route path="admin/dashboard/product-management" element={<ProductManagement />} />
-        <Route path="admin/dashboard/order" element={<ProductOrder />} />
-        <Route path="admin/dashboard/report" element={<ProductReport />} />
+        {!loggedInAdmin.isLoggedIn && <Route path="/admin-login" element={<AdminLogin />} />}
+        {loggedInAdmin.isLoggedIn && loggedInAdmin.is_admin ? (
+          <>
+            {loggedInAdmin.id_role === 1 ? (
+              <>
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/dashboard/user-management" element={<UserManagement />} />
+                <Route path="/admin/dashboard/product-management" element={<ProductManagement />} />
+                <Route path="/admin/dashboard/order" element={<ProductOrder />} />
+                <Route path="/admin/dashboard/report" element={<ProductReport />} />
+              </>
+            ) : (
+              <>
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/dashboard/order" element={<ProductOrder />} />
+                <Route path="/admin/dashboard/report" element={<ProductReport />} />
+              </>
+            )}
+            <Route path="/*" element={<AdminDashboard />} />
+          </>
+        ) : null}
+        <Route path="/*" element={<Homepage />} />
       </Routes>
     </div>
   );

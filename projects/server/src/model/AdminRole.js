@@ -20,6 +20,10 @@ module.exports = (sequelize) => {
           key: "id_warehouse",
         },
       },
+      is_deleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 0,
+      },
     },
     {
       tableName: "admin_roles",

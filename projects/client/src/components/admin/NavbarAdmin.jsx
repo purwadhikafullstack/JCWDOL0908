@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import NavbarRenderIcon from "./navbar/NavbarRenderIcon";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLoggedInAdminDataBack } from "../../feature/admin/AdminLogInSlice";
 
 function NavbarAdmin() {
-  const [toggleNav, setToggleNav] = useState(true);
+  const [toggleNav, setToggleNav] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const listNav = [
     {
@@ -28,20 +32,10 @@ function NavbarAdmin() {
     },
   ];
 
-  const RenderIcon = () => {
-    return listNav.map((navItem) => {
-      return (
-        <li
-          className="text-center hover:text-black hover:cursor-pointer"
-          onClick={() => {
-            navigate(navItem.navlink);
-          }}
-        >
-          <i className={navItem.class}></i>
-          <h2 className=" text-sm md:text-lg">{navItem.text}</h2>
-        </li>
-      );
-    });
+  const logoutBtnHandler = () => {
+    localStorage.removeItem("admin_token");
+    dispatch(setLoggedInAdminDataBack());
+    navigate("/admin-login");
   };
 
   return (
@@ -49,12 +43,12 @@ function NavbarAdmin() {
       <div
         className={
           toggleNav
-            ? `visible md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
+            ? `visible z-50 md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
             rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-full md:shadow-slate-800 md:shadow-md
-            md:py-0 lg:px-10 md:visible`
-            : `invisible md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
+            md:py-0 lg:px-10 md:visible bg-slate-50 md:rounded-none`
+            : `invisible z-50 md:top-0 md:left-0 fixed bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
             rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-full md:shadow-slate-800 md:shadow-md
-            md:py-0 lg:px-10 md:visible`
+            md:py-0 lg:px-10 md:visible bg-slate-50 md:rounded-none`
         }
       >
         <div className="relative">
@@ -68,9 +62,9 @@ function NavbarAdmin() {
             className="grid grid-cols-3 gap-4 text-lg text-slate-700 md:grid 
       md:grid-rows-6 md:grid-cols-1 md:gap-8 md:text-2xl py-8 lg:text-3xl"
           >
-            <RenderIcon />
+            <NavbarRenderIcon listNav={listNav} />
             <li className="md:invisible"></li>
-            <li className="text-center hover:text-black hover:cursor-pointer">
+            <li className="text-center hover:text-black hover:cursor-pointer" onClick={logoutBtnHandler}>
               <i className="uil uil-signout"></i>
               <h2 className=" text-sm md:text-lg">logout</h2>
             </li>
@@ -89,9 +83,13 @@ function NavbarAdmin() {
         className={
           toggleNav
             ? `invisible fixed bottom-4 right-4 text-2xl text-center
-            md:invisible hover:cursor-pointer z-0`
+            md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-slate-800
+             self-center text-white rounded-full flex flex-row justify-center
+              items-center`
             : `visible fixed bottom-4 right-4 text-2xl text-center
-            md:invisible hover:cursor-pointer z-0`
+            md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-slate-800
+             self-center text-white rounded-full flex flex-row justify-center
+              items-center`
         }
         onClick={() => {
           setToggleNav(true);

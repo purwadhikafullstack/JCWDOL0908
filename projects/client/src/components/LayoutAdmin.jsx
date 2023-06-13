@@ -1,4 +1,4 @@
-import NavbarAdmin from "./NavbarAdmin";
+import NavbarAdmin from "./admin/NavbarAdmin";
 
 function LayoutAdmin({ children }) {
   return (

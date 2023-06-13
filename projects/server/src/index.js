@@ -2,12 +2,13 @@ const { join } = require("path");
 require("dotenv").config({ path: join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
-const { UserRouter } = require("./router");
+const { UserRouter, AdminRouter, AdminLoginRouter } = require("./router");
 const db = require("./model");
-
+const bearerToken = require("express-bearer-token");
 const PORT = process.env.PORT || 8000;
 const app = express();
 app.use(cors());
+app.use(bearerToken());
 
 // Init Database
 db.sequelize
@@ -36,6 +37,8 @@ app.get("/api/greetings", (req, res, next) => {
 // NOTE : Add your routes here
 
 app.use("/api/users", UserRouter);
+app.use("/api/admin", AdminRouter);
+app.use("/api/admin-login", AdminLoginRouter);
 
 // ===========================
 
@@ -51,8 +54,11 @@ app.use((req, res, next) => {
 // error
 app.use((err, req, res, next) => {
   if (req.path.includes("/api/")) {
-    console.error("Error : ", err.stack);
-    res.status(500).send("Error !");
+    console.error("Error : ", err);
+    if (err.statusCode && err.message) {
+      res.status(err.statusCode).send(err.message);
+    }
+    res.status(500).send(err);
   } else {
     next();
   }

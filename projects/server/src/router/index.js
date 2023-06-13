@@ -1,5 +1,9 @@
-const UserRouter = require('./UserRouter');
+const UserRouter = require("./UserRouter");
+const AdminRouter = require("./AdminRouter");
+const AdminLoginRouter = require("./AdminLoginRouter");
 
 module.exports = {
-   UserRouter
-}
+  UserRouter,
+  AdminRouter,
+  AdminLoginRouter,
+};
