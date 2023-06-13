@@ -32,16 +32,24 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<Homepage />} />
-
         {!loggedInAdmin.isLoggedIn && <Route path="/admin-login" element={<AdminLogin />} />}
-
         {loggedInAdmin.isLoggedIn && loggedInAdmin.is_admin ? (
           <>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/dashboard/user-management" element={<UserManagement />} />
-            <Route path="/admin/dashboard/product-management" element={<ProductManagement />} />
-            <Route path="/admin/dashboard/order" element={<ProductOrder />} />
-            <Route path="/admin/dashboard/report" element={<ProductReport />} />
+            {loggedInAdmin.id_role === 1 ? (
+              <>
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/dashboard/user-management" element={<UserManagement />} />
+                <Route path="/admin/dashboard/product-management" element={<ProductManagement />} />
+                <Route path="/admin/dashboard/order" element={<ProductOrder />} />
+                <Route path="/admin/dashboard/report" element={<ProductReport />} />
+              </>
+            ) : (
+              <>
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/dashboard/order" element={<ProductOrder />} />
+                <Route path="/admin/dashboard/report" element={<ProductReport />} />
+              </>
+            )}
             <Route path="/*" element={<AdminDashboard />} />
           </>
         ) : null}

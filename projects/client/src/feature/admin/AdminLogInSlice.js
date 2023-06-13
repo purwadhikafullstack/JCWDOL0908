@@ -27,11 +27,11 @@ export function loggingInAdmin(username, password) {
   return async (dispatch) => {
     try {
       const response = await axios.post(`${API_ADMIN_LOGIN}`, { username, password });
-      dispatch(setLoggedInAdminData({ ...response.data.result, isLoggedIn: true }));
-      localStorage.setItem("admin_token", response.data.token);
+      await dispatch(setLoggedInAdminData({ ...response.data.result, isLoggedIn: true }));
+      await localStorage.setItem("admin_token", response.data.token);
       return response.data.isSuccess;
     } catch (error) {
-      alert(error);
+      alert(error.response.data.message);
     }
   };
 }
@@ -40,10 +40,10 @@ export function keepAdminLoggedIn() {
   return async (dispatch) => {
     try {
       const response = await axiosInstance.post("/keep-logged");
-      dispatch(setLoggedInAdminData({ ...response.data.result, isLoggedIn: true }));
-      localStorage.setItem("admin_token", response.data.token);
+      await dispatch(setLoggedInAdminData({ ...response.data.result, isLoggedIn: true }));
+      await localStorage.setItem("admin_token", response.data.token);
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.message);
     }
   };
 }

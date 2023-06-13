@@ -35,7 +35,7 @@ export function getAllUserData(page) {
       const data = response.data.result;
       return data;
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.message);
     }
   };
 }
@@ -46,7 +46,7 @@ export function getSingleUser(id, isAdmin, idRole) {
       const response = await axiosInstance.get(`/user/${id}?isAdmin=${isAdmin}&idRole=${idRole}`);
       dispatch(setSingleUser(response.data.result));
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.message);
     }
   };
 }
@@ -57,7 +57,7 @@ export function getAllAdmin(page) {
       const response = await axiosInstance.get(`?limit=7&page=${page}&offset=7`);
       dispatch(setAllAdmin(response.data.result));
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.message);
     }
   };
 }
@@ -68,7 +68,7 @@ export function getSingleWarehouseAdmin(id) {
       const response = await axiosInstance.get(`/admin-warehouse/${id}`);
       dispatch(setSingleAdminWarehouse(response.data.result));
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.message);
     }
   };
 }
@@ -80,7 +80,7 @@ export const getWarehouseCities = async () => {
     });
     return response.data.result;
   } catch (error) {
-    console.log(error);
+    alert(error.response.data.message);
   }
 };
 
@@ -89,7 +89,7 @@ export const getWarehouses = async (id_city) => {
     const response = await axiosInstance.get(`/warehouse/city/${id_city}`);
     return response.data.result;
   } catch (error) {
-    console.log(error);
+    alert(error.response.data.message);
   }
 };
 
@@ -98,7 +98,7 @@ export const updateAdminWarehouse = async (data) => {
     const response = await axiosInstance.patch("/", { ...data });
     return response.data;
   } catch (error) {
-    console.log(error);
+    alert(error.response.data.message);
   }
 };
 
@@ -107,7 +107,7 @@ export const deleteUserData = async (id_user) => {
     const response = await axiosInstance.patch(`/user/${id_user}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    alert(error.response.data.message);
   }
 };
 
@@ -116,6 +116,6 @@ export const createNewAdmin = async (data) => {
     const response = await axiosInstance.post("/", { ...data });
     return response.data;
   } catch (error) {
-    console.log(error);
+    alert(error.response.data.message);
   }
 };
