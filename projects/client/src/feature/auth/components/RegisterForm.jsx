@@ -13,6 +13,7 @@ const RegisterForm = ({ handlePage }) => {
       await registerBuyer(values.email);
       await dispatch(setLoading(false));
       ToastSuccess("Register Success Please Check Your Email");
+      handlePage("login");
     } catch (error) {
       await dispatch(setLoading(false));
       ToastError(error.response.data.message || "Register Failed");
