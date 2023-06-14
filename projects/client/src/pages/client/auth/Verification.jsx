@@ -8,12 +8,20 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "../../../feature/LoaderSlice";
 import { ToastError, ToastSuccess } from "../../../helper/Toastify";
 import { VerifyAccount } from "../../../feature/auth";
+import { useEffect, useState } from "react";
 
 function Verification() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
-  const token = new URLSearchParams(location.search).get("q");
+  const [token, setToken] = useState("");
+  // const token = new URLSearchParams(location.search).get("q");
+
+  useEffect(() => {
+    const uri = window.location.href;
+    const token = uri.substring(uri.lastIndexOf("?q") + 1);
+    // remove "?q="
+    setToken(token.substring(2));
+  }, []);
 
   const handleSubmit = async (values) => {
     dispatch(setLoading(true));
@@ -33,6 +41,7 @@ function Verification() {
   return (
     <LayoutClient>
       <section className="py-6">
+        {token}
         <div className="page_container grid sm:grid-cols-2 grid-cols-1 gap-5 ">
           <div className="form flex flex-col justify-center">
             <Formik
