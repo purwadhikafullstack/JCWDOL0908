@@ -10,7 +10,6 @@ const RegisterValidation = Yup.object().shape({
 });
 
 const UserVerification = Yup.object().shape({
-  token: Yup.string().required("Token is required"),
   password: Yup.string()
     .matches(/^(?=.*\d).{6,}$/, "Password must contain at least 6 digits")
     .required("Password is required"),

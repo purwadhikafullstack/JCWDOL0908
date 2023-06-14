@@ -41,7 +41,6 @@ function Verification() {
   return (
     <LayoutClient>
       <section className="py-6">
-        {token}
         <div className="page_container grid sm:grid-cols-2 grid-cols-1 gap-5 ">
           <div className="form flex flex-col justify-center">
             <Formik
