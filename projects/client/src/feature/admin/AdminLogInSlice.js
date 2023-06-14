@@ -36,10 +36,6 @@ export function loggingInAdmin(username, password) {
   };
 }
 
-/**
- * TODO: this keepLoggedIn function is not working properly
- * condition: the error message alert is showing up need to fix it
- */
 export function keepAdminLoggedIn() {
   return async (dispatch) => {
     try {
@@ -47,7 +43,7 @@ export function keepAdminLoggedIn() {
       await dispatch(setLoggedInAdminData({ ...response.data.result, isLoggedIn: true }));
       await localStorage.setItem("admin_token", response.data.token);
     } catch (error) {
-      // alert(error.response.data.message);
+      alert(error.response.data.message);
     }
   };
 }
