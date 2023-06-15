@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
-import { Transition } from "@headlessui/react";
+import { useEffect, useState, Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import ProfileNav from "./ProvileNav";
+
+
+
 
 function NavbarClient() {
   const [scrolled, setScrolled] = useState(false);
@@ -50,14 +54,14 @@ function NavbarClient() {
   return (
     <>
       <nav
-        className={`flex justify-between items-center h-16 bg-white text-black relative font-title text-xl
+        className={`flex justify-between items-center h-16 bg-white text-black relative font-title text-xl shadow-sm
       ${scrolled ? "fixed top-0 z-50 bg-white-transparent" : null}`}
         role="navigation"
       >
         <div className="flex items-center pl-8">
-          <a href="#" className="sm:pl-2 pl-0 font-bold text-primary sm:text-3xl text-xl">
+          <Link to="/" className="sm:pl-2 pl-0 font-bold text-primary sm:text-3xl text-xl">
             Furniture<span className="text-primaryLight">.co</span>
-          </a>
+          </Link>
         </div>
 
         {/* Desktop View */}
@@ -83,9 +87,7 @@ function NavbarClient() {
           <button className="flex">
             <i className="uil uil-shopping-cart"></i>
           </button>
-          <Link to={`${user.email ? "/profile" : "/client"}`} className="flex" title="Login / Register">
-            <i className="uil uil-user"></i>
-          </Link>
+          <ProfileNav user={user} />
         </div>
       </nav>
       {/* Mobile View */}

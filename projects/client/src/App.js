@@ -14,7 +14,7 @@ import About from "./pages/client/About";
 import Contact from "./pages/client/Contact";
 import LoginClient from "./pages/client/auth/Login";
 import VerificationAuth from "./pages/client/auth/Verification";
-import Profile from "./pages/client/Profile";
+import Profile from "./pages/client/profile/Profile";
 import Storage from "./helper/Storage";
 import { KeepUser } from "./feature/auth/slice/UserSlice";
 
