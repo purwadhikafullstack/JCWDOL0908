@@ -46,7 +46,11 @@ function ProfileContainer({ children, pageName }) {
           </ul>
         </div>
       </div>
-      <div className="sm:w-8/12 w-full">{children}</div>
+      <div className="sm:w-8/12 w-full">
+        <div className="p-4 min-h-[600px]">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

@@ -40,44 +40,42 @@ function Profile() {
       <Jumbotron title="Account | Bio Data" />
       <section className="py-6">
         <ProfileContainer pageName="profile">
-          <div className="p-4 min-h-[500px]">
-            <H3>Update Bio Data</H3>
+          <H3>Update Bio Data</H3>
 
-            <PhotoForm user={user} />
+          <PhotoForm user={user} />
 
-            <Formik
-              initialValues={{ username: user?.username || "", email: user?.email, phone: user?.phone_number || "" }}
-              onSubmit={handleSubmit}
-              validationSchema={BioValidation}
-            >
-              <Form className="flex flex-col gap-5">
-                <FieldBio label="Username" name="username" type="text" disabled={!isUpdate} />
-                <FieldBio label="Email" name="email" type="email" disabled />
-                <p className="text-sm text-gray-400 text-right">*email cannot be changed</p>
-                <FieldBio label="Phone" name="phone" type="text" disabled={!isUpdate} />
+          <Formik
+            initialValues={{ username: user?.username || "", email: user?.email, phone: user?.phone_number || "" }}
+            onSubmit={handleSubmit}
+            validationSchema={BioValidation}
+          >
+            <Form className="flex flex-col gap-5">
+              <FieldBio label="Username" name="username" type="text" disabled={!isUpdate} />
+              <FieldBio label="Email" name="email" type="email" disabled />
+              <p className="text-sm text-gray-400 text-right">*email cannot be changed</p>
+              <FieldBio label="Phone" name="phone" type="text" disabled={!isUpdate} />
 
-                <div className="flex flex-row gap-3">
+              <div className="flex flex-row gap-3">
 
-                  <button
-                    type="button"
-                    className="bg-secondary text-white py-2 px-4 rounded-lg font-semibold font-title w-1/2"
-                    onClick={() => setIsUpdate(!isUpdate)}
-                  >
-                    {isUpdate ? "Cancel" : "Edit"}
-                  </button>
+                <button
+                  type="button"
+                  className="bg-secondary text-white py-2 px-4 rounded-lg font-semibold font-title w-1/2"
+                  onClick={() => setIsUpdate(!isUpdate)}
+                >
+                  {isUpdate ? "Cancel" : "Edit"}
+                </button>
 
-                  <button
-                    type="submit"
-                    className="bg-primary text-white py-2 px-4 rounded-lg font-semibold font-title w-1/2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={!isUpdate}
-                  >
-                    Save
-                  </button>
+                <button
+                  type="submit"
+                  className="bg-primary text-white py-2 px-4 rounded-lg font-semibold font-title w-1/2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!isUpdate}
+                >
+                  Save
+                </button>
 
-                </div>
-              </Form>
-            </Formik>
-          </div>
+              </div>
+            </Form>
+          </Formik>
         </ProfileContainer>
       </section>
     </LayoutClient>

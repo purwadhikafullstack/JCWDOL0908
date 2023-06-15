@@ -37,7 +37,7 @@ function ResetPassword() {
       <Jumbotron title="Account | Reset Password" />
       <section className="py-6">
         <ProfileContainer pageName="reset password">
-          <div className="p-4 min-h-[500px]">
+
             <H3>Update Password</H3>
             <Formik
               initialValues={{ currentPassword: "", password: "", confirmPassword: "" }}
@@ -64,7 +64,6 @@ function ResetPassword() {
 
               </Form>
             </Formik>
-          </div>
         </ProfileContainer>
       </section>
     </LayoutClient>

@@ -37,6 +37,10 @@ function App() {
     if (userToken) dispatch(KeepUser(userToken));
   }, []);
 
+  /**
+   * TODO: Implement logout route
+   */
+
   return (
     <div>
       <Routes>
