@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { phoneRegExp } = require("./AdminDataValidation");
 
 const RegisterUser = Joi.object({
   email: Joi.string().email().required(),
@@ -17,8 +18,15 @@ const AuthUser = Joi.object({
   password: Joi.string().required(),
 });
 
+const UpdateBio = Joi.object({
+  username: Joi.string().max(50).empty("").allow(null),
+  phone: Joi.string().pattern(phoneRegExp).empty("").allow(null),
+});
+
+
 module.exports = {
   RegisterUser,
   VerifyUser,
   AuthUser,
+  UpdateBio,
 };
