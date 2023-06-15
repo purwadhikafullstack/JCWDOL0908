@@ -1,9 +1,16 @@
 import { useState } from "react";
 import EmptyPerson from "../../../images/empty-person.avif";
-function PhotoForm({ user }) {
-  const [preview, setPreview] = useState(user.profile_photo || EmptyPerson);
+import { UpdateProfile } from "../api/UpdateProfile";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../../LoaderSlice";
+import { ToastError, ToastSuccess } from "../../../helper/Toastify";
+import { setUser } from "../../auth/slice/UserSlice";
 
-  const handleImageChange = (e) => {
+function PhotoForm({ user }) {
+  const [preview, setPreview] = useState(process.env.REACT_APP_SERVER_URL + user.profile_photo || EmptyPerson);
+  const dispatch = useDispatch();
+
+  const handleImageChange = async (e) => {
     const selected = e.target.files[0];
     const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
 
@@ -14,7 +21,29 @@ function PhotoForm({ user }) {
       };
       reader.readAsDataURL(selected);
     } else {
-      setPreview(user.profile_photo || null);
+      setPreview(`${process.env.REACT_APP_SERVER_URL + user.profile_photo}` || null);
+    }
+    await handleSubmit(selected);
+  };
+
+  const handleSubmit = async (profile_photo) => {
+    dispatch(setLoading(true));
+    const formData = new FormData();
+    formData.append("photo", profile_photo);
+    try {
+      const res = await UpdateProfile(formData);
+      dispatch(setLoading(false));
+      ToastSuccess(res.data.message || "Update Profile Photo Success");
+      // update user data in redux
+      const payload = {
+        ...user,
+        profile_photo: res.data.data.profile_photo,
+      };
+      dispatch(setUser(payload));
+    } catch (error) {
+      dispatch(setLoading(false));
+      ToastError(error.response.data.message || "Update Profile Photo Failed");
+      setPreview(EmptyPerson);
     }
   };
 

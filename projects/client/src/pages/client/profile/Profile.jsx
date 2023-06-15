@@ -11,6 +11,7 @@ import { UpdateBio } from "../../../feature/profile/";
 import { setLoading } from "../../../feature/LoaderSlice";
 import { ToastError, ToastSuccess } from "../../../helper/Toastify";
 import { BioValidation } from "../../../validation/User";
+import { setUser } from "../../../feature/auth/slice/UserSlice";
 
 function Profile() {
   const { user } = useSelector((state) => state.user);
@@ -29,6 +30,13 @@ function Profile() {
       dispatch(setLoading(false));
       ToastSuccess(res.data.message || "Update Bio Data Success");
       setIsUpdate(false);
+      // update user data in redux
+      const payload = {
+        ...user,
+        username: res.data.data.username,
+        phone_number: res.data.data.phone_number,
+      };
+      dispatch(setUser(payload));
     } catch (error) {
       dispatch(setLoading(false));
       ToastError(error.response.data.message || "Update Bio Data Failed");
