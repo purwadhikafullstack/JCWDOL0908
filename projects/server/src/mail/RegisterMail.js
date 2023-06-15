@@ -1,13 +1,22 @@
+const fs = require("fs");
+const path = require("path");
+
+/**
+ * This function is used to send email template for verification
+ * @param email, token
+ * @returns {{subject: string, from: string, html: string, to}}
+ * @constructor
+ */
 const VerifyMail = (email, token) => {
+  const template = fs.readFileSync(path.join(__dirname, "../mail/register.html"), "utf-8");
+  const verifyLink = `${process.env.CLIENT_URL}/verify/?q=${token}`;
+  const updatedTemplate = template.replace(/{{verificationLink}}/g, verifyLink);
+
   return {
     from: `admin <${process.env.MAIL_USERNAME}>`,
     to: email,
     subject: "Email Verification",
-    html: `
-        <h1>Email Verification</h1>
-        <p>Click this link to verify your email</p>
-        <a href="${process.env.CLIENT_URL}/verify/?q=${token}">Verify</a>
-      `,
+    html: updatedTemplate,
   };
 };
 
