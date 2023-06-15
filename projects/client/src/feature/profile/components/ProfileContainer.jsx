@@ -4,22 +4,22 @@ const Links = [
   {
     name: "profile",
     icon: "uil uil-user",
-    link: "/profile",
+    link: "/account",
   },
   {
     name: "transactions",
     icon: "uil uil-wallet",
-    link: "/transactions",
+    link: "/account/transactions",
   },
   {
     name: "address",
     icon: "uil uil-location-point",
-    link: "/address",
+    link: "/account/address",
   },
   {
     name: "reset password",
     icon: "uil uil-lock",
-    link: "/reset-password",
+    link: "/account/reset-password",
   },
 ];
 

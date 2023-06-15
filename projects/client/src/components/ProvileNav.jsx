@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const links = [
   {
     title: "profile",
-    link: "/profile",
+    link: "/account",
     icon: "uil uil-user",
   },
   {

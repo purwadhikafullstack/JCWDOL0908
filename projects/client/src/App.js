@@ -17,6 +17,7 @@ import VerificationAuth from "./pages/client/auth/Verification";
 import Profile from "./pages/client/profile/Profile";
 import Storage from "./helper/Storage";
 import { KeepUser } from "./feature/auth/slice/UserSlice";
+import ResetPassword from "./pages/client/profile/ResetPassword";
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -48,7 +49,8 @@ function App() {
         <Route path="/verify" element={<VerificationAuth />} />
 
         {/*User Route*/}
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/account" element={<Profile />} />
+        <Route path="/account/reset-password" element={<ResetPassword />} />
 
 
         {!loggedInAdmin.isLoggedIn && <Route path="/admin-login" element={<AdminLogin />} />}
