@@ -10,6 +10,7 @@ export const userSlice = createSlice({
       email: "",
       username: "",
       role: "",
+      phone_number: "",
     },
   },
   reducers: {
@@ -40,13 +41,14 @@ export const KeepUser = (token) => {
         Storage.removeToken();
         dispatch(resetUser());
       } else {
-        const { id_user, email, username, role } = response.data.data;
+        const { id_user, email, username, role, phone_number } = response.data.data;
         dispatch(
           setUser({
             id: id_user,
             email,
             username,
             role,
+            phone_number,
           }),
         );
       }
