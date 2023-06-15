@@ -1,6 +1,7 @@
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -61,4 +62,18 @@ const UploadPhoto = (directory) => {
   };
 };
 
-module.exports = { UploadPhoto };
+/**
+ * UnlinkPhoto - a helper to unlink photo from storage
+ * @param name
+ * @constructor
+ */
+const UnlinkPhoto = (name) => {
+  const filePath = path.join(__dirname, `../../src/${name}`);
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  } else {
+    console.log("File does not exist:", filePath);
+  }
+};
+
+module.exports = { UploadPhoto, UnlinkPhoto };
