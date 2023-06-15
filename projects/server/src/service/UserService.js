@@ -1,6 +1,9 @@
 const db = require("../model");
 const { User } = db;
 const { ComparePassword, HashPassword } = require("../helper/Token");
+const fs = require("fs");
+const path = require("path");
+const { UnlinkPhoto } = require("../helper/Multer");
 
 /**
  * UpdateBioUser - a function to update user bio {username and phone_number}
@@ -127,12 +130,7 @@ const UpdateProfilePicture = async (data) => {
   try {
     const { id, profile_picture } = data;
 
-    const user = await User.update({
-      profile_photo: profile_picture,
-    }, {
-      where: { id_user: id },
-      transaction: t,
-    });
+    const user = await User.findByPk(id);
 
     if (!user) {
       await t.rollback();
@@ -141,6 +139,19 @@ const UpdateProfilePicture = async (data) => {
         data: null,
       };
     }
+
+    // unlink old profile picture
+    if (user.profile_photo) {
+      await UnlinkPhoto(user.profile_photo);
+    }
+
+    await User.update({
+      profile_photo: profile_picture,
+    }, {
+      where: { id_user: id },
+      transaction: t,
+    });
+
 
     await t.commit();
     const updatedUser = await User.findByPk(id);
