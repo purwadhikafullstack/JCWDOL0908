@@ -65,6 +65,9 @@ app.use((err, req, res, next) => {
   }
 });
 
+// access storage
+app.use("/storage", express.static(join(__dirname, "storage")));
+
 //#endregion
 
 //#region CLIENT
