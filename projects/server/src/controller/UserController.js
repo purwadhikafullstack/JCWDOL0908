@@ -3,6 +3,7 @@ const { UserValidation } = require("../validation");
 const { UserService } = require("../service");
 const User = db.User;
 const Address = db.Address;
+const { UploadPhoto } = require("../helper/multer");
 
 const GetUser = async (req, res) => {
   const ress = await User.findOne({
@@ -65,6 +66,14 @@ const UpdateBio = async (req, res, next) => {
   }
 };
 
+/**
+ * UpdatePassword - update user password
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<*>}
+ * @constructor
+ */
 const UpdatePassword = async (req, res, next) => {
   try {
     const { body, user } = req;
@@ -98,8 +107,48 @@ const UpdatePassword = async (req, res, next) => {
   }
 };
 
+const UpdateProfilePicture = async (req, res, next) => {
+  try {
+    const upload = await UploadPhoto("products");
+    upload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          message: err.message,
+          data: null,
+        });
+      }
+      const { user } = req;
+
+      const profile_picture = req.uniqueUrl;
+
+      const payload = {
+        id: user.id,
+        profile_picture,
+      };
+
+      const { error, data } = await UserService.UpdateProfilePicture(payload);
+
+      if (error) {
+        return res.status(400).json({
+          message: error.message,
+          data: null,
+        });
+      }
+
+      return res.status(203).json({
+        message: "profile picture updated successfully",
+        data,
+      });
+
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   GetUser,
   UpdateBio,
   UpdatePassword,
+  UpdateProfilePicture,
 };

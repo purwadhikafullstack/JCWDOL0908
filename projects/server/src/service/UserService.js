@@ -64,6 +64,12 @@ const UpdateBioUser = async (data) => {
   }
 };
 
+/**
+ * UpdatePasswordUser - a function to update user password
+ * @param data {id, oldPassword, newPassword}
+ * @returns {Promise<{data: null, error}|{data: Promise<User> | Promise<User | null>, error: null}|{data: null, error: Error}>}
+ * @constructor
+ */
 const UpdatePasswordUser = async (data) => {
   const t = await db.sequelize.transaction();
   try {
@@ -110,7 +116,50 @@ const UpdatePasswordUser = async (data) => {
   }
 };
 
+/**
+ * UpdateProfilePicture - a function to update user profile picture
+ * @param data {{profile_picture: string, id}}
+ * @returns {Promise<{data: null, error}|{data: Promise<User> | Promise<User | null>, error: null}|{data: null, error: Error}>}
+ * @constructor
+ */
+const UpdateProfilePicture = async (data) => {
+  const t = await db.sequelize.transaction();
+  try {
+    const { id, profile_picture } = data;
+
+    const user = await User.update({
+      profile_photo: profile_picture,
+    }, {
+      where: { id_user: id },
+      transaction: t,
+    });
+
+    if (!user) {
+      await t.rollback();
+      return {
+        error: new Error("User not found"),
+        data: null,
+      };
+    }
+
+    await t.commit();
+    const updatedUser = await User.findByPk(id);
+    return {
+      error: null,
+      data: updatedUser,
+    };
+
+  } catch (error) {
+    await t.rollback();
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 module.exports = {
   UpdateBioUser,
   UpdatePasswordUser,
+  UpdateProfilePicture,
 };
