@@ -24,9 +24,10 @@ yarn-error.log*
 
 .idea
 
-# Ignore all files and subdirectories in "src/storage"
-src/storage/**/*
+# Ignore all files directly within "src/storage"
+src/storage/*/*
 
-# Exclude the ".gitkeep" file in "src/storage" to keep the directory
-!src/storage/.gitkeep
-
+# Exclude the ".gitkeep" files in each subdirectory to keep them
+!src/storage/avatars/.gitkeep
+!src/storage/products/.gitkeep
+!src/storage/categories/.gitkeep

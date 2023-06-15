@@ -109,7 +109,7 @@ const UpdatePassword = async (req, res, next) => {
 
 const UpdateProfilePicture = async (req, res, next) => {
   try {
-    const upload = await UploadPhoto("products");
+    const upload = await UploadPhoto("avatars");
     upload(req, res, async (err) => {
       if (err) {
         return res.status(400).json({
