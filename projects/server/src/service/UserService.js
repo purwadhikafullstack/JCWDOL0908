@@ -13,6 +13,26 @@ const UpdateBioUser = async (data) => {
   try {
     const { id, username, phone } = data;
 
+    // check phone uniqueness
+    const phoneCount = await User.count({
+      where: {
+        phone_number: phone,
+        id_user: {
+          [db.Sequelize.Op.not]: id,
+        },
+      },
+      transaction: t,
+    });
+
+    if (phoneCount > 0) {
+      await t.rollback();
+      return {
+        error: new Error("phone number has been used"),
+        data: null,
+      };
+    }
+
+
     const user = await User.update({
       username,
       phone_number: phone,
