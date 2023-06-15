@@ -55,7 +55,40 @@ const UpdateBio = async (req, res, next) => {
       });
     }
 
-    return res.status(200).json({
+    return res.status(203).json({
+      message: "User updated successfully",
+      data,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+const UpdatePassword = async (req, res, next) => {
+  try {
+    const { body, user } = req;
+    const { error: err_validation } = UserValidation.UpdatePassword.validate(body);
+    if (err_validation) {
+      return res.status(400).json({
+        message: err_validation.details[0].message,
+        data: null,
+      });
+    }
+
+    const { error, data } = await UserService.UpdatePasswordUser({
+      ...body,
+      id: user.id,
+    });
+
+    if (error) {
+      return res.status(400).json({
+        message: error.message,
+        data: null,
+      });
+    }
+
+    return res.status(203).json({
       message: "User updated successfully",
       data,
     });
@@ -68,4 +101,5 @@ const UpdateBio = async (req, res, next) => {
 module.exports = {
   GetUser,
   UpdateBio,
+  UpdatePassword,
 };

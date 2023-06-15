@@ -23,10 +23,15 @@ const UpdateBio = Joi.object({
   phone: Joi.string().pattern(phoneRegExp).empty("").allow(null),
 });
 
+const UpdatePassword = Joi.object({
+  oldPassword: Joi.string().pattern(/^(?=.*[0-9]).{6,}$/).required(),
+  newPassword: Joi.string().pattern(/^(?=.*[0-9]).{6,}$/).required(),
+});
 
 module.exports = {
   RegisterUser,
   VerifyUser,
   AuthUser,
   UpdateBio,
+  UpdatePassword,
 };
