@@ -26,5 +26,15 @@ const BioValidation = Yup.object().shape({
   phone: Yup.string().matches(phoneRegExp, "Phone number is not valid").nullable(),
 });
 
+const UpdatePasswordValidation = Yup.object().shape({
+  currentPassword: Yup.string().required("Old Password is required"),
+  password: Yup.string()
+    .matches(/^(?=.*\d).{6,}$/, "Password must contain at least 6 digits")
+    .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords must match")
+    .required("Confirm Password is required"),
+});
 
-export { LoginValidation, RegisterValidation, UserVerification, BioValidation };
+
+export { LoginValidation, RegisterValidation, UserVerification, BioValidation, UpdatePasswordValidation };
