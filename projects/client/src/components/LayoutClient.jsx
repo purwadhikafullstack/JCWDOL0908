@@ -1,11 +1,19 @@
+import NavbarClient from "./NavbarClient";
+import FooterClient from "./FooterClient";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Loader from "./Loader";
+
 function LayoutClient({ children }) {
   return (
     <div className="flex flex-col">
-      <nav>Disini Navbar Client</nav>
-      <main>{children}</main>
-      <footer>
-        <p>Disini Footer Client</p>
-      </footer>
+      <NavbarClient />
+      <main>
+        <Loader />
+        <ToastContainer />
+        {children}
+      </main>
+      <FooterClient />
     </div>
   );
 }
