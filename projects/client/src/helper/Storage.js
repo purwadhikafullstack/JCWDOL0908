@@ -5,8 +5,8 @@ const storage = {
   getToken: (name) => {
     return localStorage.getItem(name || "token");
   },
-  removeToken: () => {
-    localStorage.removeItem("token");
+  removeToken: (name) => {
+    localStorage.removeItem(name || "token");
   },
 };
 
