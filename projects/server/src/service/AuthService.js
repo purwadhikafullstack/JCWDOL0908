@@ -8,7 +8,6 @@ const Mailer = require("../helper/Mailer");
  * MakeAuthService - a function to login user check email and password
  * @param data
  * @returns {Promise<{data: null, error}|{data: (*&{token: void}), error: null}|{data: null, error: Error}>}
- * @constructor
  */
 const MakeAuthService = async (data) => {
   try {
@@ -61,7 +60,6 @@ const MakeAuthService = async (data) => {
  * KeepLoginService - check if user exists
  * @param data
  * @returns {Promise<{data: *, error: null}|{data: null, error}|{data: null, error: Error}>}
- * @constructor
  */
 const KeepLoginService = async (data) => {
   try {
@@ -89,7 +87,6 @@ const KeepLoginService = async (data) => {
  * CreateUserWithEmail - create user with email and send email verification
  * @param data
  * @returns {Promise<{error: null, data: null}|{error: Error, data: null}|{error: Error, data: User}>}
- * @constructor
  */
 const CreateUserWithEmail = async (data) => {
   const t = await db.sequelize.transaction();
@@ -149,7 +146,6 @@ const CreateUserWithEmail = async (data) => {
  * VerifyUser - update user is_verified to true while decoding token
  * @param data
  * @returns {Promise<{data: *, error: null}|{data: null, error}|{data: null, error: Error}>}
- * @constructor
  */
 const VerifyUser = async (data) => {
   const t = await db.sequelize.transaction();

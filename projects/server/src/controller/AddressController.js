@@ -6,7 +6,6 @@ const { AddressValidation } = require("../validation");
  * @param res
  * @param next
  * @returns {Promise<*>}
- * @constructor
  */
 const GetProvinces = async (req, res, next) => {
   try {
@@ -52,7 +51,6 @@ const GetCity = async (req, res, next) => {
  * @param res
  * @param next
  * @returns {Promise<*>}
- * @constructor
  */
 const SaveAddress = async (req, res, next) => {
   try {
@@ -118,7 +116,6 @@ const UpdateDefaultAddress = async (req, res, next) => {
  * @param res
  * @param next
  * @returns {Promise<*>}
- * @constructor
  */
 const GetUsersAddress = async (req, res, next) => {
   try {

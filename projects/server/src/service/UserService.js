@@ -9,7 +9,6 @@ const { UnlinkPhoto } = require("../helper/Multer");
  * UpdateBioUser - a function to update user bio {username and phone_number}
  * @param data{ id, username, phone}
  * @returns {Promise<{data: null, error: Error}|{data: null, error: Error}|{data: *, error: null}>}
- * @constructor
  */
 const UpdateBioUser = async (data) => {
   const t = await db.sequelize.transaction();
@@ -71,7 +70,6 @@ const UpdateBioUser = async (data) => {
  * UpdatePasswordUser - a function to update user password
  * @param data {id, oldPassword, newPassword}
  * @returns {Promise<{data: null, error}|{data: Promise<User> | Promise<User | null>, error: null}|{data: null, error: Error}>}
- * @constructor
  */
 const UpdatePasswordUser = async (data) => {
   const t = await db.sequelize.transaction();
@@ -123,7 +121,6 @@ const UpdatePasswordUser = async (data) => {
  * UpdateProfilePicture - a function to update user profile picture
  * @param data {{profile_picture: string, id}}
  * @returns {Promise<{data: null, error}|{data: Promise<User> | Promise<User | null>, error: null}|{data: null, error: Error}>}
- * @constructor
  */
 const UpdateProfilePicture = async (data) => {
   const t = await db.sequelize.transaction();

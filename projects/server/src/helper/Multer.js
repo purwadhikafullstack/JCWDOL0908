@@ -38,7 +38,6 @@ const upload = multer({
  * UploadPhoto - a middleware helper to upload photo to storage using multer
  * @param directory
  * @returns {(function(*, *, *): void)|*}
- * @constructor
  */
 const UploadPhoto = (directory) => {
   return (req, res, next) => {
@@ -65,7 +64,6 @@ const UploadPhoto = (directory) => {
 /**
  * UnlinkPhoto - a helper to unlink photo from storage
  * @param name
- * @constructor
  */
 const UnlinkPhoto = (name) => {
   const filePath = path.join(__dirname, `../../src/${name}`);

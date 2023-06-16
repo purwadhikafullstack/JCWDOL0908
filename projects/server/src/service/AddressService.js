@@ -6,7 +6,6 @@ const { GetPositionMapbox } = require("../helper/Mapbox");
 /**
  * GetProvinces - Get all provinces
  * @returns {Promise<{error: *, data: *}>}
- * @constructor
  */
 const GetProvinces = async () => {
   try {
@@ -31,7 +30,6 @@ const GetProvinces = async () => {
  * GetCity - Get all cities by provinceID
  * @param provinceID
  * @returns {Promise<{data: null, error}|{data: City[], error: null}>}
- * @constructor
  */
 const GetCity = async (provinceID) => {
   try {
@@ -59,7 +57,6 @@ const GetCity = async (provinceID) => {
  * GetCityByID - Get all cities by cityIDs
  * @param cityID
  * @returns {Promise<City | null>}
- * @constructor
  */
 const GetCityByID = async (cityID) => {
   try {
@@ -73,7 +70,6 @@ const GetCityByID = async (cityID) => {
  * GetAddressByID - Get address by addressID
  * @param addressID
  * @returns {Promise<Address|null|null>}
- * @constructor
  */
 const GetAddressByID = async (addressID) => {
   try {
@@ -87,7 +83,6 @@ const GetAddressByID = async (addressID) => {
  * SaveUserAddress - Save user address
  * @param data
  * @returns {Promise<{error: *, data: *}>}
- * @constructor
  */
 const StoreUserAddress = async (data) => {
   const t = await db.sequelize.transaction();
@@ -158,7 +153,6 @@ const StoreUserAddress = async (data) => {
  * MakeAddressPrimary - a function to update address to be primary
  * @param data
  * @returns {Promise<{error: *, data: *}>}
- * @constructor
  */
 const MakeAddressPrimary = async (data) => {
   const t = await db.sequelize.transaction();
@@ -207,7 +201,6 @@ const MakeAddressPrimary = async (data) => {
  * GetAddressByUserID - Get all address by userID
  * @param id_user
  * @returns {Promise<{error: *, data: Address[]}>}
- * @constructor
  */
 const GetAddressByUserID = async (id_user) => {
   try {
