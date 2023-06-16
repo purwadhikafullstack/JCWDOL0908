@@ -8,5 +8,6 @@ router.put("/update-bio", CheckAuth, UserController.UpdateBio);
 router.put("/update-password", CheckAuth, UserController.UpdatePassword);
 router.put("/update-avatar", CheckAuth, UserController.UpdateProfilePicture);
 router.post("/address", CheckAuth, AddressController.SaveAddress);
+router.put("/address/:address_id/default", CheckAuth, AddressController.UpdateDefaultAddress);
 
 module.exports = router;

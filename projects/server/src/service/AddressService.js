@@ -70,6 +70,20 @@ const GetCityByID = async (cityID) => {
 };
 
 /**
+ * GetAddressByID - Get address by addressID
+ * @param addressID
+ * @returns {Promise<Address|null|null>}
+ * @constructor
+ */
+const GetAddressByID = async (addressID) => {
+  try {
+    return await Address.findByPk(addressID);
+  } catch (e) {
+    return null;
+  }
+};
+
+/**
  * SaveUserAddress - Save user address
  * @param data
  * @returns {Promise<{error: *, data: *}>}
@@ -140,9 +154,60 @@ const StoreUserAddress = async (data) => {
   }
 };
 
+/**
+ * MakeAddressPrimary - a function to update address to be primary
+ * @param data
+ * @returns {Promise<{error: *, data: *}>}
+ * @constructor
+ */
+const MakeAddressPrimary = async (data) => {
+  const t = await db.sequelize.transaction();
+  try {
+    const { id_user, id_address } = data;
+
+    // check if address is exist
+    const address = await GetAddressByID(id_address);
+
+    if (!address) {
+      return {
+        error: new Error("Address not found"),
+        data: null,
+      };
+    }
+
+    // make all address is_primary = 0
+    await Address.update({ is_primary: 0 }, {
+      where: {
+        id_user,
+      },
+      transaction: t,
+    });
+
+    // make address is_primary = 1
+    await Address.update({ is_primary: 1 }, { where: { id_address }, transaction: t });
+    await t.commit();
+
+    address.is_primary = 1;
+
+    return {
+      error: null,
+      data: address,
+    };
+
+  } catch (error) {
+    await t.rollback();
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 
 module.exports = {
   GetProvinces,
   GetCity,
   StoreUserAddress,
+  MakeAddressPrimary,
+  GetAddressByID,
 };

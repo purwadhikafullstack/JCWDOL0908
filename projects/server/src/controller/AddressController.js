@@ -40,7 +40,7 @@ const GetCity = async (req, res, next) => {
       message: "Get cities success",
       data,
     });
-  } catch (e){
+  } catch (e) {
     next(e);
   }
 };
@@ -86,8 +86,35 @@ const SaveAddress = async (req, res, next) => {
   }
 };
 
+const UpdateDefaultAddress = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { address_id } = req.params;
+
+    const { error, data } = await AddressService.MakeAddressPrimary({
+      id_user: user.id,
+      id_address: address_id,
+    });
+
+    if (error) {
+      return res.status(400).json({
+        message: error.message,
+        data: null,
+      });
+    }
+
+    return res.status(203).json({
+      message: "Address updated successfully",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   GetProvinces,
   GetCity,
   SaveAddress,
+  UpdateDefaultAddress,
 };
