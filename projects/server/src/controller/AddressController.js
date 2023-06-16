@@ -1,4 +1,5 @@
 const { AddressService } = require("../service");
+const { AddressValidation } = require("../validation");
 /**
  * GetProvinces - Get all provinces
  * @param req
@@ -44,7 +45,49 @@ const GetCity = async (req, res, next) => {
   }
 };
 
+
+/**
+ * SaveAddress - save user address
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<*>}
+ * @constructor
+ */
+const SaveAddress = async (req, res, next) => {
+  try {
+    const { body, user } = req;
+    const { error: err_validation } = AddressValidation.SaveAddress.validate(body);
+    if (err_validation) {
+      return res.status(400).json({
+        message: err_validation.details[0].message,
+        data: null,
+      });
+    }
+
+    const { error, data } = await AddressService.StoreUserAddress({
+      id_user: user.id,
+      ...body,
+    });
+
+    if (error) {
+      return res.status(400).json({
+        message: error.message,
+        data: null,
+      });
+    }
+
+    return res.status(201).json({
+      message: "Address saved successfully",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   GetProvinces,
   GetCity,
+  SaveAddress,
 };
