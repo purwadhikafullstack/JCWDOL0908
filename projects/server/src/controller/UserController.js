@@ -3,7 +3,7 @@ const { UserValidation } = require("../validation");
 const { UserService } = require("../service");
 const User = db.User;
 const Address = db.Address;
-const { UploadPhoto } = require("../helper/multer");
+const { UploadPhoto } = require("../helper/Multer");
 
 const GetUser = async (req, res) => {
   const ress = await User.findOne({

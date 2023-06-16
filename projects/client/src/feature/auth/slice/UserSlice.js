@@ -49,10 +49,10 @@ export const KeepUser = (token) => {
           setUser({
             id: id_user,
             email,
-            username,
+            username: username ? username : "",
             role,
-            phone_number,
-            profile_photo,
+            phone_number: phone_number ? phone_number : "",
+            profile_photo : profile_photo ? profile_photo : "",
           }),
         );
       }
