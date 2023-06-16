@@ -203,6 +203,40 @@ const MakeAddressPrimary = async (data) => {
   }
 };
 
+/**
+ * GetAddressByUserID - Get all address by userID
+ * @param id_user
+ * @returns {Promise<{error: *, data: Address[]}>}
+ * @constructor
+ */
+const GetAddressByUserID = async (id_user) => {
+  try {
+    const addresses = await Address.findAll({
+      where: {
+        id_user,
+        is_deleted: 0,
+      },
+      order: [["is_primary", "DESC"]],
+      include: [
+        {
+          model: City,
+          as: "city",
+          attributes: ["city", "type_city"],
+        },
+      ],
+    });
+    return {
+      error: null,
+      data: addresses,
+    };
+  } catch (error) {
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 
 module.exports = {
   GetProvinces,
@@ -210,4 +244,5 @@ module.exports = {
   StoreUserAddress,
   MakeAddressPrimary,
   GetAddressByID,
+  GetAddressByUserID,
 };
