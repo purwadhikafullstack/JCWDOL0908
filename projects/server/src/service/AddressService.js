@@ -230,6 +230,64 @@ const GetAddressByUserID = async (id_user) => {
   }
 };
 
+/**
+ * UpdateUserAddress - Update user address
+ * @param data
+ * @returns {Promise<{error: *, data: *}>}
+ */
+const UpdateUserAddress = async (data) => {
+  const t = await db.sequelize.transaction();
+  try {
+    const { id_address, address, id_city, notes, longitude, latitude, id_user } = data;
+
+    // Check city
+    const city = await GetCityByID(id_city);
+    if (!city) {
+      return {
+        error: new Error("City not found"),
+        data: null,
+      };
+    }
+
+    const payload = {};
+
+    // check if latitude and longitude is not empty
+    if (latitude !== undefined && longitude !== undefined) {
+      payload.latitude = latitude;
+      payload.longitude = longitude;
+    } else {
+      // get latitude and longitude from city using mapbox
+      const { error, response } = await GetPositionMapbox(address, city?.city, city?.type_city);
+      if (error) {
+        return {
+          error,
+          data: null,
+        };
+      }
+      payload.latitude = response.latitude;
+      payload.longitude = response.longitude;
+    }
+
+    // Update the address
+    await Address.update(
+      { address, id_city, notes, ...payload },
+      { where: { id_address, id_user } },
+      { transaction: t },
+    );
+    await t.commit();
+    const existingAddress = await GetAddressByID(id_address);
+    return {
+      error: null,
+      data: existingAddress,
+    };
+  } catch (error) {
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 
 module.exports = {
   GetProvinces,
@@ -238,4 +296,5 @@ module.exports = {
   MakeAddressPrimary,
   GetAddressByID,
   GetAddressByUserID,
+  UpdateUserAddress,
 };

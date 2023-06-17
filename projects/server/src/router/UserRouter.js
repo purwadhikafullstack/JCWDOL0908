@@ -10,5 +10,6 @@ router.put("/update-avatar", CheckAuth, UserController.UpdateProfilePicture);
 router.post("/address", CheckAuth, AddressController.SaveAddress);
 router.put("/address/:address_id/default", CheckAuth, AddressController.UpdateDefaultAddress);
 router.get("/address", CheckAuth, AddressController.GetUsersAddress);
+router.patch("/address/:address_id", CheckAuth, AddressController.UpdateAddress);
 
 module.exports = router;
