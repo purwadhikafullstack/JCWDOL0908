@@ -23,4 +23,5 @@ const CreateDataAdmin = Joi.object({
 module.exports = {
   EditDataAdmin,
   CreateDataAdmin,
+  phoneRegExp,
 };

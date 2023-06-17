@@ -14,9 +14,11 @@ import About from "./pages/client/About";
 import Contact from "./pages/client/Contact";
 import LoginClient from "./pages/client/auth/Login";
 import VerificationAuth from "./pages/client/auth/Verification";
-import Profile from "./pages/client/Profile";
+import Profile from "./pages/client/profile/Profile";
 import Storage from "./helper/Storage";
 import { KeepUser } from "./feature/auth/slice/UserSlice";
+import ResetPassword from "./pages/client/profile/ResetPassword";
+import Logout from "./pages/client/auth/Logout";
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -36,6 +38,11 @@ function App() {
     if (userToken) dispatch(KeepUser(userToken));
   }, []);
 
+
+  /**
+   * TODO: Implement forbidden page
+   */
+
   return (
     <div>
       <Routes>
@@ -48,7 +55,9 @@ function App() {
         <Route path="/verify" element={<VerificationAuth />} />
 
         {/*User Route*/}
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/account" element={<Profile />} />
+        <Route path="/account/reset-password" element={<ResetPassword />} />
+        <Route path="/logout" element={<Logout />} />
 
 
         {!loggedInAdmin.isLoggedIn && <Route path="/admin-login" element={<AdminLogin />} />}

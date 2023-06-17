@@ -6,10 +6,8 @@ import { ToastError, ToastSuccess } from "../../../helper/Toastify";
 import { useNavigate } from "react-router-dom";
 import FieldPassword from "../../../components/FieldPassword";
 import Storage from "../../../helper/Storage";
-
+import { KeepUser } from "../slice/UserSlice";
 const { loginWithEmailAndPassword } = require("../../auth");
-
-const { setUser } = require("../slice/UserSlice");
 
 const LoginForm = ({ handlePage }) => {
   const dispatch = useDispatch();
@@ -19,14 +17,9 @@ const LoginForm = ({ handlePage }) => {
     await dispatch(setLoading(true));
     try {
       const response = await loginWithEmailAndPassword(values.email, values.password);
-      const user = {
-        id: response.data.data.id_user,
-        username: response.data.data.username,
-        email: response.data.data.email,
-        role: response.data.data.id_role,
-      };
-      await dispatch(setUser(user));
-      Storage.setToken(response.data.data.token);
+      const token = response.data.data.token;
+      Storage.setToken(token);
+      await dispatch(KeepUser(token));
       await dispatch(setLoading(false));
       ToastSuccess("Login Success");
       navigate(-1);
