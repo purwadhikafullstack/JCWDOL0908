@@ -52,6 +52,7 @@ function Profile() {
 
           <PhotoForm user={user} />
 
+          {/*TODO : bisa dipisah*/}
           <Formik
             initialValues={{ username: user?.username || "", email: user?.email, phone: user?.phone_number || "" }}
             onSubmit={handleSubmit}

@@ -19,11 +19,13 @@ import Storage from "./helper/Storage";
 import { KeepUser } from "./feature/auth/slice/UserSlice";
 import ResetPassword from "./pages/client/profile/ResetPassword";
 import Logout from "./pages/client/auth/Logout";
+import Address from "./pages/client/profile/Address";
 
 function App() {
   // const [message, setMessage] = useState("");
   const dispatch = useDispatch();
   const loggedInAdmin = useSelector((state) => state.adminLogin.loggedInAdminData);
+  const isChecked = useSelector(state => state.user.isChecked);
 
   // useEffect(() => {
   //   (async () => {
@@ -35,13 +37,16 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem("admin_token")) dispatch(keepAdminLoggedIn());
     const userToken = Storage.getToken();
-    if (userToken) dispatch(KeepUser(userToken));
+    dispatch(KeepUser(userToken));
   }, []);
 
 
   /**
-   * TODO: Implement forbidden page
+   * TODO: Implement forbidden page apply protected route
    */
+  if (!isChecked) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -56,6 +61,7 @@ function App() {
 
         {/*User Route*/}
         <Route path="/account" element={<Profile />} />
+        <Route path="/account/address" element={<Address />} />
         <Route path="/account/reset-password" element={<ResetPassword />} />
         <Route path="/logout" element={<Logout />} />
 

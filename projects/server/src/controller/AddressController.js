@@ -27,8 +27,8 @@ const GetProvinces = async (req, res, next) => {
 
 const GetCity = async (req, res, next) => {
   try {
-    const { provinceID } = req.params;
-    const { error, data } = await AddressService.GetCity(provinceID);
+    const { province_id } = req.params;
+    const { error, data } = await AddressService.GetCity(province_id);
     if (error) {
       return res.status(404).json({
         message: error.message,
