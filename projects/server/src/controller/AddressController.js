@@ -120,7 +120,12 @@ const UpdateDefaultAddress = async (req, res, next) => {
 const GetUsersAddress = async (req, res, next) => {
   try {
     const { user } = req;
-    const { error, data } = await AddressService.GetAddressByUserID(user.id);
+    const { page = 1, limit = 2 } = req.query;
+    const { error, data } = await AddressService.GetAddressByUserID({
+      id_user: user.id,
+      page,
+      limit,
+    });
     if (error) {
       return res.status(400).json({
         message: error.message,

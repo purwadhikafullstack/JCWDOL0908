@@ -199,12 +199,14 @@ const MakeAddressPrimary = async (data) => {
 
 /**
  * GetAddressByUserID - Get all address by userID
- * @param id_user
+ * @param data
  * @returns {Promise<{error: *, data: Address[]}>}
  */
-const GetAddressByUserID = async (id_user) => {
+const GetAddressByUserID = async (data) => {
   try {
-    const addresses = await Address.findAll({
+    const { id_user, page, limit } = data;
+
+    const { count, rows: addresses } = await Address.findAndCountAll({
       where: {
         id_user,
         is_deleted: 0,
@@ -215,12 +217,26 @@ const GetAddressByUserID = async (id_user) => {
           model: City,
           as: "city",
           attributes: ["city", "type_city"],
+          include: [{ model: Province, as: "province", attributes: ["province"] }],
         },
       ],
+      limit,
+      offset: (page - 1) * limit,
     });
+
+    const metadata = {
+      total: count,
+      page,
+      page_size: limit,
+      total_page: Math.ceil(count / limit),
+    };
+
     return {
       error: null,
-      data: addresses,
+      data: {
+        metadata,
+        addresses,
+      },
     };
   } catch (error) {
     return {
