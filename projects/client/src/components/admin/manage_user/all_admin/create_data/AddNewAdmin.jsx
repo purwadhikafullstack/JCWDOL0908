@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import CustomForm from "../CustomForm";
-import CustomSelect from "../CustomSelect";
-import { createNewAdmin, getAllAdmin, getWarehouses } from "../../../../feature/admin/AdminSlice";
+import CustomForm from "../../CustomForm";
+import CustomSelect from "../../CustomSelect";
 import { useDispatch } from "react-redux";
-import RenderCity from "./RenderCity";
-import RenderWarehouse from "./RenderWarehouse";
+import RenderCity from "../edit_data/RenderCity";
+import RenderWarehouse from "../edit_data/RenderWarehouse";
+import { createNewAdmin, getAllAdmin, getWarehousesInCities } from "../../../../../feature/admin";
 
 function AddNewAdmin(props) {
   const { setNewAdminClicked, warehouseCities, page } = props;
@@ -15,8 +15,8 @@ function AddNewAdmin(props) {
   const [warehouses, setWarehouses] = useState([]);
 
   // get warehouse list after select city
-  const getDataWarehouse = async (input) => {
-    const data = await getWarehouses(input);
+  const getDataWarehouse = async (cityInput) => {
+    const data = await getWarehousesInCities(cityInput);
     setWarehouses([...data]);
   };
 
@@ -50,18 +50,9 @@ function AddNewAdmin(props) {
   };
 
   return (
-    <div
-      className="fixed maxvh maxvw bg-white z-30 top-0 left-0 modal-container
-  flex items-center justify-center"
-    >
-      <div
-        className="px-4 w-5/6 bg-slate-50 relative md:translate-x-24 md:w-1/2
-      lg:w-1/3 py-4"
-      >
-        <button
-          onClick={() => setNewAdminClicked(false)}
-          className="text-red-700 absolute top-0 right-1 font-bold text-xl"
-        >
+    <div className="modal-background">
+      <div className="modal-container">
+        <button onClick={() => setNewAdminClicked(false)} className="close-btn-modal">
           <i className="uil uil-times-circle"></i>
         </button>
         <div>
@@ -84,7 +75,7 @@ function AddNewAdmin(props) {
               setCity(formikProps.values.id_city);
               // =========================================
               return (
-                <Form className="grid grid-rows-8 py-4 text-slate-800 gap-3 overflow-auto">
+                <Form className="form-container">
                   <CustomForm label="username" name="username" type="text" id="username" />
                   <CustomForm label="email" name="email" type="email" id="email" />
                   <CustomForm label="password" name="password" type="password" id="password" />

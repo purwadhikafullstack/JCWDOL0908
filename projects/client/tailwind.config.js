@@ -10,6 +10,7 @@ module.exports = {
       gridTemplateRows: {
         // Simple 8 row grid
         8: "repeat(8, minmax(0, 1fr))",
+        10: "repeat(10, minmax(0, 1fr))",
       },
       colors: {
         primary: "#07484A",

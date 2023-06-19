@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import CustomForm from "../CustomForm";
-import CustomSelect from "../CustomSelect";
-import { getAllAdmin, getWarehouses, updateAdminWarehouse } from "../../../../feature/admin/AdminSlice";
+import CustomForm from "../../CustomForm";
+import CustomSelect from "../../CustomSelect";
 import ConfirmationModal from "./ConfirmationModal";
 import RenderCity from "./RenderCity";
 import RenderWarehouse from "./RenderWarehouse";
+import { getAllAdmin, getWarehousesInCities, updateAdminWarehouse } from "../../../../../feature/admin";
 
-function SingleAdminModal(props) {
+function EditAdminModal(props) {
   const { warehouseCities, setModal, page } = props;
   const [selectCity, setCity] = useState();
   const [secondButtonValue, setSecondButtonValue] = useState(false);
@@ -22,7 +22,7 @@ function SingleAdminModal(props) {
   const passwordRegex = /^(?=.*\d).{6,}$/;
 
   const getDataWarehouse = async (input) => {
-    const data = await getWarehouses(input);
+    const data = await getWarehousesInCities(input);
     setWarehouses([...data]);
   };
 
@@ -35,7 +35,7 @@ function SingleAdminModal(props) {
   }, []);
 
   const editSchema = Yup.object().shape({
-    username: Yup.string().required("must not blank"),
+    username: Yup.string().required("must not blank").min(5, "username must be at least 5 chars length"),
     email: Yup.string().required("must not blank").email("invalid email format"),
     password: Yup.string()
       .min(6, "password is too short - at least 6 chars minimum")
@@ -59,14 +59,8 @@ function SingleAdminModal(props) {
   };
 
   return (
-    <div
-      className="fixed maxvh maxvw bg-white z-30 top-0 left-0 modal-container
-    flex items-center justify-center"
-    >
-      <div
-        className="px-4 w-5/6 bg-slate-50 relative md:translate-x-24 md:w-1/2
-      lg:w-1/3 py-4"
-      >
+    <div className="modal-background">
+      <div className="modal-container">
         <button onClick={() => setModal(false)} className="text-red-700 absolute top-0 right-1 font-bold text-xl">
           <i className="uil uil-times-circle"></i>
         </button>
@@ -85,7 +79,7 @@ function SingleAdminModal(props) {
           {(formikProps) => {
             setCity(formikProps.values.id_city);
             return (
-              <Form className="grid grid-rows-8 py-4 text-slate-800 gap-3 overflow-auto">
+              <Form className="form-container">
                 <h1 className="font-semibold">Edit Data</h1>
                 <CustomForm label="username" name="username" type="text" id="username" />
                 <CustomForm label="email" name="email" type="email" id="email" />
@@ -118,4 +112,4 @@ function SingleAdminModal(props) {
   );
 }
 
-export default SingleAdminModal;
+export default EditAdminModal;

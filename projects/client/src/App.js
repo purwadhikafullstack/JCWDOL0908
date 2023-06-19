@@ -9,7 +9,8 @@ import ProductOrder from "./pages/ProductOrder";
 import ProductReport from "./pages/ProductReport";
 import AdminLogin from "./pages/AdminLogin";
 import { useSelector, useDispatch } from "react-redux";
-import { keepAdminLoggedIn } from "./feature/admin/AdminLogInSlice";
+import WarehouseMgt from "./pages/WarehouseMgt";
+import { keepAdminLoggedIn } from "./feature/admin_auth";
 import About from "./pages/client/About";
 import Contact from "./pages/client/Contact";
 import LoginClient from "./pages/client/auth/Login";
@@ -19,6 +20,7 @@ import Storage from "./helper/Storage";
 import { KeepUser } from "./feature/auth/slice/UserSlice";
 import ResetPassword from "./pages/client/profile/ResetPassword";
 import Logout from "./pages/client/auth/Logout";
+
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -67,6 +69,7 @@ function App() {
               <>
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/dashboard/user-management" element={<UserManagement />} />
+                <Route path="/admin/dashboard/warehouse-management" element={<WarehouseMgt />} />
                 <Route path="/admin/dashboard/product-management" element={<ProductManagement />} />
                 <Route path="/admin/dashboard/order" element={<ProductOrder />} />
                 <Route path="/admin/dashboard/report" element={<ProductReport />} />

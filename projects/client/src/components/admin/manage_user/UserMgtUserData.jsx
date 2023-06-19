@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getAllUserData, getSingleUser } from "../../../feature/admin/AdminSlice";
 import SingleUserModal from "./all_user/SingleUserModal";
 import RenderUsers from "./all_user/RenderUsers";
 import Pagination from "./all_user/Pagination";
+import { getAllUserData, getSingleUser } from "../../../feature/admin";
 
 function UserMgtUserData() {
   const dispatch = useDispatch();

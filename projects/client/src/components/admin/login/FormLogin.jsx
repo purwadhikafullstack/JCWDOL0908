@@ -2,9 +2,9 @@ import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import CustomForm from "./CustomFormLogin";
-import { loggingInAdmin } from "../../../feature/admin/AdminLogInSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { loggingInAdmin } from "../../../feature/admin_auth";
 
 function FormLogin() {
   const dispatch = useDispatch();

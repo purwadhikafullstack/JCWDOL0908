@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { getSingleUser } from "../../../../feature/admin/AdminSlice";
+import { getSingleUser } from "../../../../feature/admin";
 
 function RenderAdminsData(props) {
   const { allAdmin, editBtnHndler, setDeleteClicked } = props;

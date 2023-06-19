@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import SingleAdminModal from "./all_admin/SingleAdminModal";
-import { getAllAdmin, getSingleWarehouseAdmin, getWarehouseCities } from "../../../feature/admin/AdminSlice";
 import RenderAdminsData from "./all_admin/RenderAdminsData";
 import Pagination from "./all_admin/Pagination";
-import AddNewAdmin from "./all_admin/AddNewAdmin";
-import DeleteAdminModal from "./all_admin/DeleteAdminModal";
+import AddNewAdmin from "./all_admin/create_data/AddNewAdmin";
+import DeleteAdminModal from "./all_admin/delete_data/DeleteAdminModal";
+import EditAdminModal from "./all_admin/edit_data/EditAdminModal";
+import { getAllAdmin, getSingleWarehouseAdmin, getWarehouseCities } from "../../../feature/admin";
 
 function ManageAdmin(props) {
   let { page } = props;
@@ -51,9 +51,7 @@ function ManageAdmin(props) {
 
   return (
     <>
-      {editClicked ? (
-        <SingleAdminModal setModal={setEditClicked} page={page} warehouseCities={warehouseCities} />
-      ) : null}
+      {editClicked ? <EditAdminModal setModal={setEditClicked} page={page} warehouseCities={warehouseCities} /> : null}
       {addNewAdminClicked ? (
         <AddNewAdmin setNewAdminClicked={setNewAdminClicked} warehouseCities={warehouseCities} page={page} />
       ) : null}
@@ -86,10 +84,7 @@ function ManageAdmin(props) {
             <i className="uil uil-plus"></i> New Admin
           </button>
         </div>
-        <div
-          className="items-center row-span-1 py-2 grid grid-cols-7 text-slate-800
-          text-lg lg:grid-cols-11 lg:font-bold"
-        >
+        <div className="pagination-container">
           <Pagination minusPageNum={minusPageNum} page={page} addPageNum={addPageNum} allAdmin={allAdmin} />
         </div>
       </div>

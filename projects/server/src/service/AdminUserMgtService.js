@@ -1,10 +1,8 @@
 const db = require("../model");
-const { User, Address, City, AdminRole, Warehouse, sequelize } = db;
+const { User, City, AdminRole, Warehouse, sequelize } = db;
 const { Op } = require("sequelize");
-const { QueryTypes } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { join } = require("path");
-const { type } = require("os");
 require("dotenv").config({ path: join(__dirname, "../.env") });
 const env = process.env;
 
@@ -127,6 +125,19 @@ const createNewAdmin = async (username, email, phone_number, password, id_wareho
   return createNewAdmin;
 };
 
+const getAllAdminUserLogic = async (offset, limit, page) => {
+  try {
+    const allAdminCount = await getAllAdminCount();
+    const allAdminUser = await getAllAdmin(offset, limit, page);
+    const adminCount = allAdminCount[0].dataValues.user_count;
+    const totalPage = Math.ceil(adminCount / limit);
+    const result = { totalPage, dataAll: allAdminUser };
+    return { error: null, result };
+  } catch (error) {
+    return { error, result: null };
+  }
+};
+
 module.exports = {
   getAllUserCount,
   getAllUserWithoutAddress,
@@ -141,4 +152,5 @@ module.exports = {
   createAdminRoleWarehouse,
   deleteUser,
   createNewAdmin,
+  getAllAdminUserLogic,
 };

@@ -4,6 +4,7 @@ function RenderUsers(props) {
   const { allUserData, dataClicked } = props;
 
   const cutString = (string) => {
+    if (!string) return string;
     return string.length > 12 ? string.slice(0, 10) + "..." : string;
   };
 

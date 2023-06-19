@@ -7,16 +7,10 @@ function SingleUserModal(props) {
   const singleUser = useSelector((state) => state.admin.singleUser);
 
   return (
-    <div
-      className="fixed maxvh maxvw bg-white z-30 top-0 left-0 modal-container
-    flex items-center justify-center"
-    >
-      <div
-        className="py-14 px-6 w-5/6 bg-slate-50 relative md:translate-x-24 md:w-1/2
-      lg:w-1/3 max-h-96 lg:text-xl"
-      >
+    <div className="modal-background">
+      <div className="modal-container">
         <button
-          className="text-red-700 absolute top-0 right-1 font-bold text-xl"
+          className="close-btn-modal"
           onClick={() => {
             props.someFunction(false);
           }}
