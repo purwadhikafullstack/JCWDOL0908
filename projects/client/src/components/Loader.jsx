@@ -5,7 +5,7 @@ const Loader = () => {
   return (
     <>
       {loader.isLoading ? (
-        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-75 z-50 flex justify-center items-center flex-col">
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-75 z-[999999] flex justify-center items-center flex-col">
           <div className="lds-ring">
             <div></div>
             <div></div>
