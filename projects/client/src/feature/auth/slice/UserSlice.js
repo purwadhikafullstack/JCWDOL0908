@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Storage from "../../../helper/Storage";
 import { keepLogin } from "../../auth";
-import storage from "../../../helper/Storage";
 
 export const userSlice = createSlice({
   name: "user",
@@ -70,7 +69,6 @@ export const KeepUser = (token) => {
       Storage.removeToken();
       dispatch(resetUser());
     } finally {
-
       dispatch(setIsChecked(true));
     }
   };
