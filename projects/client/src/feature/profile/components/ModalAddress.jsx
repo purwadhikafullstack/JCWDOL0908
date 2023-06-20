@@ -106,7 +106,7 @@ function ModalAddress({ isOpen, onClose, address }) {
             }}
             validationSchema={AddressValidation}
             onSubmit={handleSubmit}>
-            {({ handleChange }) => {
+            {({ handleChange,setFieldValue }) => {
               return (
                 <Form>
                   <div className="flex flex-col gap-3">
@@ -148,9 +148,11 @@ function ModalAddress({ isOpen, onClose, address }) {
                       onChange={async (e) => {
                         handleChange(e);
                         await fetchCities(e.target.value);
+                        // reset city value
+                        await setFieldValue("city", "");
                       }}
                     >
-                      <option value="" disabled>Select Province</option>
+                      <option value="" >Select Province</option>
                       {provinces.map((province) => (
                         <option key={province.id_province} value={province.id_province}>{province.province}</option>
                       ))}
@@ -168,7 +170,7 @@ function ModalAddress({ isOpen, onClose, address }) {
                       placeholder="City"
                       className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
-                      <option value="" disabled>Select City</option>
+                      <option value="">Select City</option>
                       {cities.map((city) => (
                         <option key={city.id_city} value={city.id_city}>{`${city.type_city} - ${city.city}`}</option>
                       ))}
