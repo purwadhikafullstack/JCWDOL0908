@@ -88,7 +88,6 @@ const StoreUserAddress = async (data) => {
   const t = await db.sequelize.transaction();
   try {
     const { id_user, address, id_city, notes, longitude, latitude } = data;
-
     // check city
     const city = await GetCityByID(id_city);
     if (!city) {
@@ -211,13 +210,15 @@ const GetAddressByUserID = async (data) => {
         id_user,
         is_deleted: 0,
       },
-      order: [["is_primary", "DESC"]],
+      order: [
+        ["is_primary", "DESC"],
+        ["createdAt", "DESC"],
+      ],
       include: [
         {
           model: City,
           as: "city",
-          attributes: ["city", "type_city"],
-          include: [{ model: Province, as: "province", attributes: ["province"] }],
+          include: [{ model: Province, as: "province" }],
         },
       ],
       limit,
@@ -225,9 +226,9 @@ const GetAddressByUserID = async (data) => {
     });
 
     const metadata = {
-      total: count,
-      page,
-      page_size: limit,
+      total: parseInt(count),
+      page: parseInt(page),
+      page_size: parseInt(limit),
       total_page: Math.ceil(count / limit),
     };
 
@@ -304,6 +305,47 @@ const UpdateUserAddress = async (data) => {
   }
 };
 
+/**
+ * RemoveAddress - Remove address
+ * @param data
+ * @returns {Promise<{error: *, data: *}>}
+ */
+const RemoveAddress = async (data) => {
+  try {
+    const { id_address, id_user } = data;
+
+    // Check if address is exist
+    const address = await GetAddressByID(id_address);
+
+    if (!address) {
+      return {
+        error: new Error("Address not found"),
+        data: null,
+      };
+    }
+
+    // Check if address is primary
+    if (address?.is_primary) {
+      return {
+        error: new Error("Cannot delete primary address"),
+        data: null,
+      };
+    }
+
+    // Remove the address
+    await Address.update({ is_deleted: 1 }, { where: { id_address, id_user } });
+    return {
+      error: null,
+      data: "Address deleted",
+    };
+  } catch (error) {
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 
 module.exports = {
   GetProvinces,
@@ -313,4 +355,5 @@ module.exports = {
   GetAddressByID,
   GetAddressByUserID,
   UpdateUserAddress,
+  RemoveAddress,
 };

@@ -120,7 +120,7 @@ const UpdateDefaultAddress = async (req, res, next) => {
 const GetUsersAddress = async (req, res, next) => {
   try {
     const { user } = req;
-    const { page = 1, limit = 2 } = req.query;
+    const { page = 1, limit = 5 } = req.query;
     const { error, data } = await AddressService.GetAddressByUserID({
       id_user: user.id,
       page,
@@ -183,6 +183,40 @@ const UpdateAddress = async (req, res, next) => {
   }
 };
 
+/**
+ * RemoveAddress - Remove user address
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<*>}
+ */
+const RemoveAddress = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { address_id } = req.params;
+
+    const { error, data } = await AddressService.RemoveAddress({
+      id_user: user.id,
+      id_address: address_id,
+    });
+
+    if (error) {
+      return res.status(400).json({
+        message: error.message,
+        data: null,
+      });
+    }
+
+    return res.status(203).json({
+      message: "Address removed successfully",
+      data,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   GetProvinces,
   GetCity,
@@ -190,4 +224,5 @@ module.exports = {
   UpdateDefaultAddress,
   GetUsersAddress,
   UpdateAddress,
+  RemoveAddress,
 };
