@@ -22,7 +22,9 @@ const LoginForm = ({ handlePage }) => {
       await dispatch(KeepUser(token));
       await dispatch(setLoading(false));
       ToastSuccess("Login Success");
-      navigate(-1);
+      setTimeout(() => {
+        navigate(-1);
+      }, 600);
     } catch (error) {
       await dispatch(setLoading(false));
       ToastError(error.response.data.message || "Login Failed");
