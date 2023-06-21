@@ -4,18 +4,16 @@ const path = require("path");
 const fs = require("fs");
 
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    const sub = req.directory || 'avatars'; // Retrieve the subfolder dynamically from the request
-    const destinationFolder = path.join('src/storage', sub);
+  destination: function (req, file, cb) {
+    const sub = req.directory || "avatars"; // Retrieve the subfolder dynamically from the request
+    const destinationFolder = path.join("src/storage", sub);
     cb(null, destinationFolder);
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     const uniqueFilename = `${uuidv4()}-${file.originalname}`;
     cb(null, uniqueFilename);
   },
 });
-
-
 
 /**
  * upload - multer instance initialization
@@ -26,11 +24,11 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024, // 10 MB (max file size)
   },
   fileFilter: function (req, file, cb) {
-    const ext = path.extname(file.originalname)
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.avif') {
-      return cb(new Error('Only images are allowed'))
+    const ext = path.extname(file.originalname);
+    if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg" && ext !== ".avif") {
+      return cb(new Error("Only images are allowed"));
     }
-    cb(null, true)
+    cb(null, true);
   },
 });
 
@@ -42,7 +40,7 @@ const upload = multer({
 const UploadPhoto = (directory) => {
   return (req, res, next) => {
     req.directory = directory;
-    upload.single("photo")(req, res, function(err) {
+    upload.single("photo")(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         // A Multer error occurred during the file upload
         return res.status(500).json({ message: err.message });
@@ -74,4 +72,33 @@ const UnlinkPhoto = (name) => {
   }
 };
 
-module.exports = { UploadPhoto, UnlinkPhoto };
+/**
+ * UploadPhotoEditData - a middleware helper to upload photo to storage using multer
+ * @param directory
+ * @returns {(function(*, *, *): void)|*}
+ * @constructor
+ */
+const UploadPhotoEditData = (directory) => {
+  return (req, res, next) => {
+    req.directory = directory;
+    upload.single("photo")(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred during the file upload
+        return res.status(500).json({ message: err.message });
+      } else if (err) {
+        // An unknown error occurred during the file upload
+        return res.status(500).json({ message: err.message || "Unknown error occurred during file upload" });
+      }
+
+      if (!req.file) {
+        req.uniqueUrl = null;
+      } else {
+        req.uniqueUrl = `/storage/${directory}/${req.file.filename}`;
+      }
+
+      next();
+    });
+  };
+};
+
+module.exports = { UploadPhoto, UnlinkPhoto, UploadPhotoEditData };

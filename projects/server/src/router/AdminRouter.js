@@ -5,7 +5,6 @@ const { tokenDecoder } = require("../middleware/TokenDecoder");
 const { isSuperAdmin } = require("../middleware/IsSuperAdmin");
 
 router.get("/", tokenDecoder, isSuperAdmin, AdminController.getAllAdminUser);
-router.get("/single/:name", AdminController.getMyUser);
 router.get("/users", tokenDecoder, isSuperAdmin, AdminController.getAllUser);
 router.get("/user/:id", tokenDecoder, isSuperAdmin, AdminController.getSingleUser);
 router.get("/admin-warehouse/:id", tokenDecoder, isSuperAdmin, AdminController.getSingleWarehouseAdmin);

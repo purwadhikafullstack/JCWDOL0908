@@ -1,8 +1,6 @@
 const db = require("../model");
-const { User, Address, City, AdminRole, Warehouse, sequelize } = db;
+const { User, AdminRole, Warehouse } = db;
 const { Op } = require("sequelize");
-const { QueryTypes } = require("sequelize");
-const { AdminUserMgtService } = require("../service");
 const bcrypt = require("bcrypt");
 const { createToken } = require("../helper/CreateToken");
 
@@ -32,62 +30,93 @@ const updateToken = async (id_user, token, transaction) => {
 const loginAdmin = async (username, password, transaction) => {
   let result;
   let tokenPayload;
-  const user = await getAdminByUsername(username);
-  if (!user) return { status: 401, message: "invalid username and password", isSuccess: false };
-  const isPasswordMatch = await bcrypt.compare(password, user.dataValues.password);
-  if (!isPasswordMatch) return { status: 401, message: "invalid username and password", isSuccess: false };
-  const { id_user, is_admin, id_role, admin_role } = user.dataValues;
-  const { role_admin, id_warehouse } = admin_role.dataValues;
-  if (!id_warehouse) {
-    result = { id_user, username, is_admin, id_role, role_admin };
-    tokenPayload = result;
-  } else {
-    const getWarehouse = await getWarehouseByIdAdmin(id_warehouse);
-    const { warehouse_name, id_city } = getWarehouse.dataValues.warehouse.dataValues;
-    result = {
-      id_user,
-      username,
-      is_admin,
-      id_role,
-      role_admin,
-      id_warehouse,
-      warehouse_name,
-      id_city,
-    };
-    tokenPayload = { id_user, username, is_admin, id_role, role_admin };
+
+  try {
+    const user = await getAdminByUsername(username);
+
+    // check whether the username-input match the username in DB
+    if (!user) throw { statusCode: 401, errMsg: "invalid username and password" };
+
+    // check whether the password-input match the password in DB
+    const isPasswordMatch = await bcrypt.compare(password, user.dataValues.password);
+    if (!isPasswordMatch) throw { statusCode: 401, errMsg: "invalid username and password" };
+
+    const { id_user, is_admin, id_role, admin_role } = user.dataValues;
+    const { role_admin, id_warehouse } = admin_role.dataValues;
+
+    // check whether it's super-admin or warehouse-admin
+    if (!id_warehouse) {
+      result = { id_user, username, is_admin, id_role, role_admin };
+      tokenPayload = result;
+    } else {
+      const getWarehouse = await getWarehouseByIdAdmin(id_role);
+      const { warehouse_name, id_city, is_deleted } = getWarehouse.dataValues.warehouse.dataValues;
+
+      // check whether warehouse already deleted or not
+      if (is_deleted) throw { statusCode: 404, errMsg: "warehouse where you've assigned at already deleted" };
+
+      result = {
+        id_user,
+        username,
+        is_admin,
+        id_role,
+        role_admin,
+        id_warehouse,
+        warehouse_name,
+        id_city,
+      };
+      tokenPayload = { id_user, is_admin, id_role, role_admin };
+    }
+
+    // create Token
+    const token = createToken(tokenPayload);
+    const tokenUpdate = await updateToken(id_user, token, transaction);
+    return { error: null, result: { result, token } };
+  } catch (error) {
+    return { error, result: null };
   }
-  const token = createToken(tokenPayload);
-  const tokenUpdate = await updateToken(id_user, token, transaction);
-  return { status: 200, message: "success fetched data", isSuccess: true, result, token };
 };
 
-const keepLogin = async (id_user, transaction) => {
+const keepLogin = async (id_user) => {
   let result;
   let tokenPayload;
-  const user = await getAdminById(id_user);
-  if (!user) return { status: 401, message: "invalid ID User", isSuccess: false };
-  const { username, is_admin, id_role, admin_role } = user.dataValues;
-  const { role_admin, id_warehouse } = admin_role.dataValues;
-  if (!id_warehouse) {
-    result = { id_user, username, is_admin, id_role, role_admin };
-    tokenPayload = result;
-  } else {
-    const getWarehouse = await getWarehouseByIdAdmin(id_warehouse);
-    const { warehouse_name, address, id_city } = getWarehouse.dataValues.warehouse.dataValues;
-    result = {
-      id_user,
-      username,
-      is_admin,
-      id_role,
-      role_admin,
-      id_warehouse,
-      warehouse_name,
-      id_city,
-    };
-    tokenPayload = { id_user, username, is_admin, id_role, role_admin };
+  try {
+    const user = await getAdminById(id_user);
+
+    // check whether the id_user match in DB
+    if (!user) throw { statusCode: 401, errMsg: "invalid admin/unauthorized" };
+    const { username, is_admin, id_role, admin_role } = user.dataValues;
+    const { role_admin, id_warehouse } = admin_role.dataValues;
+
+    // check whether it's super-admin or warehouse-admin
+    if (!id_warehouse) {
+      result = { id_user, username, is_admin, id_role, role_admin };
+      tokenPayload = result;
+    } else {
+      const getWarehouse = await getWarehouseByIdAdmin(id_role);
+      const { warehouse_name, is_deleted, id_city } = getWarehouse.dataValues.warehouse.dataValues;
+
+      // check whether warehouse already deleted or not
+      if (is_deleted) throw { statusCode: 404, errMsg: "warehouse where you've assigned at already deleted" };
+      result = {
+        id_user,
+        username,
+        is_admin,
+        id_role,
+        role_admin,
+        id_warehouse,
+        warehouse_name,
+        id_city,
+      };
+      tokenPayload = { id_user, is_admin, id_role, role_admin };
+    }
+
+    // create Token
+    const token = createToken(tokenPayload);
+    return { error: null, result: { result, token } };
+  } catch (error) {
+    return { error, result: null };
   }
-  const token = createToken(tokenPayload);
-  return { status: 200, message: "success fetched data", isSuccess: true, result, token };
 };
 
 module.exports = { loginAdmin, keepLogin };

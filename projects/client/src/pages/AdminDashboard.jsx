@@ -1,6 +1,9 @@
+import { useSelector } from "react-redux";
 import LayoutAdmin from "../components/LayoutAdmin";
 
 function AdminDashboard() {
+  const admin = useSelector((state) => state.adminLogin.loggedInAdminData);
+
   return (
     <LayoutAdmin>
       <div className="maxvh w-full flex flex-row justify-center items-center">
@@ -11,7 +14,7 @@ function AdminDashboard() {
           >
             ADMIN DASHBOARD
           </h1>
-          <p className="text-slate-400 md:text-2xl text-xl md:my-4 my-1">Welcome, User</p>
+          <p className="text-slate-400 md:text-2xl text-xl md:my-4 my-1">Welcome, {admin.username}</p>
         </div>
       </div>
     </LayoutAdmin>

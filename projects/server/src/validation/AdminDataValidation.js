@@ -20,8 +20,20 @@ const CreateDataAdmin = Joi.object({
   id_warehouse: Joi.number().required(),
 });
 
+const CreateWarehouse = Joi.object({
+  warehouse_name: Joi.string().required(),
+  address: Joi.string().required(),
+  id_city: Joi.number().required(),
+});
+
+const CreateNewCategory = Joi.object({
+  category_name: Joi.string().required(),
+});
+
 module.exports = {
   EditDataAdmin,
   CreateDataAdmin,
+  CreateWarehouse,
   phoneRegExp,
+  CreateNewCategory,
 };

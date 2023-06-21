@@ -2,7 +2,15 @@ const { join } = require("path");
 require("dotenv").config({ path: join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
-const { UserRouter, AdminRouter, AdminLoginRouter, AuthRouter, AddressRouter } = require("./router");
+const {
+  UserRouter,
+  AdminRouter,
+  AdminLoginRouter,
+  AdminWarehouseRouter,
+  AuthRouter,
+  CategoryRouter,
+  AddressRouter,
+} = require("./router");
 const db = require("./model");
 const bearerToken = require("express-bearer-token");
 const PORT = process.env.PORT || 8000;
@@ -39,8 +47,10 @@ app.get("/api/greetings", (req, res, next) => {
 app.use("/api/users", UserRouter);
 app.use("/api/admin", AdminRouter);
 app.use("/api/admin-login", AdminLoginRouter);
+app.use("/api/admin-warehouse", AdminWarehouseRouter);
 app.use("/api/auth", AuthRouter);
 app.use("/api/address", AddressRouter);
+app.use("/api/category", CategoryRouter);
 
 // ===========================
 
