@@ -1,5 +1,5 @@
 import React from "react";
-import FormLogin from "../components/admin/login/FormLogin";
+import FormLogin from "../feature/admin_auth/component/FormLogin";
 
 function AdminLogin() {
   return (

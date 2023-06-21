@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import CustomForm from "./CustomFormLogin";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loggingInAdmin } from "../../../feature/admin_auth";
+import { loggingInAdmin } from "..";
 
 function FormLogin() {
   const dispatch = useDispatch();

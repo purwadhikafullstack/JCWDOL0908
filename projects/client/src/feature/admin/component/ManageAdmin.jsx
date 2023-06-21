@@ -5,7 +5,7 @@ import Pagination from "./all_admin/Pagination";
 import AddNewAdmin from "./all_admin/create_data/AddNewAdmin";
 import DeleteAdminModal from "./all_admin/delete_data/DeleteAdminModal";
 import EditAdminModal from "./all_admin/edit_data/EditAdminModal";
-import { getAllAdmin, getSingleWarehouseAdmin, getWarehouseCities } from "../../../feature/admin";
+import { getAllAdmin, getSingleWarehouseAdmin, getWarehouseCities } from "../";
 
 function ManageAdmin(props) {
   let { page } = props;

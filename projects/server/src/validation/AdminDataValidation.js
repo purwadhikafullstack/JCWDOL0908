@@ -26,9 +26,14 @@ const CreateWarehouse = Joi.object({
   id_city: Joi.number().required(),
 });
 
+const CreateNewCategory = Joi.object({
+  category_name: Joi.string().required(),
+});
+
 module.exports = {
   EditDataAdmin,
   CreateDataAdmin,
   CreateWarehouse,
   phoneRegExp,
+  CreateNewCategory,
 };

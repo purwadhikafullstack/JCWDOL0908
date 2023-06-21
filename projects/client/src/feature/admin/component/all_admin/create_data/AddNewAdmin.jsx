@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import CustomForm from "../../CustomForm";
-import CustomSelect from "../../CustomSelect";
+import CustomForm from "../../../../../components/CustomForm";
+import CustomSelect from "../../../../../components/CustomSelect";
 import { useDispatch } from "react-redux";
 import RenderCity from "../edit_data/RenderCity";
 import RenderWarehouse from "../edit_data/RenderWarehouse";
-import { createNewAdmin, getAllAdmin, getWarehousesInCities } from "../../../../../feature/admin";
+import { createNewAdmin, getAllAdmin, getWarehousesInCities } from "../../../";
 
 function AddNewAdmin(props) {
   const { setNewAdminClicked, warehouseCities, page } = props;

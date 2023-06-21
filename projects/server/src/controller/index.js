@@ -4,6 +4,7 @@ const AdminController = require("./AdminController");
 const AdminLoginController = require("./AdminLoginController");
 const AdminWarehouseController = require("./AdminWarehouseController");
 const AuthController = require("./AuthController");
+const CategoryController = require("./CategoryController");
 
 
 module.exports = {
@@ -12,4 +13,5 @@ module.exports = {
   AdminLoginController,
   AdminWarehouseController,
   AuthController,
+  CategoryController,
 };

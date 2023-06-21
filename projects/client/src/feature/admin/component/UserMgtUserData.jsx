@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import SingleUserModal from "./all_user/SingleUserModal";
 import RenderUsers from "./all_user/RenderUsers";
 import Pagination from "./all_user/Pagination";
-import { getAllUserData, getSingleUser } from "../../../feature/admin";
+import { getAllUserData, getSingleUser } from "../";
 
 function UserMgtUserData() {
   const dispatch = useDispatch();

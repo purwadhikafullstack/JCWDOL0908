@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import CustomForm from "../../manage_user/CustomForm";
-import RenderProvince from "../add_data/RenderProvince";
-import RenderCity from "../add_data/RenderCity";
-import CustomSelect from "../../manage_user/CustomSelect";
-import { editWarehouse, getCitiesByProvinces, getProvinces, getWarehouses } from "../../../../feature/admin_warehouse";
-
-function EditModal(props) {
-  const { setIsEditBtnClicked, warehouseData, setWarehouses, pageNum } = props;
+import CustomForm from "../../../../components/CustomForm";
+import CustomSelect from "../../../../components/CustomSelect";
+import RenderProvince from "./RenderProvince";
+import RenderCity from "./RenderCity";
+import { createNewWarehouse, getCitiesByProvinces, getProvinces, getWarehouses } from "../..";
+//hooks formik
+function AddDataModal(props) {
+  const { setIsCreateBtnClicked, pageNum, setWarehouses } = props;
+  const addressRegex = /^[A-Za-z\s]+$/;
   const [provinceList, setProvinceList] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState();
   const [cityList, setCityList] = useState([]);
-  const addressRegex = /^[A-Za-z\s]+$/;
 
   useEffect(() => {
     (async () => {
       const provinces = await getProvinces();
       setProvinceList([...provinces]);
-      setSelectedProvince(`${warehouseData.id_province}:::${warehouseData.province}`);
     })();
   }, []);
 
@@ -31,7 +30,7 @@ function EditModal(props) {
     })();
   }, [selectedProvince]);
 
-  const editWarehouseSchema = Yup.object().shape({
+  const createWarehouseSchema = Yup.object().shape({
     warehouse_name: Yup.string().required("must not blank"),
     address: Yup.string().required("must not blank").matches(addressRegex, "alphabet only"),
     id_province: Yup.string("required").required("required"),
@@ -44,45 +43,50 @@ function EditModal(props) {
     let [idCity, city] = id_city.split(":::");
     idCity = parseInt(idCity);
     const address = `${values.address}, ${city}, ${province}`;
-    const data = {
-      id_warehouse: warehouseData.id_warehouse,
-      address,
-      id_province: idProvince,
-      id_city: idCity,
-      warehouse_name,
-    };
-    const response = await editWarehouse(data);
+    const data = { address, id_province: idProvince, id_city: idCity, warehouse_name };
+    const response = await createNewWarehouse(data);
     const fetching = await getWarehouses(pageNum);
     setWarehouses([...fetching.result]);
     alert(response.data.message);
-    setIsEditBtnClicked(false);
+    setIsCreateBtnClicked(false);
   };
 
   return (
     <div className="modal-background">
       <div className="modal-container">
-        <button className="close-btn-modal" onClick={() => setIsEditBtnClicked(false)}>
+        <button onClick={() => setIsCreateBtnClicked(false)} className="close-btn-modal">
           <i className="uil uil-times-circle"></i>
         </button>
         <div>
-          <h1 className="my-4 font-bold">Edit Warehouse</h1>
+          <h1 className="my-4 font-bold">Create Warehouse</h1>
           <Formik
             initialValues={{
-              warehouse_name: warehouseData.warehouse_name,
-              address: warehouseData.address.split(",")[0],
-              number: "",
-              id_province: `${warehouseData.id_province}:::${warehouseData.province}`,
-              id_city: `${warehouseData.id_city}:::${warehouseData.city}`,
+              warehouse_name: "",
+              address: "",
+              id_province: "",
+              id_city: "",
             }}
-            validationSchema={editWarehouseSchema}
+            validationSchema={createWarehouseSchema}
             onSubmit={onSubmit}
           >
             {(formikProps) => {
               setSelectedProvince(formikProps.values.id_province);
               return (
                 <Form className="form-container">
-                  <CustomForm label="warehouse" name="warehouse_name" type="text" id="warehouse_name" />
-                  <CustomForm label="address" name="address" type="text" id="address" />
+                  <CustomForm
+                    label="warehouse"
+                    name="warehouse_name"
+                    type="text"
+                    id="warehouse_name"
+                    placeholder="example: UPI"
+                  />
+                  <CustomForm
+                    label="address"
+                    name="address"
+                    type="text"
+                    id="address"
+                    placeholder="example: Jalan Dokter Setiabudi"
+                  />
                   <CustomSelect onChange={formikProps.handleChange} label="province" name="id_province">
                     <option value="">Select Province</option>
                     <RenderProvince provinceList={provinceList} />
@@ -97,7 +101,7 @@ function EditModal(props) {
                   <div className=" row-span-1">
                     <div className="grid grid-cols-2 gap-8 text-sm h-5/6 mt-4">
                       <button className="bg-green-800 text-white" type="submit">
-                        Submit
+                        Create
                       </button>
                     </div>
                   </div>
@@ -111,4 +115,4 @@ function EditModal(props) {
   );
 }
 
-export default EditModal;
+export default AddDataModal;

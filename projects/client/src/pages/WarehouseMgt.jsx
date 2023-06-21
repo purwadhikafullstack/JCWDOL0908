@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LayoutAdmin from "../components/LayoutAdmin";
-import HeaderWarehouseMgt from "../components/admin/manage_warehouse/HeaderWarehouseMgt";
-import Body from "../components/admin/manage_warehouse/Body";
+import HeaderWarehouseMgt from "../feature/admin_warehouse/component/HeaderWarehouseMgt";
+import Body from "../feature/admin_warehouse/component/Body";
 import { getWarehouses } from "../feature/admin_warehouse";
 
 function WarehouseMgt() {
@@ -13,8 +13,8 @@ function WarehouseMgt() {
     (async () => {
       const data = await getWarehouses(pageNum);
       const { result, totalPage } = data;
-      setTotalPage(totalPage);
-      setWarehouses([...result]);
+      await setTotalPage(totalPage);
+      await setWarehouses([...result]);
     })();
   }, [pageNum]);
 

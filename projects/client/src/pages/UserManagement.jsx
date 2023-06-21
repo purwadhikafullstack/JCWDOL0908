@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import LayoutAdmin from "../components/LayoutAdmin";
-import UserMgtUserData from "../components/admin/manage_user/UserMgtUserData";
-import ManageAdmin from "../components/admin/manage_user/ManageAdmin";
 import { useDispatch } from "react-redux";
 import { getAllAdmin } from "../feature/admin";
+import ManageAdmin from "../feature/admin/component/ManageAdmin";
+import UserMgtUserData from "../feature/admin/component/UserMgtUserData";
 
 function UserManagement() {
   const [allDataBtnClicked, setAllDataBtnClicked] = useState(true);

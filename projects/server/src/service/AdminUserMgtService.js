@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const { join } = require("path");
 require("dotenv").config({ path: join(__dirname, "../.env") });
 const env = process.env;
+const { getProvinces } = require("./AdminWarehouseService");
 
 const getAllUserWithoutAddress = async (offset, limit, page) => {
   const allUser = await User.findAll({
@@ -132,6 +133,7 @@ const getAllAdminUserLogic = async (offset, limit, page) => {
     const adminCount = allAdminCount[0].dataValues.user_count;
     const totalPage = Math.ceil(adminCount / limit);
     const result = { totalPage, dataAll: allAdminUser };
+    const provinces = await getProvinces();
     return { error: null, result };
   } catch (error) {
     return { error, result: null };
