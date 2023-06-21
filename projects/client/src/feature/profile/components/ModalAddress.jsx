@@ -28,6 +28,7 @@ function ModalAddress({ isOpen, onClose, address }) {
       address: values.address,
       notes: values.notes,
       id_city: values.city,
+      zip_code: values.zip_code,
     };
 
     try {
@@ -103,6 +104,7 @@ function ModalAddress({ isOpen, onClose, address }) {
               notes: address ? address.notes : "",
               city: address ? address.id_city : "",
               province: address ? address.id_province : "",
+              zip_code: address ? address.zip_code : "",
             }}
             validationSchema={AddressValidation}
             onSubmit={handleSubmit}>
@@ -134,6 +136,19 @@ function ModalAddress({ isOpen, onClose, address }) {
                       className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                     <ErrorMessage name="notes" component="p" className="text-red-500 text-sm text-center py-1" />
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <label htmlFor="notes" className="block font-medium text-gray-700 mt-3">
+                      Zip Code
+                    </label>
+                    <Field
+                      id="zip_code"
+                      name="zip_code"
+                      as="input"
+                      placeholder="Zip Code / Postal Code"
+                      className="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                    <ErrorMessage name="zip_code" component="p" className="text-red-500 text-sm text-center py-1" />
                   </div>
                   <div className="flex flex-col gap-3">
                     <label htmlFor="province" className="block font-medium text-gray-700 mt-3">

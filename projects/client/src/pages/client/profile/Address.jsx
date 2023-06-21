@@ -108,6 +108,7 @@ function Address() {
                     isPrimary: address.is_primary,
                     notes: address.notes,
                     id_city: address.city.id_city,
+                    zip_code: address.zip_code,
                     city: address.city.city,
                     type_city: address.city.type_city,
                     province: address.city.province.province,

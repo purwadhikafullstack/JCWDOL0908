@@ -3,13 +3,14 @@ const axios = require("axios");
 /**
  * GetPositionMapbox - get latitude and longitude from mapbox API by city name and type
  * @param address - address ex : "Jalan Raya or RT 01 RW 02"
+ * @param zip - zip code ex : "12345"
  * @param cityName - city name
  * @param typeCity - type city ex : "Kota" or "Kabupaten"
  * @returns {Promise<{response: {message: string}, error: boolean}|{response: {latitude: *, longitude: *}, error: boolean}>}
  */
-const GetPositionMapbox = async (address = "",cityName, typeCity) => {
+const GetPositionMapbox = async (address = "", zip, cityName, typeCity) => {
   try {
-    const query = `${address} ${typeCity} ${cityName}`;
+    const query = `${address} ${typeCity} ${cityName} pos ${zip}`;
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${process.env.MAP_BOX_KEY}`;
     console.log(url);
     const response_mapbox = await axios.get(url);

@@ -87,7 +87,7 @@ const GetAddressByID = async (addressID) => {
 const StoreUserAddress = async (data) => {
   const t = await db.sequelize.transaction();
   try {
-    const { id_user, address, id_city, notes, longitude, latitude } = data;
+    const { id_user, address, id_city, notes, zip_code, longitude, latitude } = data;
     // check city
     const city = await GetCityByID(id_city);
     if (!city) {
@@ -113,7 +113,7 @@ const StoreUserAddress = async (data) => {
       payload.longitude = longitude;
     } else {
       // get latitude and longitude from city using mapbox
-      const { error, response } = await GetPositionMapbox(address, city?.city, city?.type_city);
+      const { error, response } = await GetPositionMapbox(address, zip_code, city?.city, city?.type_city);
       if (error) {
         return {
           error,
@@ -131,6 +131,7 @@ const StoreUserAddress = async (data) => {
         id_user,
         id_city,
         notes,
+        zip_code,
         ...payload,
       },
       { transaction: t },
@@ -255,7 +256,7 @@ const GetAddressByUserID = async (data) => {
 const UpdateUserAddress = async (data) => {
   const t = await db.sequelize.transaction();
   try {
-    const { id_address, address, id_city, notes, longitude, latitude, id_user } = data;
+    const { id_address, address, id_city, notes, zip_code, longitude, latitude, id_user } = data;
 
     // Check city
     const city = await GetCityByID(id_city);
@@ -274,7 +275,7 @@ const UpdateUserAddress = async (data) => {
       payload.longitude = longitude;
     } else {
       // get latitude and longitude from city using mapbox
-      const { error, response } = await GetPositionMapbox(address, city?.city, city?.type_city);
+      const { error, response } = await GetPositionMapbox(address, zip_code, city?.city, city?.type_city);
       if (error) {
         return {
           error,
@@ -287,7 +288,7 @@ const UpdateUserAddress = async (data) => {
 
     // Update the address
     await Address.update(
-      { address, id_city, notes, ...payload },
+      { address, id_city, notes, zip_code, ...payload },
       { where: { id_address, id_user } },
       { transaction: t },
     );
