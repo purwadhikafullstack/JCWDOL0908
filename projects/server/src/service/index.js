@@ -5,6 +5,7 @@ const AuthService = require("./AuthService");
 const UserService = require("./UserService");
 const AddressService = require("./AddressService");
 const CategoryService = require("./CategoryService");
+const ProductService = require("./ProductService");
 
 module.exports = {
   AdminUserMgtService,
@@ -14,4 +15,5 @@ module.exports = {
   UserService,
   AddressService,
   CategoryService,
+  ProductService,
 };
