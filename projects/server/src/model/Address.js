@@ -30,6 +30,9 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(255),
         allowNull: true,
       },
+      zip_code: {
+        type: DataTypes.STRING(255),
+      },
       is_primary: {
         type: DataTypes.BOOLEAN,
       },

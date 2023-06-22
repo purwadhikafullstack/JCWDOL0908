@@ -7,7 +7,6 @@ const { UserValidation } = require("../validation");
  * @param res
  * @param next
  * @returns {Promise<*>}
- * @constructor
  */
 const AuthUser = async (req, res, next) => {
   try {
@@ -44,7 +43,6 @@ const AuthUser = async (req, res, next) => {
  * @param res
  * @param next
  * @returns {Promise<*>}
- * @constructor
  */
 const KeepLogin = async (req, res, next) => {
   try {
@@ -71,7 +69,6 @@ const KeepLogin = async (req, res, next) => {
  * @param res
  * @param next
  * @returns {Promise<*>}
- * @constructor
  */
 const RegisterUser = async (req, res, next) => {
   try {
@@ -108,7 +105,6 @@ const RegisterUser = async (req, res, next) => {
  * @param res
  * @param next
  * @returns {Promise<*>}
- * @constructor
  */
 const VerifyUser = async (req, res, next) => {
   try {

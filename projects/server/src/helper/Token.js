@@ -8,7 +8,6 @@ const IV_PARSE = process.env.TOKEN_IV_PARSE;
  * GenerateToken - Generate token from email can be used for reset password and verify email
  * @param email
  * @returns {Promise<*>}
- * @constructor
  */
 const GenerateToken = async (email) => {
   const key = CryptoJS.enc.Utf8.parse(KEY_PARSE);
@@ -20,7 +19,6 @@ const GenerateToken = async (email) => {
  * DecodeToken - Decode token to email
  * @param token
  * @returns {Promise<string>}
- * @constructor
  */
 const DecodeToken = async (token) => {
   const key = CryptoJS.enc.Utf8.parse(KEY_PARSE);
@@ -33,7 +31,6 @@ const DecodeToken = async (token) => {
  * HashPassword - Hash password
  * @param password
  * @returns {Promise<void|*>}
- * @constructor
  */
 const HashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -45,7 +42,6 @@ const HashPassword = async (password) => {
  * @param password
  * @param hash
  * @returns {Promise<void|*>}
- * @constructor
  */
 const ComparePassword = async (password, hash) => {
   return await bcrypt.compare(password, hash);
@@ -55,7 +51,6 @@ const ComparePassword = async (password, hash) => {
  * GenerateJWT - Generate JWT token
  * @param data
  * @returns {Promise<void>}
- * @constructor
  */
 const GenerateJWT = async (data) => {
   const payload = {
@@ -71,7 +66,6 @@ const GenerateJWT = async (data) => {
  * DecodeJWT - Decode JWT token
  * @param token
  * @returns {Promise<{data: *, error: *}>}
- * @constructor
  */
 const DecodeJWT = async (token) => {
   try {

@@ -30,7 +30,6 @@ const GetUser = async (req, res) => {
  * @param res
  * @param next
  * @returns {Promise<*>}
- * @constructor
  */
 const UpdateBio = async (req, res, next) => {
   try {
@@ -72,7 +71,6 @@ const UpdateBio = async (req, res, next) => {
  * @param res
  * @param next
  * @returns {Promise<*>}
- * @constructor
  */
 const UpdatePassword = async (req, res, next) => {
   try {

@@ -13,6 +13,7 @@ export const userSlice = createSlice({
       phone_number: "",
       profile_photo: "",
     },
+    isChecked: false,
   },
   reducers: {
     setUser: (state, action) => {
@@ -28,15 +29,23 @@ export const userSlice = createSlice({
         profile_photo: "",
       };
     },
+    setIsChecked: (state, action) => {
+      state.isChecked = action.payload;
+    },
   },
 });
 
-export const { setUser, resetUser } = userSlice.actions;
+export const { setUser, resetUser, setIsChecked } = userSlice.actions;
 
 export default userSlice.reducer;
 
 export const KeepUser = (token) => {
   return async (dispatch) => {
+    if(!token) {
+      dispatch(resetUser());
+      dispatch(setIsChecked(true));
+      return;
+    }
     try {
       const response = await keepLogin();
 
@@ -59,6 +68,8 @@ export const KeepUser = (token) => {
     } catch (error) {
       Storage.removeToken();
       dispatch(resetUser());
+    } finally {
+      dispatch(setIsChecked(true));
     }
   };
 };

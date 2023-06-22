@@ -1,10 +1,11 @@
 import AxiosInstances from "../../../helper/AxiosInstances";
+import storage from "../../../helper/Storage";
 
 export const UpdateBio = async (data) => {
   const { username, phone } = data;
-  return AxiosInstances.put("/users/update-bio", { username, phone }, {
+  return AxiosInstances.put("/users/bio", { username, phone }, {
     headers: {
-      authorization: `Bearer ${localStorage.getItem("token")}`,
+      authorization: `Bearer ${storage.getToken("token")}`,
     },
   });
 };

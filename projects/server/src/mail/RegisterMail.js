@@ -5,7 +5,6 @@ const path = require("path");
  * This function is used to send email template for verification
  * @param email, token
  * @returns {{subject: string, from: string, html: string, to}}
- * @constructor
  */
 const VerifyMail = (email, token) => {
   const template = fs.readFileSync(path.join(__dirname, "../mail/register.html"), "utf-8");
