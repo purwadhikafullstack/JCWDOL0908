@@ -8,7 +8,7 @@ const { Product, ProductWarehouseRlt } = db;
  * @param {string} data.page - The page number.
  * @param {string} data.page_size - The number of items per page.
  * @param {string} data.name - The name to filter products by.
- * @param {number} data.id_category - The category ID to filter products by.
+ * @param {[]number} data.id_category - The category ID to filter products by.
  * @param {number} data.price_min - The minimum price to filter products by.
  * @param {number} data.price_max - The maximum price to filter products by.
  * @param {string} data.sort_key - The key to sort products by.
@@ -44,7 +44,9 @@ const listProducts = async (data) => {
     }
 
     if (id_category) {
-      condition.where.id_category = id_category;
+      condition.where.id_category = {
+        [Op.in]: id_category.split(",").map((id) => parseInt(id)),
+      }
     }
 
     if (price_min && price_max) {
