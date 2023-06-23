@@ -55,7 +55,7 @@ function NavbarClient() {
     <>
       <nav
         className={`flex justify-between items-center h-16 bg-white text-black relative font-title text-xl shadow-sm
-      ${scrolled ? "fixed top-0 z-50 bg-white-transparent" : null}`}
+      ${scrolled ? "fixed inset-0 top-0 z-50 bg-white-transparent" : null}`}
         role="navigation"
       >
         <div className="flex items-center pl-8">

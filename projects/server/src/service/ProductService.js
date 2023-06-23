@@ -1,6 +1,6 @@
 const db = require("../model");
 const { Op } = require("sequelize");
-const { Product, ProductWarehouseRlt } = db;
+const { Product, Category, ProductWarehouseRlt } = db;
 
 /**
  * GetProducts retrieves a list of products with pagination and includes the stock count for each product.
@@ -46,7 +46,7 @@ const listProducts = async (data) => {
     if (id_category) {
       condition.where.id_category = {
         [Op.in]: id_category.split(",").map((id) => parseInt(id)),
-      }
+      };
     }
 
     if (price_min && price_max) {
@@ -59,6 +59,10 @@ const listProducts = async (data) => {
 
     const { count, rows: products } = await Product.findAndCountAll({
       where: condition.where,
+      include: {
+        model: Category,
+        attributes: ["category_name"],
+      },
       offset,
       limit,
       order: sort,

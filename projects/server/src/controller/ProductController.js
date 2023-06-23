@@ -22,8 +22,10 @@ const listProducts = async (req, res, next) => {
 
     return res.status(200).json({
       message: "list products success",
-      metadata: data.metadata,
-      data: data.products,
+      data: {
+        metadata: data.metadata,
+        products: data.products,
+      },
     });
   } catch (error) {
     next(error);
@@ -32,4 +34,4 @@ const listProducts = async (req, res, next) => {
 
 module.exports = {
   listProducts,
-}
+};

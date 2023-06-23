@@ -21,6 +21,7 @@ import { KeepUser } from "./feature/auth/slice/UserSlice";
 import ResetPassword from "./pages/client/profile/ResetPassword";
 import Logout from "./pages/client/auth/Logout";
 import Address from "./pages/client/profile/Address";
+import Products from "./pages/client/Products";
 
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/products" element={<Products />} />
 
         {/*Auth User Route*/}
         <Route path="/client" element={<LoginClient />} />
