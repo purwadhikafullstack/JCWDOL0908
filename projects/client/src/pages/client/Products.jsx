@@ -42,7 +42,7 @@ function Products() {
     (async () => {
       await fetchProducts();
     })();
-  }, [page, sort]);
+  }, [page, sort, filter]);
 
   const { products: data, metadata } = products;
 
@@ -55,9 +55,36 @@ function Products() {
           <div className="w-full flex flex-row gap-2">
             <FilterSort sort={sort} setSort={setSort} />
             <FilterWrapper filter={filter} setFilter={setFilter} />
+            {filter.category.length > 0 && (
+              <div className="flex flex-row items-center gap-2 border px-2 py-1 rounded-md">
+                <p className="">On Filter: {filter.category.length} Category</p>
+                <button
+                  className="bg-red-500 px-1 rounded-md"
+                  onClick={() => setFilter({ ...filter, category: [] })}
+                >
+                  <i className="uil uil-times text-white"></i>
+                </button>
+              </div>
+            )}
+
+            {
+              filter.price[0] > 0 ||  filter.price[1] !== 999999999 ? (
+                <div className="flex flex-row items-center gap-2 border px-2 py-1 rounded-md">
+                  <p className="">On Filter: Price {filter.price[0]} - {filter.price[1]}</p>
+                  <button
+                    className="bg-red-500 px-1 rounded-md"
+                    onClick={() => setFilter({ ...filter, price: [0, 999999999] })}
+                  >
+                    <i className="uil uil-times text-white"></i>
+                  </button>
+                </div>
+              ) : null
+            }
+
+
           </div>
           {/* list */}
-          {data ? (
+          {data?.length > 0 ? (
             <>
               <div className="grid sm:grid-cols-4 grid-cols-2 gap-5 py-6">
                 {

@@ -11,6 +11,7 @@ function FilterPrice({ filter, setFilter }) {
           </span>
           <input
             type="number"
+            min="0"
             className="border border-l-0 border-gray-300 flex-1 p-2 rounded-r-md"
             placeholder="Min"
             value={filter.price[0]}
