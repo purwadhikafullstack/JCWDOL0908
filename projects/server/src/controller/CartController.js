@@ -1,6 +1,5 @@
 const { CartService } = require("../service");
-
-// TODO: validation
+const { CartValidation } = require("../validation");
 
 /**
  * AddToCart - Add product to cart also update quantity if product already in cart (increase/decrease quantity)
@@ -10,6 +9,15 @@ const { CartService } = require("../service");
  */
 const AddToCart = async (req, res, next) => {
   try {
+
+    const { error: errorValidation } = await CartValidation.cartValidation.validate(req.body)
+    if (errorValidation) {
+      return res.status(400).json({
+        message: errorValidation.message,
+        data: null,
+      });
+    }
+
     const { productID, quantity } = req.body;
     const userID = req.user.id;
     const payload = {
