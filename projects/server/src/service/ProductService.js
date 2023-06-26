@@ -71,7 +71,10 @@ const listProducts = async (data) => {
     const productIds = products.map((product) => product.id_product);
 
     const stockCounts = await ProductWarehouseRlt.findAll({
-      attributes: ["id_product", [db.sequelize.fn("sum", db.sequelize.col("stock")), "total_stock"]],
+      attributes: ["id_product",
+        [db.sequelize.fn("sum", db.sequelize.col("stock")), "total_stock"],
+        [db.sequelize.fn("sum", db.sequelize.col("booked_stock")), "total_booked_stock"],
+      ],
       where: {
         id_product: productIds,
       },
@@ -79,9 +82,12 @@ const listProducts = async (data) => {
     });
 
     const stockMap = stockCounts.reduce((map, count) => {
-      map[count.id_product] = count.getDataValue("total_stock");
+      const totalStock = parseInt(count.getDataValue("total_stock")) || 0;
+      const totalBookedStock = parseInt(count.getDataValue("total_booked_stock")) || 0;
+      map[count.id_product] = totalStock - totalBookedStock;
       return map;
     }, {});
+
 
     const updatedProducts = products.map((product) => ({
       ...product.toJSON(),
@@ -124,18 +130,30 @@ const getProduct = async (id) => {
       },
     });
 
-    // stock count
     const stockCount = await ProductWarehouseRlt.findAll({
-      attributes: ["id_product", [db.sequelize.fn("sum", db.sequelize.col("stock")), "total_stock"]],
+      attributes: [
+        "id_product",
+        [
+          db.sequelize.fn("sum", db.sequelize.col("stock")),
+          "total_stock"
+        ],
+        [
+          db.sequelize.fn("sum", db.sequelize.col("booked_stock")),
+          "total_booked_stock"
+        ]
+      ],
       where: {
-        id_product: id,
-      }
-    })
+        id_product: id
+      },
+      group: ["id_product"]
+    });
 
     if (stockCount.length > 0) {
-      product.dataValues.stock = parseInt(stockCount[0].getDataValue("total_stock"));
+      product.dataValues.stock = stockCount[0].dataValues.total_stock - stockCount[0].dataValues.total_booked_stock;
+      product.dataValues.booked_stock =  parseInt(stockCount[0].dataValues.total_booked_stock) || 0
     } else {
       product.dataValues.stock = 0;
+      product.dataValues.booked_stock = 0;
     }
 
     return {
