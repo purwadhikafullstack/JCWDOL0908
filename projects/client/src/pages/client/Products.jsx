@@ -6,18 +6,49 @@ import FilterWrapper from "../../feature/products/components/FilterWrapper";
 import { ListProducts } from "../../feature/products";
 import ProductItem from "../../feature/products/components/ProductItem";
 import Pagination from "../../components/Pagination";
+import { useSearchParams } from "react-router-dom";
 
 function Products() {
+  const [search, setSearch] = useSearchParams();
   const [products, setProducts] = useState({});
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(search.get("page") || 1);
   const [filter, setFilter] = useState({
     price: [0, 999999999],
     category: [],
   });
   const [sort, setSort] = useState({
-    type: "default",
-    value: "",
+    type: search.get("sort_key") || "default",
+    value: search.get("sort_condition") || "",
   });
+
+  // TODO : useSearchParams() to get query params | page, price_min, price_max, \
+  useEffect(() => {
+    setSearch((searchParams) => {
+      searchParams.set("sort_key", sort.type);
+      searchParams.set("sort_condition", sort.value);
+      return searchParams;
+    })
+  }, [sort]);
+
+  useEffect(() => {
+    setSearch((searchParams) => {
+      searchParams.set("page", page);
+      return searchParams;
+    })
+
+  }, [page])
+
+  useEffect(() => {
+    setSearch((searchParams) => {
+      searchParams.set("price_min", filter.price[0]);
+      searchParams.set("price_max", filter.price[1]);
+      return searchParams;
+    })
+  }, [filter.price])
+
+
+
+
 
   const query = {
     page: page,
@@ -68,7 +99,7 @@ function Products() {
             )}
 
             {
-              filter.price[0] > 0 ||  filter.price[1] !== 999999999 ? (
+              filter.price[0] > 0 || filter.price[1] !== 999999999 ? (
                 <div className="flex flex-row items-center gap-2 border px-2 py-1 rounded-md">
                   <p className="">On Filter: Price {filter.price[0]} - {filter.price[1]}</p>
                   <button

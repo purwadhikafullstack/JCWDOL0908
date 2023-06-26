@@ -32,6 +32,27 @@ const listProducts = async (req, res, next) => {
   }
 };
 
+const getProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { error, data } = await ProductService.getProduct(id);
+    if (error) {
+      return res.status(400).json({
+        message: error.message,
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: "get product success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   listProducts,
+  getProduct,
 };

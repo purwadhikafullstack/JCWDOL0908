@@ -110,6 +110,47 @@ const listProducts = async (data) => {
   }
 };
 
+/**
+ * GetProduct retrieves a product by ID.
+ * @param id
+ * @returns {Object} An object containing error status and data.
+ */
+const getProduct = async (id) => {
+  try {
+    const product = await Product.findByPk(id, {
+      include: {
+        model: Category,
+        attributes: ["category_name"],
+      },
+    });
+
+    // stock count
+    const stockCount = await ProductWarehouseRlt.findAll({
+      attributes: ["id_product", [db.sequelize.fn("sum", db.sequelize.col("stock")), "total_stock"]],
+      where: {
+        id_product: id,
+      }
+    })
+
+    if (stockCount.length > 0) {
+      product.dataValues.stock = parseInt(stockCount[0].getDataValue("total_stock"));
+    } else {
+      product.dataValues.stock = 0;
+    }
+
+    return {
+      error: false,
+      data: product,
+    };
+  } catch (error) {
+    return {
+      error: error,
+      data: null,
+    };
+  }
+};
+
 module.exports = {
   listProducts,
+  getProduct,
 };
