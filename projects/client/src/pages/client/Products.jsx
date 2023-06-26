@@ -20,34 +20,28 @@ function Products() {
     type: search.get("sort_key") || "default",
     value: search.get("sort_condition") || "",
   });
+  
+  useEffect(() => {
+    setSearch((searchParams) => {
+      searchParams.set("page", page);
+      return searchParams;
+    });
 
-  // TODO : useSearchParams() to get query params | page, price_min, price_max, \
+  }, [page]);
   useEffect(() => {
     setSearch((searchParams) => {
       searchParams.set("sort_key", sort.type);
       searchParams.set("sort_condition", sort.value);
       return searchParams;
-    })
+    });
   }, [sort]);
-
-  useEffect(() => {
-    setSearch((searchParams) => {
-      searchParams.set("page", page);
-      return searchParams;
-    })
-
-  }, [page])
-
   useEffect(() => {
     setSearch((searchParams) => {
       searchParams.set("price_min", filter.price[0]);
       searchParams.set("price_max", filter.price[1]);
       return searchParams;
-    })
-  }, [filter.price])
-
-
-
+    });
+  }, [filter.price]);
 
 
   const query = {
