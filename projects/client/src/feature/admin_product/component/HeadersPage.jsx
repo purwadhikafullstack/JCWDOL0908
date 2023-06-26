@@ -8,7 +8,7 @@ function HeaderPage(props) {
         className="font-semibold text-2xl pt-8 row-span-2 
         text-slate-800 lg:text-3xl"
       >
-        Product Management
+        {isProductClicked ? "Product Management" : "Category Management"}
       </h1>
       <div className="grid grid-cols-2 row-start-4 row-span-1 gap-20 lg:grid-cols-4 lg:gap-8">
         <button
@@ -20,7 +20,7 @@ function HeaderPage(props) {
           className="py-1 px-1 bg-slate-800 text-white text-sm font-semibold hover:bg-slate-900
            lg:text-lg md:text-sm  disabled:bg-slate-100 disabled:text-slate-400 disabled:hover:cursor-not-allowed"
         >
-          Category List
+          Category
         </button>
         <button
           disabled={isProductClicked}
@@ -32,7 +32,7 @@ function HeaderPage(props) {
           font-semibold border-slate-800 border-2 hover:bg-slate-950 disabled:hover:cursor-not-allowed
           hover:text-white disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-400 lg:text-lg"
         >
-          Product List
+          Product
         </button>
       </div>
     </div>

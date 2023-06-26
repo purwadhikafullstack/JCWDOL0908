@@ -9,6 +9,7 @@ const {
   AdminWarehouseRouter,
   AuthRouter,
   CategoryRouter,
+  ProductRouter,
   AddressRouter,
 } = require("./router");
 const db = require("./model");
@@ -49,8 +50,9 @@ app.use("/api/admin", AdminRouter);
 app.use("/api/admin-login", AdminLoginRouter);
 app.use("/api/admin-warehouse", AdminWarehouseRouter);
 app.use("/api/auth", AuthRouter);
-app.use("/api/address", AddressRouter);
 app.use("/api/category", CategoryRouter);
+app.use("/api/product", ProductRouter);
+app.use("/api/address", AddressRouter);
 
 // ===========================
 
@@ -68,9 +70,9 @@ app.use((err, req, res, next) => {
   if (req.path.includes("/api/")) {
     console.error("Error : ", err);
     if (err.statusCode && err.message) {
-      res.status(err.statusCode).send(err.message);
+      return res.status(err.statusCode).send(err.message);
     }
-    res.status(500).send(err);
+    return res.status(500).send(err);
   } else {
     next();
   }
