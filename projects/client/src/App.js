@@ -22,6 +22,8 @@ import ResetPassword from "./pages/client/profile/ResetPassword";
 import Logout from "./pages/client/auth/Logout";
 import ManageStock from "./pages/ManageStock";
 import Address from "./pages/client/profile/Address";
+import Products from "./pages/client/Products";
+import ProductDetail from "./pages/client/ProductDetail";
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -55,6 +57,8 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
 
         {/*Auth User Route*/}
         <Route path="/client" element={<LoginClient />} />

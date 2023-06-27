@@ -5,7 +5,7 @@ const { tokenDecoder, isAdmin, isUser } = require("../middleware/TokenDecoder");
 const { isSuperAdmin } = require("../middleware/IsSuperAdmin");
 
 router.post("/", tokenDecoder, isAdmin, isSuperAdmin, CategoryController.createNewCategory);
-router.get("/", tokenDecoder, isUser, CategoryController.getCategories);
+router.get("/",  CategoryController.getCategories);
 router.patch("/delete/:id_category", tokenDecoder, isAdmin, isSuperAdmin, CategoryController.deleteCategory);
 router.patch("/edit/:id_category", tokenDecoder, isAdmin, isSuperAdmin, CategoryController.editCategory);
 

@@ -9,8 +9,8 @@ const {
   AdminWarehouseRouter,
   AuthRouter,
   CategoryRouter,
-  ProductRouter,
   AddressRouter,
+  ProductRouter,
 } = require("./router");
 const db = require("./model");
 const bearerToken = require("express-bearer-token");
@@ -51,6 +51,7 @@ app.use("/api/admin-login", AdminLoginRouter);
 app.use("/api/admin-warehouse", AdminWarehouseRouter);
 app.use("/api/auth", AuthRouter);
 app.use("/api/category", CategoryRouter);
+app.use("/api/products", ProductRouter);
 app.use("/api/product", ProductRouter);
 app.use("/api/address", AddressRouter);
 

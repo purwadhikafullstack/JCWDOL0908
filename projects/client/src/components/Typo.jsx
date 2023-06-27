@@ -6,6 +6,6 @@ export const SectionTitle = ({ children }) => {
   );
 };
 
-export const H3 = ({ children }) => {
-  return <h3 className="text-xl font-semibold mb-4 font-title">{children}</h3>;
+export const H3 = ({ children, className ="" }) => {
+  return <h3 className={`text-xl font-semibold mb-4 font-title ${className}`}>{children}</h3>;
 };
