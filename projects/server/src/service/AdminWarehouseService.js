@@ -73,12 +73,20 @@ const getWarehousesDataCount = async () => {
 };
 
 const getWarehousesData = async (offset, limit, page) => {
-  const warehouses = await Warehouse.findAll({
-    where: { is_deleted: 0 },
-    include: { model: City, include: { model: Province } },
-    offset: parseInt(offset) * (parseInt(page) - 1),
-    limit: parseInt(limit),
-  });
+  let warehouses;
+  if (offset && limit && page) {
+    warehouses = await Warehouse.findAll({
+      where: { is_deleted: 0 },
+      include: { model: City, include: { model: Province } },
+      offset: parseInt(offset) * (parseInt(page) - 1),
+      limit: parseInt(limit),
+    });
+  } else {
+    warehouses = await Warehouse.findAll({
+      where: { is_deleted: 0 },
+      include: { model: City, include: { model: Province } },
+    });
+  }
   return warehouses;
 };
 
@@ -142,15 +150,20 @@ const checkWarehouseByNameExceptSelf = async (warehouse_name, id_warehouse, id_c
 
 const getWarehousesLogic = async (offset, limit, page) => {
   try {
+    let warehousesCount;
+    let totalPage;
+
     // get total count warehouses
-    let warehousesCount = await getWarehousesDataCount();
+    if (offset && limit && page) {
+      warehousesCount = await getWarehousesDataCount();
+      warehousesCount = warehousesCount[0].dataValues.warehouse_count;
+      totalPage = Math.ceil(warehousesCount / limit);
+    }
 
     // get warehouses with limit
     const warehouses = await getWarehousesData(offset, limit, page);
 
     // get total page if fetching data being limited
-    warehousesCount = warehousesCount[0].dataValues.warehouse_count;
-    const totalPage = Math.ceil(warehousesCount / limit);
 
     const result = warehouses.map((warehouse, index) => {
       const { city } = warehouse.dataValues;
@@ -270,4 +283,5 @@ module.exports = {
   getCitiesByProvinceId,
   createWarehouseLogic,
   editWarehouseLogic,
+  getWarehousesData,
 };

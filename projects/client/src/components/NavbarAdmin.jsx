@@ -87,11 +87,11 @@ function NavbarAdmin() {
       <div
         className={
           toggleNav
-            ? `invisible absolute bottom-4 right-4 text-2xl text-center
+            ? `invisible absolute bottom-2 right-2 text-2xl text-center
             md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-slate-800
              self-center text-white rounded-full flex flex-row justify-center
               items-center`
-            : `visible absolute bottom-4 right-4 text-2xl text-center
+            : `visible absolute bottom-2 right-2 text-2xl text-center
             md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-slate-800
              self-center text-white rounded-full flex flex-row justify-center
               items-center`

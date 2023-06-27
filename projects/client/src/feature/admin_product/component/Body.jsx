@@ -7,14 +7,14 @@ function Body(props) {
   const { isCategoryClicked, isProductClicked } = props;
   const admin = useSelector((state) => state.adminLogin.loggedInAdminData);
   return (
-    <div className="row-span-6 grid grid-rows-8">
+    <div className="row-span-6 grid grid-rows-12">
       {isCategoryClicked ? (
         <>
           {admin.role_admin === "super-admin" ? (
             <CategoryBody />
           ) : (
             <div
-              className="row-span-6 h-full w-full flex items-center justify-center 
+              className="row-span-full h-full w-full flex items-center justify-center 
             text-3xl text-slate-800 font-semibold lg:text-6xl"
             >
               Restricted Content
@@ -22,7 +22,7 @@ function Body(props) {
           )}
         </>
       ) : (
-        <ProductBody />
+        <ProductBody admin={admin} />
       )}
     </div>
   );

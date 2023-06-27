@@ -46,11 +46,16 @@ const deleteCategory = async (id_category, transaction) => {
 };
 
 const getCategories = async (offset, limit, page) => {
-  const categories = await Category.findAll({
-    where: { is_deleted: 0 },
-    offset: parseInt(offset) * (parseInt(page) - 1),
-    limit: parseInt(limit),
-  });
+  let categories;
+  if (offset && limit && page) {
+    categories = await Category.findAll({
+      where: { is_deleted: 0 },
+      offset: parseInt(offset) * (parseInt(page) - 1),
+      limit: parseInt(limit),
+    });
+  } else {
+    categories = await Category.findAll({ where: { is_deleted: 0 } });
+  }
   return categories;
 };
 
@@ -80,7 +85,6 @@ const editCategoryLogic = async (category_image, category_name, id_category) => 
   const transaction = await db.sequelize.transaction();
   try {
     const isNameExist = await getCategoryByNameExceptSelf(category_name, id_category, transaction);
-    console.log(isNameExist);
     if (isNameExist) throw { errMsg: "name already exists", statusCode: 400 };
 
     // get current image pattern data
@@ -104,14 +108,19 @@ const editCategoryLogic = async (category_image, category_name, id_category) => 
 
 const getCategoriesLogic = async (offset, limit, page) => {
   try {
-    let categoriesCount = await getCategoriesCount();
-    let categories = await getCategories(offset, limit, page);
+    let categoriesCount;
+    let totalPage;
 
+    if (offset && limit && page) {
+      categoriesCount = await getCategoriesCount();
+      categoriesCount = categoriesCount[0].dataValues.category_count;
+      totalPage = Math.ceil(categoriesCount / limit);
+    }
+
+    let categories = await getCategories(offset, limit, page);
     categories = categories.map((category) => {
       return category.dataValues;
     });
-    categoriesCount = categoriesCount[0].dataValues.category_count;
-    const totalPage = Math.ceil(categoriesCount / limit);
 
     const result = { categories, totalPage };
     return { error: null, result };

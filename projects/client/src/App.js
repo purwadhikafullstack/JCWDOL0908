@@ -20,16 +20,16 @@ import Storage from "./helper/Storage";
 import { KeepUser } from "./feature/auth/slice/UserSlice";
 import ResetPassword from "./pages/client/profile/ResetPassword";
 import Logout from "./pages/client/auth/Logout";
+import ManageStock from "./pages/ManageStock";
 import Address from "./pages/client/profile/Address";
 import Products from "./pages/client/Products";
 import ProductDetail from "./pages/client/ProductDetail";
-
 
 function App() {
   // const [message, setMessage] = useState("");
   const dispatch = useDispatch();
   const loggedInAdmin = useSelector((state) => state.adminLogin.loggedInAdminData);
-  const isChecked = useSelector(state => state.user.isChecked);
+  const isChecked = useSelector((state) => state.user.isChecked);
 
   // useEffect(() => {
   //   (async () => {
@@ -79,6 +79,7 @@ function App() {
                 <Route path="/admin/dashboard/user-management" element={<UserManagement />} />
                 <Route path="/admin/dashboard/warehouse-management" element={<WarehouseMgt />} />
                 <Route path="/admin/dashboard/product-management" element={<ProductManagement />} />
+                <Route path="/admin/dashboard/product-management/stock" element={<ManageStock />} />
                 <Route path="/admin/dashboard/order" element={<ProductOrder />} />
                 <Route path="/admin/dashboard/report" element={<ProductReport />} />
               </>
@@ -88,6 +89,7 @@ function App() {
                 <Route path="/admin/dashboard/order" element={<ProductOrder />} />
                 <Route path="/admin/dashboard/report" element={<ProductReport />} />
                 <Route path="/admin/dashboard/product-management" element={<ProductManagement />} />
+                <Route path="/admin/dashboard/product-management/stock" element={<ManageStock />} />
               </>
             )}
             <Route path="/*" element={<AdminDashboard />} />

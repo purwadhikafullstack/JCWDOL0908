@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { AdminLoginController } = require("../controller");
-const { tokenDecoder } = require("../middleware/TokenDecoder");
+const { tokenDecoder, isAdmin } = require("../middleware/TokenDecoder");
 
 router.post("/", AdminLoginController.loginAdmin);
-router.post("/keep-logged", tokenDecoder, AdminLoginController.keepLogin);
+router.post("/keep-logged", tokenDecoder, isAdmin, AdminLoginController.keepLogin);
 
 module.exports = router;
