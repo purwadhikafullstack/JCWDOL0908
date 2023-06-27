@@ -151,7 +151,7 @@ const GetCart = async (data) => {
         {
           model: db.Product,
           as: "product",
-          attributes: ["product_name", "price", "product_image"],
+          attributes: ["product_name", "price", "product_image", "weight_kg"],
         },
       ],
     });

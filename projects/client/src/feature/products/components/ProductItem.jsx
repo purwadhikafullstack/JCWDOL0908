@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { numberFormat } from "../../../helper/number_format";
 
 function ProductItem({ product_name, category_name, price, product_image, id_product, stock }) {
-  const image_url = product_image ? `${process.env.REACT_APP_API_URL}/${product_image}` : defaultImage;
+  const image_url = product_image ? `${process.env.REACT_APP_SERVER_URL}/${product_image}` : defaultImage;
   return (
     <Link className="flex" to={`/products/${id_product}`}>
       <div

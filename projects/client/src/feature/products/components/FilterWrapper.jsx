@@ -17,7 +17,7 @@ function FilterWrapper({ filter, setFilter }) {
         open={isOn}
         onClose={() => setIsOn(false)}
         as="div" className="relative">
-        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+        {/*<Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />*/}
         {/* right */}
         <div className="fixed flex flex-col justify-between right-0 top-0 w-80 bg-white shadow-lg h-screen py-3">
           <div className="flex flex-col gap-2">

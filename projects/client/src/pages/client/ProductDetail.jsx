@@ -9,11 +9,13 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "../../feature/LoaderSlice";
 import { numberFormat } from "../../helper/number_format";
 import emptyImage from "../../images/empty.jpg";
+import { addToCart } from "../../feature/cart/slice/CartSlice";
 
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     (async () => {
@@ -30,6 +32,30 @@ function ProductDetail() {
   }, []);
 
   const productImage = process.env.REACT_APP_API_BASE_URL + product?.product_image || emptyImage;
+
+  const handleQuantityChange = (e) => {
+    setQuantity(e.target.value);
+  };
+
+  const handleMinus = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const handlePlus = () => {
+    if (quantity < product?.stock) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    dispatch(addToCart({
+      productID: product?.id_product,
+      quantity: quantity,
+    }));
+  };
 
   return (
     <LayoutClient>
@@ -61,17 +87,20 @@ function ProductDetail() {
             </div>
             {
               product.stock > 0 && (
-                <form action="" className="flex flex-col flex-wrap mt-3 font-body border-t pt-3">
+                <form action="" onSubmit={handleAddToCart} className="flex flex-col flex-wrap mt-3 font-body border-t pt-3">
                   <div className="flex flex-row items-center justify-between">
                     <label htmlFor="qty" className="">Qty</label>
                     <div className="flex flex-wrap flex-row">
                       <button type="button"
-                              className="px-3 py-2 border border-r-0 border-gray-300 rounded-l-md hover:bg-gray-100">-
+                              className="px-3 py-2 border border-r-0 border-gray-300 rounded-l-md hover:bg-gray-100"
+                              onClick={handleMinus}>-
                       </button>
-                      <input type="text" name="qty" id="qty" min={1} value={1}
-                             className="w-10 text-center border-t border-b border-gray-300" />
+                      <input type="number" name="qty" id="qty" min={1} max={product?.stock} value={quantity}
+                             onChange={handleQuantityChange}
+                             className="w-10 text-center border-t border-b border-gray-300 num-field" />
                       <button type="button"
-                              className="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md hover:bg-gray-100">+
+                              className="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md hover:bg-gray-100"
+                              onClick={handlePlus}>+
                       </button>
                     </div>
                   </div>
