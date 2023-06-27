@@ -347,6 +347,33 @@ const RemoveAddress = async (data) => {
   }
 };
 
+/**
+ * getPrimaryAddress - Get primary address
+ * @param id_user
+ * @return {Promise<{error: *, data: *}>}
+ */
+const getPrimaryAddress = async (id_user) => {
+  try {
+    const response = await Address.findOne({
+      include: [ { model: City, as: "city", include: [{ model: Province, as: "province" }] } ],
+      where: {
+        id_user,
+        is_primary: 1,
+        is_deleted: 0,
+      },
+    });
+    return {
+      error: null,
+      data: response,
+    };
+  } catch (error) {
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 
 module.exports = {
   GetProvinces,
@@ -357,4 +384,5 @@ module.exports = {
   GetAddressByUserID,
   UpdateUserAddress,
   RemoveAddress,
+  getPrimaryAddress,
 };

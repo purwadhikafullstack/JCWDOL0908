@@ -48,3 +48,11 @@ export const getProvince = () => {
 export const getCitiesByProvince = (province_id) => {
   return AxiosInstances.get(`/address/cities/${province_id}`);
 };
+
+export const getPrimaryAddress = () => {
+  return AxiosInstances.get("/users/address/default", {
+    headers: {
+      Authorization: `Bearer ${storage.getToken()}`,
+    },
+  });
+};
