@@ -21,8 +21,8 @@
 }
 
 .modal-container {
-  @apply px-4 w-5/6 bg-slate-50 relative md:translate-x-24 md:w-1/2
-  lg:w-1/3 py-4;
+  @apply px-4 w-5/6 bg-slate-50 relative md:translate-x-24 md:w-2/3
+  lg:w-1/2 py-4;
 }
 
 .close-btn-modal {
@@ -32,7 +32,7 @@
 /* DELETE MODAL */
 
 .delete-modal-header-container {
-  @apply grid grid-rows-8 gap-2;
+  @apply flex flex-col gap-2;
 }
 
 .delete-modal-header-text {
@@ -40,7 +40,7 @@
 }
 
 .delete-modal-body-container {
-  @apply row-span-5 text-sm lg:text-base;
+  @apply text-sm lg:text-base;
 }
 
 .delete-modal-confirmation-btn {
@@ -77,4 +77,15 @@
 
 .conf-modal-btn-cancel {
   @apply py-1 px-2 bg-red-800 text-white hover:cursor-pointer;
+}
+
+/* PRODUCT & CATEGORIES */
+
+.product-and-category-body-container {
+  @apply row-span-10 grid gap-2 lg:gap-2;
+}
+
+.render-data-container {
+  @apply font-semibold text-slate-800 grid grid-rows-4 md:grid-rows-2
+  md:grid-cols-2 items-start gap-2 text-xl lg:text-4xl md:text-3xl lg:gap-6 py-2;
 }

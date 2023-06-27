@@ -28,6 +28,28 @@ const CreateWarehouse = Joi.object({
 
 const CreateNewCategory = Joi.object({
   category_name: Joi.string().required(),
+  category_image: Joi.string().max(255).required(),
+});
+
+const editCategoryWithoutImage = Joi.object({
+  category_name: Joi.string().required(),
+});
+
+const CreateNewProduct = Joi.object({
+  product_name: Joi.string().max(45).required(),
+  description: Joi.string().max(255),
+  weight_kg: Joi.number().required(),
+  price: Joi.number().required(),
+  id_category: Joi.number().required(),
+  product_image: Joi.string().max(105).required(),
+});
+
+const editProductWithoutImage = Joi.object({
+  product_name: Joi.string().max(45).required(),
+  description: Joi.string().max(255),
+  weight_kg: Joi.number().required(),
+  price: Joi.number().required(),
+  id_category: Joi.number().required(),
 });
 
 module.exports = {
@@ -36,4 +58,7 @@ module.exports = {
   CreateWarehouse,
   phoneRegExp,
   CreateNewCategory,
+  CreateNewProduct,
+  editCategoryWithoutImage,
+  editProductWithoutImage,
 };

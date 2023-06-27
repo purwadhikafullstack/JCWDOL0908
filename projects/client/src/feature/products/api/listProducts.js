@@ -6,5 +6,5 @@ export const ListProducts = (query) => {
     delete query.sort_condition;
   }
   const uQuery = new URLSearchParams(query).toString();
-  return AxiosInstances.get("/products?" + uQuery);
+  return AxiosInstances.get("/products/client?" + uQuery);
 };

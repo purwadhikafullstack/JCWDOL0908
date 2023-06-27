@@ -31,7 +31,7 @@ function ProductDetail() {
     })();
   }, []);
 
-  const productImage = process.env.REACT_APP_API_BASE_URL + product?.product_image || emptyImage;
+  const productImage = process.env.REACT_APP_SERVER_URL + product?.product_image || emptyImage;
 
   const handleQuantityChange = (e) => {
     setQuantity(e.target.value);
@@ -84,6 +84,9 @@ function ProductDetail() {
             <div className="flex flex-wrap mt-3 font-body">
               Status: {product.stock > 0 ? <span className="ml-2 text-green-500">In Stock</span> :
               <span className="ml-2 text-red-500">Out of Stock</span>}
+            </div>
+            <div className="flex flex-wrap mt-3 font-body">
+              Weight: <span className="ml-2">{product?.weight_kg} Kg</span>
             </div>
             {
               product.stock > 0 && (

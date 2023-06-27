@@ -23,7 +23,10 @@ function DeleteModal(props) {
         <div className="delete-modal-header-container">
           <h1 className="delete-modal-header-text">Detail Data</h1>
           <div className="delete-modal-body-container">
-            <div className="mx-auto hover:cursor-pointer w-60 h-40 flex items-center justify-center border-2 border-slate-100">
+            <div
+              className="mx-auto hover:cursor-pointer w-60 h-40 flex items-center justify-center border-2 border-slate-100
+            lg:w-80 lg:h-60"
+            >
               <img
                 src={preview}
                 alt="category_image"
@@ -31,10 +34,12 @@ function DeleteModal(props) {
                 className={`mx-auto object-contain ${preview ? "w-full h-full" : "hidden"}`}
               />
             </div>
-            <h1 className="text-center">Category name : {singleCategory.category_name}</h1>
+            <h1 className="text-center">
+              <span className="font-bold">category name</span> : {singleCategory.category_name}
+            </h1>
           </div>
         </div>
-        <h3 className="text-center mb-2">
+        <h3 className="text-center mt-8 mb-2">
           Are you sure want to <i className="font-bold">delete</i> this data?
         </h3>
         <div className="w-full flex justify-center">
