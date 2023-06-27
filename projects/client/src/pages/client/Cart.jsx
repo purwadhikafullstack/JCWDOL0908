@@ -5,6 +5,7 @@ import CartItem from "../../feature/cart/components/CartItem";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { numberFormat } from "../../helper/number_format";
 
 function Cart() {
   const products = useSelector((state) => state.cart.cart);
@@ -41,6 +42,18 @@ function Cart() {
                       <CartItem key={product.id} product={product} />
                     ))
                   }
+                  <div className="flex flex-row justify-end mt-6 border-t pt-3">
+                    <div className="flex flex-col space-y-2">
+                      <div className="flex flex-row justify-between font-title text-primaryLight">
+                        <span className="font-bold px-3">Grand Total</span>
+                        <span
+                          className="font-bold">{numberFormat(products.reduce((a, b) => a + b.product.price * b.quantity, 0))}</span>
+                      </div>
+                      <Link to="/checkout" className="bg-primaryLight text-white px-4 py-2 rounded text-center font-title font-medium">
+                        Checkout
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </>
             ) : (

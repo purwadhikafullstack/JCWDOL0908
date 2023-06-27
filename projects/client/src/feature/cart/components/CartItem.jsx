@@ -5,7 +5,7 @@ import { addToCart, RemoveFromCart } from "../slice/CartSlice";
 
 function CartItem({ product }) {
   const dispatch = useDispatch();
-  const image_url = product.product.product_image ? `${process.env.REACT_APP_SERVER_URL}/${product.product.product_image}` : defaultImage;
+  const image_url = process.env.REACT_APP_SERVER_URL + product.product.product_image || defaultImage;
   const handleMinus = () => {
     const payload = {
       productID: product.id_product,
