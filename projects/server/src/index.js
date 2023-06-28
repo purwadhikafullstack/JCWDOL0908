@@ -9,6 +9,7 @@ const {
   AdminWarehouseRouter,
   AuthRouter,
   CategoryRouter,
+  CartRouter,
   AddressRouter,
   ProductRouter,
 } = require("./router");
@@ -52,8 +53,10 @@ app.use("/api/admin-warehouse", AdminWarehouseRouter);
 app.use("/api/auth", AuthRouter);
 app.use("/api/category", CategoryRouter);
 app.use("/api/products", ProductRouter);
+app.use("/api/cart", CartRouter);
 app.use("/api/product", ProductRouter);
 app.use("/api/address", AddressRouter);
+
 
 // ===========================
 

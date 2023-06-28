@@ -24,6 +24,7 @@ import ManageStock from "./pages/ManageStock";
 import Address from "./pages/client/profile/Address";
 import Products from "./pages/client/Products";
 import ProductDetail from "./pages/client/ProductDetail";
+import Cart from "./pages/client/Cart";
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -59,6 +60,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetail />} />
+
+        <Route path="/shopping-cart" element={<Cart />} />
 
         {/*Auth User Route*/}
         <Route path="/client" element={<LoginClient />} />

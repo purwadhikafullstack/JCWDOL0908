@@ -4,11 +4,11 @@ import { sortTypes } from "../../../helper/const";
 
 function FilterSort({ sort, setSort }) {
   return (
-    <Menu as="div" className="flex flex-col">
+    <Menu as="div" className="flex flex-col relative">
       <Menu.Button
         className="font-title text-left text-lg border rounded-md hover:border-primary px-3 py-1 cursor-pointer">Sort
         by : <span className="capitalize">{sort.type} {sort.value}</span></Menu.Button>
-      <Menu.Items className="flex flex-col shadow-lg border">
+      <Menu.Items className="absolute z-50 -bottom-[110px] left-0 flex flex-col shadow-lg border w-[140px]">
         {
           sortTypes.map((sortType, index) => (
             <Menu.Item key={index}>

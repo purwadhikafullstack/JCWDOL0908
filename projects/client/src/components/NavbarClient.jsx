@@ -1,16 +1,16 @@
 import { useEffect, useState, Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
+import { Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProfileNav from "./ProvileNav";
-
-
+import { totalCartItems } from "../feature/cart/slice/CartSlice";
 
 
 function NavbarClient() {
   const [scrolled, setScrolled] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const { user } = useSelector((state) => state.user);
+  const { cart } = useSelector((state) => state.cart);
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -84,9 +84,13 @@ function NavbarClient() {
           <button className="flex">
             <i className="uil uil-search"></i>
           </button>
-          <button className="flex">
+          <Link to="/shopping-cart" className="flex relative">
             <i className="uil uil-shopping-cart"></i>
-          </button>
+            <span
+              className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-4 h-4 text-xs font-body flex items-center justify-center">
+              {totalCartItems(cart)}
+            </span>
+          </Link>
           <ProfileNav user={user} />
         </div>
       </nav>

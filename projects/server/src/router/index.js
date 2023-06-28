@@ -5,6 +5,7 @@ const AdminWarehouseRouter = require("./AdminWarehouseRouter");
 const AuthRouter = require("./AuthRouter");
 const CategoryRouter = require("./CategoryRouter");
 const ProductRouter = require("./ProductRouter");
+const CartRouter = require("./CartRouter");
 const AddressRouter = require("./AddressRouter");
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   AuthRouter,
   CategoryRouter,
   ProductRouter,
+  CartRouter,
   AddressRouter,
 };
