@@ -14,6 +14,7 @@ const getProvinces = async () => {
     const result = await Province.findAll();
     return { error: null, result };
   } catch (error) {
+    console.log(error);
     return { error, result: null };
   }
 };
@@ -23,6 +24,7 @@ const getCitiesByProvinceId = async (id_province) => {
     const result = await City.findAll({ where: { id_province } });
     return { error: null, result };
   } catch (error) {
+    console.log(error);
     return { error, result: null };
   }
 };
@@ -123,11 +125,6 @@ const editWarehouse = async (id_warehouse, warehouse_name, address, id_city, lat
   return edit;
 };
 
-const createAdminRoleWarehouse = async (id_warehouse, transaction) => {
-  const createRole = await AdminRole.create({ role_admin: "admin-warehouse", id_warehouse }, { transaction });
-  return createRole;
-};
-
 const checkWarehouse = async (warehouse_name, id_city, transaction) => {
   const findWarehouse = await Warehouse.findAll({
     where: {
@@ -148,140 +145,18 @@ const checkWarehouseByNameExceptSelf = async (warehouse_name, id_warehouse, id_c
   return findWarehouse;
 };
 
-const getWarehousesLogic = async (offset, limit, page) => {
-  try {
-    let warehousesCount;
-    let totalPage;
-
-    // get total count warehouses
-    if (offset && limit && page) {
-      warehousesCount = await getWarehousesDataCount();
-      warehousesCount = warehousesCount[0].dataValues.warehouse_count;
-      totalPage = Math.ceil(warehousesCount / limit);
-    }
-
-    // get warehouses with limit
-    const warehouses = await getWarehousesData(offset, limit, page);
-
-    // get total page if fetching data being limited
-
-    const result = warehouses.map((warehouse, index) => {
-      const { city } = warehouse.dataValues;
-      const { id_city, type_city, province } = city;
-      const { id_province } = province;
-      return { ...warehouse.dataValues, id_city, city: city.city, type_city, province: province.province, id_province };
-    });
-    const data = { result, totalPage };
-    return { error: null, data };
-  } catch (error) {
-    return { error, data: null };
-  }
-};
-
-const deleteWarehouseLogic = async (id_warehouse) => {
-  const transaction = await db.sequelize.transaction();
-  try {
-    // delete warehouse
-    const response = await deleteWarehouseById(id_warehouse, transaction);
-    let result = response[0];
-
-    // check whether data changed exist
-    if (!result) throw { errMsg: "warehouse not found", statusCode: 404 };
-
-    result = "success";
-    await transaction.commit();
-    return { error: null, result };
-  } catch (error) {
-    transaction.rollback();
-    return { error, result: null };
-  }
-};
-
-const createWarehouseLogic = async (warehouse_name, address, id_city) => {
-  const transaction = await db.sequelize.transaction();
-  try {
-    // get the detail address data from geolocation api
-    const response = await getGeoLocation(address);
-    let { result, error } = response;
-    const { geometry, components } = result;
-    const { lat, lng } = geometry;
-
-    // if error while accessing the geo API
-    if (error) throw error;
-
-    // check if the road exists
-    if (!components.road) throw { errMsg: "we can't find the road", statusCode: 404 };
-
-    //check if warehouse already exist
-    const isWarehouseExist = await checkWarehouse(warehouse_name, id_city, transaction);
-    if (isWarehouseExist.length > 0) throw { errMsg: "warehouse already exists", statusCode: 400 };
-
-    //create warehouse
-    const createNew = await createWarehouse(
-      warehouse_name,
-      address,
-      id_city,
-      lat.toString(),
-      lng.toString(),
-      transaction,
-    );
-
-    // create new admin role of the new warehouse
-    const createNewAdminRole = await createAdminRoleWarehouse(createNew.dataValues.id_warehouse, transaction);
-    transaction.commit();
-    return { error: null, result: createNewAdminRole };
-  } catch (error) {
-    transaction.rollback();
-    return { error, result: null };
-  }
-};
-
-const editWarehouseLogic = async (id_warehouse, warehouse_name, address, id_city) => {
-  const transaction = await db.sequelize.transaction();
-  try {
-    // get the detail address data from geolocation api
-    const response = await getGeoLocation(address);
-    let { result, error } = response;
-    const { geometry, components } = result;
-    const { lat, lng } = geometry;
-
-    // if error while accessing the geo API
-    if (error) throw error;
-
-    // check if the road exists
-    if (!components.road) throw { errMsg: "we can't find the road", statusCode: 404 };
-
-    //check if warehouse already exist
-    const isWarehouseExist = await checkWarehouseByNameExceptSelf(warehouse_name, id_warehouse, id_city, transaction);
-    if (isWarehouseExist.length > 0) throw { errMsg: "warehouse name already exists", statusCode: 400 };
-
-    //edit warehouse
-    const edit = await editWarehouse(
-      id_warehouse,
-      warehouse_name,
-      address,
-      id_city,
-      lat.toString(),
-      lng.toString(),
-      transaction,
-    );
-    transaction.commit();
-    return { error: null, result: edit };
-  } catch (error) {
-    transaction.rollback();
-    return { error, result: null };
-  }
-};
-
 module.exports = {
   getSingleWarehouseAdmin,
   getAllWarehouseCity,
   getSpecificWarehouseByIdCity,
-  getWarehousesLogic,
-  deleteWarehouseLogic,
   getProvinces,
   getCitiesByProvinceId,
-  createWarehouseLogic,
-  editWarehouseLogic,
   getWarehousesData,
+  getGeoLocation,
+  checkWarehouseByNameExceptSelf,
+  editWarehouse,
+  checkWarehouse,
+  createWarehouse,
+  deleteWarehouseById,
+  getWarehousesDataCount,
 };

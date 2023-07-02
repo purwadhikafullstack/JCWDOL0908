@@ -6,7 +6,7 @@ function HeaderPage(props) {
     <div className="w-full text-center row-span-2 grid grid-rows-4">
       <h1
         className="font-semibold text-2xl pt-8 row-span-2 
-        text-slate-800 lg:text-3xl"
+        text-slate-800 lg:text-3xl font-title"
       >
         {isProductClicked ? "Product Management" : "Category Management"}
       </h1>

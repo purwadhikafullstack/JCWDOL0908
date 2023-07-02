@@ -63,7 +63,7 @@ function EditModal(props) {
     validationSchema,
     onSubmit: async (values) => {
       let price = currencyValue.replace(/[^0-9]/g, "");
-      price = parseInt(price.slice(0, price.length - 2));
+      price = parseInt(price);
       const id_product = singleProduct.id_product;
       const data = { ...values, price };
       const formData = new FormData();
@@ -104,7 +104,7 @@ function EditModal(props) {
             </div>
             <CustomSelectCategory formik={formik} categories={categories} label="category" name="id_category" />
             <div className="grid grid-cols-3 gap-2 text-sm h-8 mt-4">
-              <button type="submit" onClick={formik.handleSubmit} className="bg-green-800 text-white h-full">
+              <button type="submit" onClick={formik.handleSubmit} className="bg-slate-800 text-white h-full">
                 Submit
               </button>
             </div>

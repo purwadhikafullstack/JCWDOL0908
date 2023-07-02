@@ -77,7 +77,7 @@ function ManageAdmin(props) {
         </div>
         <div className="row-span-1 grid items-center">
           <button
-            className="bg-green-800 text-white px-2 py-1 text-base 
+            className="bg-slate-800 text-white px-2 py-1 text-base 
           font-semibold lg:w-1/3"
             onClick={() => setNewAdminClicked(true)}
           >

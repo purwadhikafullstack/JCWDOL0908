@@ -6,6 +6,7 @@ const AuthController = require("./AuthController");
 const CategoryController = require("./CategoryController");
 const ProductController = require("./ProductController");
 const AddressController = require("./AddressController");
+const ProductWarehouseRltController = require("./ProductWarehouseRltController");
 const CartController = require("./CartController");
 const CheckoutController = require("./CheckoutController");
 
@@ -18,6 +19,7 @@ module.exports = {
   CategoryController,
   ProductController,
   AddressController,
+  ProductWarehouseRltController,
   CartController,
   CheckoutController,
 };

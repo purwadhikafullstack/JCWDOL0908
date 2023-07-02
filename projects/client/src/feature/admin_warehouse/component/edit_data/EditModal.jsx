@@ -96,7 +96,7 @@ function EditModal(props) {
                   <div className="invisible"></div>
                   <div className=" row-span-1">
                     <div className="grid grid-cols-2 gap-8 text-sm h-5/6 mt-4">
-                      <button className="bg-green-800 text-white" type="submit">
+                      <button className="bg-slate-800 text-white" type="submit">
                         Submit
                       </button>
                     </div>

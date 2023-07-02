@@ -75,8 +75,6 @@ const UnlinkPhoto = (name) => {
 /**
  * UploadPhotoEditData - a middleware helper to upload photo to storage using multer
  * @param directory
- * @returns {(function(*, *, *): void)|*}
- * @constructor
  */
 const UploadPhotoEditData = (directory) => {
   return (req, res, next) => {

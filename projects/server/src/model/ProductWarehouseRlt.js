@@ -29,6 +29,10 @@ module.exports = (sequelize) => {
       booked_stock: {
         type: DataTypes.INTEGER,
       },
+      is_deleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 0,
+      },
     },
     {
       tableName: "product_warehouse_rlt",

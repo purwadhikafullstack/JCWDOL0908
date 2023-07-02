@@ -73,7 +73,7 @@ function EditModal(props) {
               ) : null}
             </div>
             <div className="grid grid-cols-3 gap-2 text-sm h-8">
-              <button type="submit" onClick={formik.handleSubmit} className="bg-green-800 text-white h-full">
+              <button type="submit" onClick={formik.handleSubmit} className="bg-slate-800 text-white h-full">
                 Submit
               </button>
             </div>

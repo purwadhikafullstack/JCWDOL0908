@@ -12,6 +12,6 @@ export const deleteUserData = async (id_user) => {
     );
     return response.data;
   } catch (error) {
-    alert(error.response.data.message);
+    return error.response.data;
   }
 };

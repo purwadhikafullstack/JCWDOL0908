@@ -1,10 +1,11 @@
 const { AdminWarehouseService } = require("../service");
 const { AdminDataValidation } = require("../validation");
+const { AdminWarehouseLogic } = require("../logic");
 
 const getAllWarehouse = async (req, res, next) => {
   try {
     const { offset, limit, page } = req.query;
-    const warehouses = await AdminWarehouseService.getWarehousesLogic(offset, limit, page);
+    const warehouses = await AdminWarehouseLogic.getWarehousesLogic(offset, limit, page);
     const { error, data } = warehouses;
 
     // check whether error exists
@@ -20,7 +21,7 @@ const getAllWarehouse = async (req, res, next) => {
 const deleteWarehouse = async (req, res, next) => {
   try {
     const { id_warehouse } = req.params;
-    const response = await AdminWarehouseService.deleteWarehouseLogic(id_warehouse);
+    const response = await AdminWarehouseLogic.deleteWarehouseLogic(id_warehouse);
     const { error, result } = response;
 
     // check whether error exists
@@ -71,12 +72,16 @@ const createWarehouse = async (req, res, next) => {
   let { warehouse_name, address, id_city, id_province } = req.body;
   try {
     // data validation
-    var { error, value } = AdminDataValidation.CreateWarehouse.validate({ warehouse_name, address, id_city });
-    if (error) throw error;
+    const { error: err_validation, value } = AdminDataValidation.CreateWarehouse.validate({
+      warehouse_name,
+      address,
+      id_city,
+    });
+    if (err_validation) throw error;
 
     // start create warehouse logic
-    const response = await AdminWarehouseService.createWarehouseLogic(warehouse_name, address, id_city, id_province);
-    var { result, error } = response;
+    const response = await AdminWarehouseLogic.createWarehouseLogic(warehouse_name, address, id_city, id_province);
+    const { result, error } = response;
 
     // check whether error exists
     if (error?.errMsg) return res.status(error.statusCode).send({ message: error.errMsg, isSuccess: false });
@@ -92,18 +97,22 @@ const editWarehouse = async (req, res, next) => {
   let { id_warehouse, warehouse_name, address, id_city, id_province } = req.body;
   try {
     // data validation
-    var { error, value } = AdminDataValidation.CreateWarehouse.validate({ warehouse_name, address, id_city });
-    if (error) throw error;
+    const { error: err_validation, value } = AdminDataValidation.CreateWarehouse.validate({
+      warehouse_name,
+      address,
+      id_city,
+    });
+    if (err_validation) throw error;
 
     // start create warehouse logic
-    const response = await AdminWarehouseService.editWarehouseLogic(
+    const response = await AdminWarehouseLogic.editWarehouseLogic(
       id_warehouse,
       warehouse_name,
       address,
       id_city,
       id_province,
     );
-    var { result, error } = response;
+    const { result, error } = response;
 
     // check whether error exists
     if (error?.errMsg) return res.status(error.statusCode).send({ message: error.errMsg, isSuccess: false });

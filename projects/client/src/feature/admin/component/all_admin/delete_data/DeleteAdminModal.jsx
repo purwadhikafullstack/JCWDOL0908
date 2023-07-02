@@ -10,6 +10,7 @@ function DeleteAdminModal(props) {
 
   const delButtonHandler = async (id_user) => {
     const result = await deleteUserData(id_user);
+    alert(result.message);
     await dispatch(getAllAdmin(page));
     setDeleteClicked(false);
   };

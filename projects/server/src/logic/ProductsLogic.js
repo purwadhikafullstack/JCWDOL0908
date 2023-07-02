@@ -1,4 +1,4 @@
-const { ProductService, AdminWarehouseService } = require("../service");
+const { ProductService, AdminWarehouseService, ProductWarehouseRltService } = require("../service");
 const { UnlinkPhoto } = require("../helper/Multer");
 const db = require("../model");
 
@@ -22,6 +22,7 @@ const getProductsLogic = async (offset, limit, page, id_category) => {
     const result = { productsList, totalPage };
     return { error: null, result };
   } catch (error) {
+    console.log(error);
     return { error, result: null };
   }
 };
@@ -52,7 +53,7 @@ const postNewProductLogic = async (data) => {
     // give the relation between created product with all warehouses
     for (let iter = 0; iter < getWarehouses.length; iter++) {
       const id_warehouse = getWarehouses[iter].dataValues.id_warehouse;
-      await ProductService.createProductWarehouseRlt(id_product, id_warehouse, transaction);
+      await ProductWarehouseRltService.createProductWarehouseRlt(id_product, id_warehouse, transaction);
     }
 
     transaction.commit();
@@ -60,6 +61,7 @@ const postNewProductLogic = async (data) => {
   } catch (error) {
     await UnlinkPhoto(product_image);
     transaction.rollback();
+    console.log(error);
     return { error, result: null };
   }
 };
@@ -73,6 +75,7 @@ const deleteProductLogic = async (id_product) => {
     return { error: null, result: response };
   } catch (error) {
     transaction.rollback();
+    console.log(error);
     return { error, result: null };
   }
 };
@@ -112,6 +115,7 @@ const editProductLogic = async (data) => {
   } catch (error) {
     await UnlinkPhoto(product_image);
     transaction.rollback();
+    console.log(error);
     return { error, result: null };
   }
 };
