@@ -1,5 +1,6 @@
 const db = require("../model");
 const { Op } = require("sequelize");
+const { QueryTypes } = require("sequelize");
 const { Product, ProductWarehouseRlt, sequelize, Category } = db;
 
 /**
@@ -71,7 +72,8 @@ const listProducts = async (data) => {
     const productIds = products.map((product) => product.id_product);
 
     const stockCounts = await ProductWarehouseRlt.findAll({
-      attributes: ["id_product",
+      attributes: [
+        "id_product",
         [db.sequelize.fn("sum", db.sequelize.col("stock")), "total_stock"],
         [db.sequelize.fn("sum", db.sequelize.col("booked_stock")), "total_booked_stock"],
       ],
@@ -87,7 +89,6 @@ const listProducts = async (data) => {
       map[count.id_product] = totalStock - totalBookedStock;
       return map;
     }, {});
-
 
     const updatedProducts = products.map((product) => ({
       ...product.toJSON(),
@@ -133,24 +134,18 @@ const getProduct = async (id) => {
     const stockCount = await ProductWarehouseRlt.findAll({
       attributes: [
         "id_product",
-        [
-          db.sequelize.fn("sum", db.sequelize.col("stock")),
-          "total_stock"
-        ],
-        [
-          db.sequelize.fn("sum", db.sequelize.col("booked_stock")),
-          "total_booked_stock"
-        ]
+        [db.sequelize.fn("sum", db.sequelize.col("stock")), "total_stock"],
+        [db.sequelize.fn("sum", db.sequelize.col("booked_stock")), "total_booked_stock"],
       ],
       where: {
-        id_product: id
+        id_product: id,
       },
-      group: ["id_product"]
+      group: ["id_product"],
     });
 
     if (stockCount.length > 0) {
       product.dataValues.stock = stockCount[0].dataValues.total_stock - stockCount[0].dataValues.total_booked_stock;
-      product.dataValues.booked_stock =  parseInt(stockCount[0].dataValues.total_booked_stock) || 0
+      product.dataValues.booked_stock = parseInt(stockCount[0].dataValues.total_booked_stock) || 0;
     } else {
       product.dataValues.stock = 0;
       product.dataValues.booked_stock = 0;
@@ -168,12 +163,9 @@ const getProduct = async (id) => {
   }
 };
 
-
 const getProductByName = async (product_name, id_product) => {
   let product;
-  console.log("id_product", id_product);
   if (id_product) {
-    console.log("harusnya kesini jg");
     product = await Product.findOne({ where: { product_name, id_product: { [Op.not]: id_product } } });
   } else {
     product = await Product.findOne({ where: { product_name } });
@@ -188,7 +180,7 @@ const getProductById = async (id_product, transaction) => {
 
 const getProductsCount = async (id_category) => {
   let productsCount;
-  //check if offset, limit, page value is given
+  //check if id_category is given
   if (id_category) {
     // if id_category given, then get total count data with category filter
     productsCount = await Product.findAll({
@@ -231,14 +223,6 @@ const getProducts = async (offset, limit, page, id_category) => {
     products = await Product.findAll({ where: { is_deleted: 0 } });
   }
   return products;
-};
-
-const createProductWarehouseRlt = async (id_product, id_warehouse, transaction) => {
-  const response = await ProductWarehouseRlt.create(
-    { id_product, stock: 0, id_warehouse, booked_stock: 0 },
-    { transaction },
-  );
-  return response;
 };
 
 const createProduct = async (product_name, description, weight_kg, product_image, id_category, price, transaction) => {
@@ -292,11 +276,9 @@ module.exports = {
   getProducts,
   getProductByName,
   createProduct,
-  createProductWarehouseRlt,
   deleteProduct,
   updateProduct,
   getProductById,
   listProducts,
   getProduct,
 };
-

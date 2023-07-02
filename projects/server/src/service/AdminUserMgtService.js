@@ -5,9 +5,8 @@ const bcrypt = require("bcrypt");
 const { join } = require("path");
 require("dotenv").config({ path: join(__dirname, "../.env") });
 const env = process.env;
-const { getProvinces } = require("./AdminWarehouseService");
 
-const getAllUserWithoutAddress = async (offset, limit, page) => {
+const getAllUser = async (offset, limit, page) => {
   const allUser = await User.findAll({
     where: {
       is_deleted: 0,
@@ -107,42 +106,17 @@ const deleteUser = async (id_user, transaction) => {
   return deleteUserData;
 };
 
-const createNewAdmin = async (username, email, phone_number, password, id_warehouse, transaction) => {
-  const getAdminRole = await findAdminRoleByIdWarehouse(id_warehouse);
-  const adminRoleId = getAdminRole.dataValues.id_role;
-  const hashedPassword = await hashingPassword(password);
-  const createNewAdmin = await User.create(
-    {
-      username,
-      email,
-      phone_number,
-      password: hashedPassword,
-      is_admin: true,
-      id_role: adminRoleId,
-      is_verify: true,
-    },
+const createNewAdmin = async (username, email, phone_number, password, id_role, transaction) => {
+  const result = await User.create(
+    { username, email, phone_number, password, is_admin: true, id_role, is_verify: true },
     { transaction },
   );
-  return createNewAdmin;
-};
-
-const getAllAdminUserLogic = async (offset, limit, page) => {
-  try {
-    const allAdminCount = await getAllAdminCount();
-    const allAdminUser = await getAllAdmin(offset, limit, page);
-    const adminCount = allAdminCount[0].dataValues.user_count;
-    const totalPage = Math.ceil(adminCount / limit);
-    const result = { totalPage, dataAll: allAdminUser };
-    const provinces = await getProvinces();
-    return { error: null, result };
-  } catch (error) {
-    return { error, result: null };
-  }
+  return result;
 };
 
 module.exports = {
   getAllUserCount,
-  getAllUserWithoutAddress,
+  getAllUser,
   getSingleSuperAdmin,
   getSingleUser,
   getAllAdmin,
@@ -154,5 +128,4 @@ module.exports = {
   createAdminRoleWarehouse,
   deleteUser,
   createNewAdmin,
-  getAllAdminUserLogic,
 };

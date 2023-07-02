@@ -1,5 +1,5 @@
 import React from "react";
-import RenderCategoryOptions from "./add_data/RenderCategoryOptions";
+import RenderCategoryOptions from "../RenderCategoryOptions";
 
 function CustomSelectCategory({ label, formik, name, categories }) {
   return (

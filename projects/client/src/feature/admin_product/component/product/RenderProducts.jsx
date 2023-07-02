@@ -28,11 +28,8 @@ function RenderProducts(props) {
       gap-2 lg:grid-cols-4 lg:px-6 lg:h-full bg-slate-100 shadow-md transition hover:scale-105"
       >
         <div className="col-span-2 lg:col-span-3 text-left h-full flex items-center">
-          <div className="relative">
+          <div className="bg-white bg-opacity-40 py-1 px-2">
             <p className=" text-slate-800 relative z-10 ">{cutString(product?.product_name)}</p>
-            <p className=" text-white absolute top-0 left-0 z-0 -ml-[0.1rem] mt-[0.08rem] lg:mt-[0.1rem]">
-              {cutString(product?.product_name)}
-            </p>
           </div>
         </div>
         <div className="h-1/3 md:h-1/4 grid grid-cols-2 gap-2">

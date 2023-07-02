@@ -86,7 +86,7 @@ function AddDataModal(props) {
             </div>
             <CustomSelectCategory formik={formik} categories={categories} label="category" name="id_category" />
             <div className="grid grid-cols-3 gap-2 text-sm h-8 mt-4">
-              <button type="submit" onClick={formik.handleSubmit} className="bg-green-800 text-white h-full">
+              <button type="submit" onClick={formik.handleSubmit} className="bg-slate-800 text-white h-full">
                 Submit
               </button>
             </div>

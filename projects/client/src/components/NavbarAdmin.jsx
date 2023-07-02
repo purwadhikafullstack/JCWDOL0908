@@ -59,8 +59,8 @@ function NavbarAdmin() {
         <div className="relative">
           <h1
             onClick={() => navigate("/admin/dashboard")}
-            className="invisible md:visible md:text-lg text-slate-800 tracking-tighter
-      md:pt-10 md:pb-8 scale-y-110 font-bold lg:text-2xl hover:cursor-pointer"
+            className="invisible md:visible md:text-lg text-slate-800
+      md:pt-10 md:pb-8 scale-y-110 font-bold lg:text-2xl hover:cursor-pointer font-title"
           >
             WarehouseKu
           </h1>

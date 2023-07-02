@@ -6,3 +6,4 @@ export * from "./api/postProduct";
 export * from "./api/getProducts";
 export * from "./api/deleteProduct";
 export * from "./api/editProduct";
+export * from "./api/updateProductStocks";

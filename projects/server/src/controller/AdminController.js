@@ -1,32 +1,33 @@
 const db = require("../model");
-const { AdminUserMgtService, AdminWarehouseService } = require("../service");
+const { AdminWarehouseService } = require("../service");
 const { AdminDataValidation } = require("../validation");
+const { AdminUserLogic } = require("../logic");
 
 const getAllAdminUser = async (req, res, next) => {
   const { offset, limit, page } = req.query;
-  const response = await AdminUserMgtService.getAllAdminUserLogic(offset, limit, page);
-  const { result, error } = response;
-  if (!result) return res.status(500).send({ isSuccess: false, message: "internal server error", error });
-  return res.status(200).send({ isSuccess: true, message: "success fetched data", result });
+  try {
+    const { result, error } = await AdminUserLogic.getAllAdminUserLogic(offset, limit, page);
+
+    //check whether error exist/no result found
+    if (error) return res.status(500).send({ message: "internal server error", isSuccess: false, error });
+
+    return res.status(200).send({ isSuccess: true, message: "success fetched data", result });
+  } catch (error) {
+    //unknown error
+    next(error);
+  }
 };
 
 const getSingleUser = async (req, res, next) => {
   const { isAdmin, idRole } = req.query;
   const { id } = req.params;
-  let result;
   try {
-    if ((isAdmin === "true" && idRole == "null") || isAdmin === "false") {
-      result = await AdminUserMgtService.getSingleUser(id);
-    } else if (isAdmin === "true") {
-      if (idRole != 1) {
-        result = await AdminWarehouseService.getSingleWarehouseAdmin(id);
-      } else {
-        result = await AdminUserMgtService.getSingleSuperAdmin(id);
-      }
-    }
+    const { error, result } = await AdminUserLogic.getSingleUserLogic(id, isAdmin, idRole);
+    if (error) return res.status(500).send({ message: "internal server error", isSuccess: false, error });
     return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
   } catch (error) {
-    return res.status(500).send({ isSuccess: false, message: "internal server error", error });
+    //unknown error
+    next(error);
   }
 };
 
@@ -36,21 +37,20 @@ const getSingleWarehouseAdmin = async (req, res, next) => {
     const result = await AdminWarehouseService.getSingleWarehouseAdmin(id);
     return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
   } catch (error) {
-    return res.status(500).send({ isSuccess: false, message: "internal server error", error });
+    //unknown error
+    next(error);
   }
 };
 
 const getAllUser = async (req, res, next) => {
   const { offset, limit, page } = req.query;
   try {
-    const allUserCount = await AdminUserMgtService.getAllUserCount();
-    const allUser = await AdminUserMgtService.getAllUserWithoutAddress(offset, limit, page);
-    const userCount = allUserCount[0].dataValues.user_count;
-    const totalPage = Math.ceil(userCount / limit);
-    const result = { totalPage, dataAll: allUser };
+    const { error, result } = await AdminUserLogic.getAllUserLogic(offset, limit, page);
+    if (error) return res.status(500).send({ message: "internal server error", isSuccess: false, error });
     return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
   } catch (error) {
-    return res.status(500).send({ isSuccess: false, message: "internal server error", error });
+    //unknown error
+    next(error);
   }
 };
 
@@ -59,7 +59,8 @@ const getAllWarehouseCity = async (req, res, next) => {
     const result = await AdminWarehouseService.getAllWarehouseCity();
     return res.status(200).send({ isSuccess: true, result, message: "success retrieve data" });
   } catch (error) {
-    return res.status(500).send({ isSuccess: false, message: "internal server error", error });
+    //unknown error
+    next(error);
   }
 };
 
@@ -69,82 +70,88 @@ const getSpecWarehouseByIdCity = async (req, res, next) => {
     const warehouse = await AdminWarehouseService.getSpecificWarehouseByIdCity(id_city);
     return res.status(200).send({ isSuccess: true, result: warehouse, message: "success retrieve data" });
   } catch (error) {
-    return res.status(500).send({ isSuccess: false, message: "internal server error", error });
+    //unknown error
+    next(error);
   }
 };
 
 const updateAdminWarehouse = async (req, res, next) => {
-  const transaction = await db.sequelize.transaction();
   const { id_user, username, email, password, phoneNumber, id_warehouse } = req.body;
   let newRole;
   try {
-    const { error, value } = AdminDataValidation.EditDataAdmin.validate({ username, email, phoneNumber, id_warehouse });
-    if (error) throw error;
-    if (password !== "") {
-      const { error, value } = AdminDataValidation.EditDataAdmin.validate({ password });
-      if (error) throw error;
-      await AdminUserMgtService.updateDataAdminPassword(id_user, password, transaction);
-    }
-    const isRoleAdminExist = await AdminUserMgtService.findAdminRoleByIdWarehouse(id_warehouse);
-    if (!isRoleAdminExist) {
-      const createRole = await AdminUserMgtService.createAdminRoleWarehouse(id_warehouse, transaction);
-      newRole = createRole.dataValues.id_role;
-    }
-    newRole = isRoleAdminExist.dataValues.id_role;
-    const updatePersonalData = await AdminUserMgtService.updateDataAdmin(
-      id_user,
+    // validating data
+    const { error: err_validation, value } = AdminDataValidation.EditDataAdmin.validate({
       username,
       email,
       phoneNumber,
-      newRole,
-      transaction,
+      id_warehouse,
+    });
+    if (err_validation) throw error;
+    if (password !== "") {
+      const { error, value } = AdminDataValidation.EditDataAdmin.validate({ password });
+      if (error) throw error;
+    }
+
+    const { error, result } = AdminUserLogic.updateAdminWarehouseLogic(
+      id_user,
+      username,
+      email,
+      password,
+      phoneNumber,
+      id_warehouse,
     );
-    await transaction.commit();
-    return res.status(204).send({ isSuccess: true, message: "data updated" });
+
+    if (error?.errMsg) res.status(error.statusCode).send({ message: error.errMsg, isSuccess: false });
+    if (error) return res.status(500).send({ message: "internal server error", isSuccess: false, error });
+
+    return res.status(204).send({ isSuccess: true, message: "data updated", result });
   } catch (error) {
-    await transaction.rollback();
-    return res.status(500).send({ isSuccess: false, message: "internal server error", error });
+    // unknown error
+    next(error);
   }
 };
 
 const deleteUser = async (req, res, next) => {
   const { id } = req.params;
-  const transaction = await db.sequelize.transaction();
   try {
-    const result = await AdminUserMgtService.deleteUser(id, transaction);
-    await transaction.commit();
-    return res.status(204).send({ isSuccess: true, message: "data deleted" });
+    const { error, result } = await AdminUserLogic.deleteUserLogic(id);
+    if (error) return res.status(500).send({ message: "internal server error", isSuccess: false, error });
+    return res.status(202).send({ isSuccess: true, result, message: "data deleted" });
   } catch (error) {
-    await transaction.rollback();
-    return res.status(500).send({ isSuccess: false, message: "internal server error", error });
+    //unknown error
+    next(error);
   }
 };
 
 const createNewAdmin = async (req, res, next) => {
   const { username, email, phone_number, password, id_warehouse } = req.body;
-  const transaction = await db.sequelize.transaction();
   try {
-    const { error, value } = AdminDataValidation.CreateDataAdmin.validate({
+    // validating data
+    const { error: err_validation, value } = AdminDataValidation.CreateDataAdmin.validate({
       username,
       email,
       phone_number,
       password,
       id_warehouse,
     });
-    if (error) throw error;
-    const result = await AdminUserMgtService.createNewAdmin(
+
+    //check whether any data-validation error exist
+    if (err_validation) throw error;
+    // if error not exist, create data logic begin
+    const { error, result } = await AdminUserLogic.createNewAdminLogic(
       username,
       email,
       phone_number,
       password,
       id_warehouse,
-      transaction,
     );
-    await transaction.commit();
-    return res.status(201).send({ isSuccess: true, message: "data succesfully created" });
+    if (error?.errMsg) res.status(error.statusCode).send({ message: error.errMsg, isSuccess: false });
+    if (error) return res.status(500).send({ message: "internal server error", isSuccess: false, error });
+
+    return res.status(201).send({ isSuccess: true, result, message: "data succesfully created" });
   } catch (error) {
-    await transaction.rollback();
-    return res.status(500).send({ isSuccess: false, message: "internal server error", error });
+    // unknown error
+    next(error);
   }
 };
 
