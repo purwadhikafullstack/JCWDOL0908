@@ -20,6 +20,7 @@ function DeliveryMethod({ address, selectedCourier, setSelectedCourier }) {
   useEffect(() => {
     (async () => {
       if (address.id_address) {
+        setSelectedCourier({});
         await fetchCourier();
       }
     })();
@@ -38,25 +39,29 @@ function DeliveryMethod({ address, selectedCourier, setSelectedCourier }) {
               <i className="uil uil-angle-down"/>
             </Menu.Button>
 
-            <Menu.Items className="flex flex-col shadow-lg border w-full absolute top-10 rounded-md bg-primary">
-              {
-                // map and item, index
-                courier.map((item, index) => (
-                  item?.costs.map((cost, index) => (
-                    <Menu.Item key={index}>
-                      {({ active }) => (
-                        <button
-                          onClick={() => setSelectedCourier({ ...item, cost })}
-                          className={`flex items-center justify-between px-3 py-2 cursor-pointer capitalize ${active ? "bg-primary text-white" : "bg-gray-100"}`}
-                        >
-                          {item.code}- {cost.service} ({cost.cost[0].etd} days)
-                        </button>
-                      )}
-                    </Menu.Item>
-                  ))
-                ))
-              }
-            </Menu.Items>
+            {
+              courier && (
+                <Menu.Items className="flex flex-col shadow-lg border w-full absolute top-10 rounded-md bg-primary">
+                  {
+                    // map and item, index
+                    courier.map((item, index) => (
+                      item?.costs.map((cost, index) => (
+                        <Menu.Item key={index}>
+                          {({ active }) => (
+                            <button
+                              onClick={() => setSelectedCourier({ ...item, cost })}
+                              className={`flex items-center justify-between px-3 py-2 cursor-pointer capitalize ${active ? "bg-primary text-white" : "bg-gray-100"}`}
+                            >
+                              {item.code}- {cost.service} ({cost.cost[0].etd} days)
+                            </button>
+                          )}
+                        </Menu.Item>
+                      ))
+                    ))
+                  }
+                </Menu.Items>
+              )
+            }
           </Menu>
         </div>
         {
