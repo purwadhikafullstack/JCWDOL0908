@@ -92,13 +92,18 @@ function Checkout() {
                     <div className="py-3">
                       {
                         selectedAddress?.id_city && (
-                          <button
-                            type="button"
-                            className="px-3 py-2 flex items-center rounded-md border text-gray-900 font-medium font-title hover:bg-gray-100"
-                            onClick={() => setTrigger({ action: "change", address: {} })}
-                          >
-                            Choose Another Address
-                          </button>
+                          <div className="flex flex-row gap-2">
+                            <button
+                              type="button"
+                              className="px-3 py-2 flex items-center rounded-md border text-gray-900 font-medium font-title hover:bg-gray-100"
+                              onClick={() => setTrigger({ action: "change", address: {} })}
+                            >
+                              Choose Another Address
+                            </button>
+                            <Link to="/account/address" className="px-3 py-2 flex items-center rounded-md border text-gray-900 font-medium font-title hover:bg-gray-100">
+                              Manage Address
+                            </Link>
+                          </div>
                         )
                       }
                     </div>
