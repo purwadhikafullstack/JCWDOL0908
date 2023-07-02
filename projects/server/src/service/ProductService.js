@@ -14,6 +14,7 @@ const { Product, ProductWarehouseRlt, sequelize, Category } = db;
  * @param {string} data.sort_key - The key to sort products by.
  * @param {string} data.sort_condition - The sorting condition ("asc" or "desc").
  * @returns {Object} An object containing error status, data, and metadata.
+ * TODO: stock relations with is deleted
  */
 const listProducts = async (data) => {
   try {

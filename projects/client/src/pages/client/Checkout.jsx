@@ -6,14 +6,16 @@ import ModalAddress from "../../feature/profile/components/ModalAddress";
 import { getPrimaryAddress } from "../../feature/profile";
 import { ToastError } from "../../helper/Toastify";
 import ModalListAddress from "../../feature/checkout/components/ModalListAddress";
-import { numberFormat } from "../../helper/number_format";
 import { useSelector } from "react-redux";
 import CartItem from "../../feature/cart/components/CartItem";
 import { Link } from "react-router-dom";
+import SummaryCheckout from "../../feature/checkout/components/SummaryCheckout";
+import DeliveryMethod from "../../feature/checkout/components/DeliveryMethod";
 
 function Checkout() {
   const [selectedAddress, setSelectedAddress] = useState({});
   const products = useSelector((state) => state.cart.cart);
+  const [selectedCourier, setSelectedCourier] = useState({});
   const [trigger, setTrigger] = useState({
     action: "",
     address: {},
@@ -108,24 +110,12 @@ function Checkout() {
                       ))
                     }
                   </div>
+                  <DeliveryMethod
+                    address={selectedAddress}
+                    selectedCourier={selectedCourier}
+                    setSelectedCourier={setSelectedCourier} />
                 </div>
-                <div className="w-full sm:w-4/12">
-                  <H3>Order Summary</H3>
-                  <div className="border-b-8">
-                    <div className="flex justify-between rounded-md w-full gap-3 py-2 border-y">
-                      <p className="font-body">Subtotal</p>
-                      <p className="font-body">{numberFormat(subTotal)}</p>
-                    </div>
-                    <div className="flex justify-between rounded-md w-full gap-3 py-2 ">
-                      <p className="font-body">Shipping</p>
-                      <p className="font-body">-</p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between py-3 mb-3 rounded-md w-full gap-3 border-y">
-                    <p className="font-body">Total</p>
-                    <p className="font-body">{numberFormat(subTotal)}</p>
-                  </div>
-                </div>
+                <SummaryCheckout subTotal={parseInt(subTotal)} shipping={selectedCourier?.cost?.cost[0].value} />
               </>
             ) : (
               <div className="w-full flex flex-col items-center justify-center gap-3">
