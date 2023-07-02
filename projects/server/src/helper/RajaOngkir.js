@@ -12,11 +12,11 @@ const getShippingCost = async ({ origin, destination, weight, courier = "jne:pos
   try {
     const apiUrl = 'https://pro.rajaongkir.com/api/cost';
     const requestData = {
-      origin: 24,
+      origin: origin,
       originType: 'city',
-      destination: 163,
+      destination: destination,
       destinationType: 'city',
-      weight: 12 * 1000,
+      weight: weight * 1000,
       courier: 'jne:pos'
     };
 

@@ -5,3 +5,8 @@ export const numberFormat = (value) => {
     maximumFractionDigits: 0,
   }).format(value);
 };
+
+// remove word "HARI"
+export const removeHari = (value) => {
+  return value.replace("HARI", "");
+};

@@ -106,7 +106,7 @@ function Checkout() {
                   <div className="border-b-8 py-3 flex flex-col gap-2">
                     {
                       products.map((product) => (
-                        <CartItem key={product.id} product={product} withAction={false} />
+                        <CartItem key={product.id_product} product={product} withAction={false} />
                       ))
                     }
                   </div>

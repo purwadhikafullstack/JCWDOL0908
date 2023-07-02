@@ -2,19 +2,30 @@ import { H3 } from "../../../components/Typo";
 import { Menu } from "@headlessui/react";
 import { shippingCost } from "../api/shippingCost";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { numberFormat } from "../../../helper/number_format";
+import { useDispatch, useSelector } from "react-redux";
+import { numberFormat, removeHari } from "../../../helper/number_format";
+import { setLoading } from "../../LoaderSlice";
+import { ToastError } from "../../../helper/Toastify";
 
 function DeliveryMethod({ address, selectedCourier, setSelectedCourier }) {
   const [courier, setCourier] = useState([]);
   const cart = useSelector((state) => state.cart.cart);
+  const dispatch = useDispatch();
+
   const fetchCourier = async () => {
-    const carts = cart.map((item) => item.id_cart);
-    const res = await shippingCost({
-      id_address: address.id_address,
-      carts,
-    });
-    setCourier(res.data.data);
+    dispatch(setLoading(true));
+    try {
+      const carts = cart.map((item) => item.id_cart);
+      const res = await shippingCost({
+        id_address: address.id_address,
+        carts,
+      });
+      setCourier(res.data.data);
+    } catch (error) {
+      ToastError(error.message || "Failed to get shipping cost");
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
 
   useEffect(() => {
@@ -36,7 +47,7 @@ function DeliveryMethod({ address, selectedCourier, setSelectedCourier }) {
             <Menu.Button
               className="font-title text-left text-lg border bg-primaryLight text-white rounded-md hover:border-primary px-3 py-1 cursor-pointer capitalize flex justify-between">
               {selectedCourier?.code ? `${selectedCourier?.code} - ${selectedCourier?.cost?.service}` : "Choose Courier"}
-              <i className="uil uil-angle-down"/>
+              <i className="uil uil-angle-down" />
             </Menu.Button>
 
             {
@@ -52,7 +63,7 @@ function DeliveryMethod({ address, selectedCourier, setSelectedCourier }) {
                               onClick={() => setSelectedCourier({ ...item, cost })}
                               className={`flex items-center justify-between px-3 py-2 cursor-pointer capitalize ${active ? "bg-primary text-white" : "bg-gray-100"}`}
                             >
-                              {item.code}- {cost.service} ({cost.cost[0].etd} days)
+                              {item.code}- {cost.service} ({removeHari(cost.cost[0].etd)} days)
                             </button>
                           )}
                         </Menu.Item>
@@ -69,7 +80,7 @@ function DeliveryMethod({ address, selectedCourier, setSelectedCourier }) {
             <div className="flex flex-col w-full sm:w-1/2 gap-2 bg-gray-100 p-3">
               <p className="font-body"> Courier : {selectedCourier?.code}</p>
               <p className="font-body"> Service : {selectedCourier?.cost?.service}</p>
-              <p className="font-body"> Estimation : {selectedCourier?.cost?.cost[0].etd} days</p>
+              <p className="font-body"> Estimation : {removeHari(selectedCourier?.cost?.cost[0].etd)} days</p>
               <p className="font-body"> Price : {numberFormat(selectedCourier?.cost?.cost[0].value)}</p>
             </div>
           )
