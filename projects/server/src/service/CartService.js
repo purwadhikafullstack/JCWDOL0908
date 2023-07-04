@@ -167,8 +167,29 @@ const GetCart = async (data) => {
   }
 };
 
+/**
+ * removeAfterCheckout - Remove product from cart after checkout
+ * @param userID
+ * @return {Promise<void>}
+ */
+const removeAfterCheckout = async (userID) => {
+  const t = await db.sequelize.transaction();
+  try {
+    await Cart.destroy({
+      where: {
+        id_user: userID,
+      },
+      transaction: t,
+    });
+    await t.commit();
+  } catch (error) {
+    await t.rollback();
+  }
+};
+
 module.exports = {
   AddToCart,
   RemoveFromCart,
   GetCart,
+  removeAfterCheckout,
 };
