@@ -7,7 +7,7 @@ import { numberFormat, removeHari } from "../../../helper/number_format";
 import { setLoading } from "../../LoaderSlice";
 import { ToastError } from "../../../helper/Toastify";
 
-function DeliveryMethod({ address, selectedCourier, setSelectedCourier }) {
+function DeliveryMethod({ address, selectedCourier, setSelectedCourier, setSelectedWarehouse }) {
   const [courier, setCourier] = useState([]);
   const cart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
@@ -20,7 +20,8 @@ function DeliveryMethod({ address, selectedCourier, setSelectedCourier }) {
         id_address: address.id_address,
         carts,
       });
-      setCourier(res.data.data);
+      setCourier(res.data.data.shipping);
+      setSelectedWarehouse(res.data.data.warehouse);
     } catch (error) {
       ToastError(error.message || "Failed to get shipping cost");
     } finally {
@@ -36,7 +37,6 @@ function DeliveryMethod({ address, selectedCourier, setSelectedCourier }) {
       }
     })();
   }, [address]);
-
 
   return (
     <div className="py-3">

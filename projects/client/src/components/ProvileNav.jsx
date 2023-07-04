@@ -10,7 +10,7 @@ const links = [
   },
   {
     title: "transactions",
-    link: "/transactions",
+    link: "/account/transactions",
     icon: "uil uil-wallet",
   },
   {

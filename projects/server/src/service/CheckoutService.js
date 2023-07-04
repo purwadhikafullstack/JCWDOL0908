@@ -74,7 +74,10 @@ const calculateShipping = async (data) => {
 
     return {
       error: false,
-      data: results.data,
+      data: {
+        shipping: results.data,
+        warehouse: warehousesWithDistance[0],
+      },
     };
 
 
@@ -86,7 +89,7 @@ const calculateShipping = async (data) => {
   }
 };
 
-
+//  TODO: validate stock before checkout
 const createOrder = async (data) => {
   const t = await db.sequelize.transaction();
   try {
@@ -136,7 +139,7 @@ const createOrder = async (data) => {
     // update product booked stock
     await updateBookedStock(transactionDetails, id_warehouse, t);
     // delete cart
-    // await CartService.removeAfterCheckout(id_user);
+    await removeAfterCheckout(id_user);
     await t.commit();
     const transactionData = await Transaction.findByPk(transaction.id_transaction);
 
