@@ -9,10 +9,12 @@ import { ToastError, ToastSuccess } from "../../../helper/Toastify";
 import Pagination from "../../../components/Pagination";
 import ModalAddress from "../../../feature/profile/components/ModalAddress";
 import ModelAddressDelete from "../../../feature/profile/components/ModelAddressDelete";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../../feature/LoaderSlice";
+import { useNavigate } from "react-router-dom";
 
 function Address() {
+  const { user } = useSelector((state) => state.user);
   const [address, setAddress] = useState({ metadata: {}, addresses: [] });
   const [page, setPage] = useState(1);
   const [trigger, setTrigger] = useState({
@@ -20,9 +22,10 @@ function Address() {
     address: {},
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-
     (async () => {
       // handle trigger default
       if (trigger.action === "set-default") {
@@ -65,11 +68,14 @@ function Address() {
       ToastError(error.message || "Failed to set default address");
     } finally {
       dispatch(setLoading(false));
-      setTrigger({ action: "", address: {} })
+      setTrigger({ action: "", address: {} });
     }
   };
 
-
+  if (!user?.id) {
+    ToastError("You must login first");
+    window.location.href = "/client";
+  }
 
   return (
     <LayoutClient>

@@ -15,6 +15,7 @@ import { createOrder } from "../../feature/checkout";
 import { setLoading } from "../../feature/LoaderSlice";
 
 function Checkout() {
+  const { user } = useSelector((state) => state.user);
   const [selectedAddress, setSelectedAddress] = useState({});
   const [selectedWarehouse, setSelectedWarehouse] = useState({});
   const products = useSelector((state) => state.cart.cart);
@@ -70,13 +71,15 @@ function Checkout() {
   };
 
   useEffect(() => {
-    (async () => {
-      await fetchPrimaryAddress();
-    })();
-  }, []);
+    if (user?.id) {
+      (async () => {
+        await fetchPrimaryAddress();
+      })();
+    }
+  }, [user]);
 
   useEffect(() => {
-    if (products.length > 0) {
+    if (products.length > 0 && user?.id) {
       products.forEach((product) => {
         if (product.quantity > product.product.stock) {
           setStockAvailable({
@@ -86,7 +89,12 @@ function Checkout() {
         }
       });
     }
-  }, [products]);
+  }, [products, user]);
+
+  if (!user?.id) {
+    ToastError("You must login first");
+    window.location.href = "/client";
+  }
 
   return (
     <LayoutClient>
