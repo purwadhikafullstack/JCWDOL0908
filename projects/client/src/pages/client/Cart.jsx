@@ -4,18 +4,36 @@ import { H3 } from "../../components/Typo";
 import CartItem from "../../feature/cart/components/CartItem";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { numberFormat } from "../../helper/number_format";
 
 function Cart() {
   const products = useSelector((state) => state.cart.cart);
   const user = useSelector((state) => state.user.user);
+  const [stockAvailable, setStockAvailable] = useState({
+    status: true,
+    message: "",
+  });
 
   useEffect(() => {
     if (!user.email) {
       window.location.href = "/client";
     }
   }, [user]);
+
+  // check stock is available
+  useEffect(() => {
+    if (products.length > 0) {
+      products.forEach((product) => {
+        if (product.quantity > product.product.stock) {
+          setStockAvailable({
+            status: false,
+            message: `Stock for ${product.product.product_name} is not available` + (product.product.stock > 0 ? ` only ${product.product.stock} left remove and re add to cart` : ""),
+          });
+        }
+      });
+    }
+  }, [products]);
 
   return (
     <LayoutClient>
@@ -42,6 +60,13 @@ function Cart() {
                       <CartItem key={product.id_product} product={product} />
                     ))
                   }
+                  {
+                    !stockAvailable.status && (
+                      <div className="flex flex-col items-center justify-center py-6">
+                        <span className="text-red-500 font-title text-lg">{stockAvailable.message}</span>
+                      </div>
+                    )
+                  }
                   <div className="flex flex-row justify-end mt-6 border-t pt-3">
                     <div className="flex flex-col space-y-2">
                       <div className="flex flex-row justify-between font-title text-primaryLight">
@@ -49,7 +74,10 @@ function Cart() {
                         <span
                           className="font-bold">{numberFormat(products.reduce((a, b) => a + b.product.price * b.quantity, 0))}</span>
                       </div>
-                      <Link to="/checkout" className="bg-primaryLight text-white px-4 py-2 rounded text-center font-title font-medium">
+                      <Link
+                        disabled={!stockAvailable.status}
+                        to="/checkout"
+                        className="bg-primaryLight text-white px-4 py-2 rounded text-center font-title font-medium">
                         Checkout
                       </Link>
                     </div>

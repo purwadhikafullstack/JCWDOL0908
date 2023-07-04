@@ -1,5 +1,5 @@
 const db = require("../model");
-const { Cart } = db;
+const { Cart, ProductWarehouseRlt } = db;
 const { getProduct } = require("./ProductService");
 
 /**
@@ -155,9 +155,36 @@ const GetCart = async (data) => {
         },
       ],
     });
+
+    // stock count on product relation
+    const stockCounts = await ProductWarehouseRlt.findAll({
+      attributes: [
+        "id_product",
+        [db.sequelize.fn("sum", db.sequelize.col("stock")), "total_stock"],
+        [db.sequelize.fn("sum", db.sequelize.col("booked_stock")), "total_booked_stock"],
+      ],
+      where: {
+        id_product: cart.map((item) => item.id_product),
+      },
+      group: ["id_product"],
+    });
+    const stockMap = stockCounts.reduce((map, count) => {
+      const totalStock = parseInt(count.getDataValue("total_stock")) || 0;
+      const totalBookedStock = parseInt(count.getDataValue("total_booked_stock")) || 0;
+      map[count.id_product] = totalStock - totalBookedStock;
+      return map;
+    }, {});
+
+
+    const updatedCart = cart.map((item) => {
+      item.dataValues.product.dataValues.stock = stockMap[item.id_product];
+      return item;
+    });
+
+
     return {
       error: false,
-      data: cart,
+      data: updatedCart,
     };
   } catch (error) {
     return {

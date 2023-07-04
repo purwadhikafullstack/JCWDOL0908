@@ -18,6 +18,10 @@ function Checkout() {
   const [selectedAddress, setSelectedAddress] = useState({});
   const [selectedWarehouse, setSelectedWarehouse] = useState({});
   const products = useSelector((state) => state.cart.cart);
+  const [stockAvailable, setStockAvailable] = useState({
+    status: true,
+    message: "",
+  });
   const [selectedCourier, setSelectedCourier] = useState({});
   const [trigger, setTrigger] = useState({
     action: "",
@@ -70,6 +74,20 @@ function Checkout() {
       await fetchPrimaryAddress();
     })();
   }, []);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      products.forEach((product) => {
+        if (product.quantity > product.product.stock) {
+          setStockAvailable({
+            status: false,
+            message: `Stock for ${product.product.product_name} is not available` + (product.product.stock > 0 ? ` only ${product.product.stock} left remove and re add to cart` : ""),
+          });
+        }
+      });
+    }
+  }, [products]);
+
   return (
     <LayoutClient>
       <Jumbotron title="Checkout" />
@@ -140,6 +158,13 @@ function Checkout() {
                         <CartItem key={product.id_product} product={product} withAction={false} />
                       ))
                     }
+                    {
+                      !stockAvailable.status && (
+                        <div className="flex flex-col items-center justify-center py-6">
+                          <span className="text-red-500 font-title text-lg">{stockAvailable.message}</span>
+                        </div>
+                      )
+                    }
                   </div>
                   <DeliveryMethod
                     address={selectedAddress}
@@ -148,6 +173,7 @@ function Checkout() {
                     setSelectedCourier={setSelectedCourier} />
                 </div>
                 <SummaryCheckout
+                  stockAvailable={stockAvailable}
                   handleCheckout={handleCheckout}
                   subTotal={parseInt(subTotal)}
                   shipping={selectedCourier?.cost?.cost[0].value} />
