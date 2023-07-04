@@ -217,6 +217,25 @@ const RemoveAddress = async (req, res, next) => {
   }
 };
 
+const getPrimaryAddress = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { error, data } = await AddressService.getPrimaryAddress(user.id);
+    if (error) {
+      return res.status(400).json({
+        message: error.message,
+        data: null,
+      });
+    }
+    return res.status(200).json({
+      message: "Get address success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   GetProvinces,
   GetCity,
@@ -225,4 +244,5 @@ module.exports = {
   GetUsersAddress,
   UpdateAddress,
   RemoveAddress,
+  getPrimaryAddress,
 };

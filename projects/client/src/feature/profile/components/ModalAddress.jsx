@@ -97,7 +97,7 @@ function ModalAddress({ isOpen, onClose, address }) {
       <div className="fixed inset-0 flex items-center justify-center p-4">
         {/* The actual dialog panel  */}
         <Dialog.Panel className="sm:w-[600px]  w-[380px] bg-white rounded-sm shadow-xl p-6">
-          <H3>{address ? "Edit Address" : "Add New Address"}</H3>
+          <H3>{address.id_city ? "Edit Address" : "Add New Address"}</H3>
           <Formik
             initialValues={{
               address: address ? address.address : "",

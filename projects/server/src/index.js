@@ -10,8 +10,9 @@ const {
   AuthRouter,
   CategoryRouter,
   CartRouter,
-  ProductRouter,
   AddressRouter,
+  ProductRouter,
+  CheckoutRouter,
 } = require("./router");
 const db = require("./model");
 const bearerToken = require("express-bearer-token");
@@ -55,6 +56,7 @@ app.use("/api/categories", CategoryRouter);
 app.use("/api/products", ProductRouter);
 app.use("/api/cart", CartRouter);
 app.use("/api/address", AddressRouter);
+app.use("/api/checkout", CheckoutRouter);
 
 // ===========================
 

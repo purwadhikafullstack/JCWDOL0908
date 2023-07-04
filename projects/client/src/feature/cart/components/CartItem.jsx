@@ -3,7 +3,7 @@ import defaultImage from "../../../images/empty.jpg";
 import { useDispatch } from "react-redux";
 import { addToCart, RemoveFromCart } from "../slice/CartSlice";
 
-function CartItem({ product }) {
+function CartItem({ product, withAction = true }) {
   const dispatch = useDispatch();
   const image_url = process.env.REACT_APP_SERVER_URL + product.product.product_image || defaultImage;
   const handleMinus = () => {
@@ -49,25 +49,35 @@ function CartItem({ product }) {
         </div>
       </div>
       <div className="flex items-center space-x-2 flex-row gap-3 justify-end">
-        <button
-          className="flex items-center justify-center text-gray-500"
-          title="Remove"
-          onClick={handleRemove}>
-          <i className="uil uil-trash-alt"></i>
-        </button>
-        <div className="flex flex-wrap flex-row">
-          <button type="button"
-                  className="px-3 py-2 border border-r-0 border-gray-300 rounded-l-md hover:bg-gray-100"
-                  onClick={handleMinus}>-
-          </button>
-          <span className="w-10 text-center border-t border-b border-gray-300 flex items-center justify-center">
-            {product.quantity}
-          </span>
-          <button type="button"
-                  className="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md hover:bg-gray-100"
-                  onClick={handlePlus}>+
-          </button>
-        </div>
+        {
+          withAction ? (
+            <>
+              <button
+                className="flex items-center justify-center text-gray-500"
+                title="Remove"
+                onClick={handleRemove}>
+                <i className="uil uil-trash-alt"></i>
+              </button>
+              <div className="flex flex-wrap flex-row">
+                <button type="button"
+                        className="px-3 py-2 border border-r-0 border-gray-300 rounded-l-md hover:bg-gray-100"
+                        onClick={handleMinus}>-
+                </button>
+                <span className="w-10 text-center border-t border-b border-gray-300 flex items-center justify-center">
+                  {product.quantity}
+                </span>
+                <button type="button"
+                        className="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md hover:bg-gray-100"
+                        onClick={handlePlus}>+
+                </button>
+              </div>
+            </>
+          ) : (
+            <span className="w-10 text-center border-gray-300 flex items-center justify-center text-gray-400">
+                  {product.quantity}
+                </span>
+          )
+        }
         <div className="items-center space-x-2 sm:flex hidden min-w-[100px]">
           <span className="text-sm text-gray-400">{numberFormat(product.product.price * product.quantity)}</span>
         </div>

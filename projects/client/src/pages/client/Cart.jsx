@@ -39,7 +39,7 @@ function Cart() {
                 <div className="flex flex-col gap-3">
                   {
                     products.map((product) => (
-                      <CartItem key={product.id} product={product} />
+                      <CartItem key={product.id_product} product={product} />
                     ))
                   }
                   <div className="flex flex-row justify-end mt-6 border-t pt-3">

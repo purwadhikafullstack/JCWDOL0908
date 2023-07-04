@@ -14,5 +14,6 @@ router.put("/address/:address_id/default", CheckAuth, AddressController.UpdateDe
 router.get("/address", CheckAuth, AddressController.GetUsersAddress);
 router.patch("/address/:address_id", CheckAuth, AddressController.UpdateAddress);
 router.delete("/address/:address_id", CheckAuth, AddressController.RemoveAddress);
+router.get("/address/default", CheckAuth, AddressController.getPrimaryAddress);
 
 module.exports = router;
