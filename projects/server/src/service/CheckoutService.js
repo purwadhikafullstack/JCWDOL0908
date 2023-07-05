@@ -10,7 +10,7 @@ const {
 } = db;
 const { getShippingCost } = require("../helper/RajaOngkir");
 const { updateBookedStock } = require("./ProductService");
-const { removeAfterCheckout } = require("./CartService");
+const { removeAfterCheckout, GetCart } = require("./CartService");
 
 /**
  * Calculate shipping cost
@@ -94,6 +94,30 @@ const createOrder = async (data) => {
   const t = await db.sequelize.transaction();
   try {
     const { id_address, id_warehouse, carts, id_user, shipping_cost, shipping_service, total_price } = data;
+
+    // Validate stock
+    const { error: errorStock, data: dataCart } = await GetCart({
+      userID: id_user,
+    });
+
+    if (errorStock) {
+      await t.rollback();
+      return {
+        error: new Error("Failed to create transaction"),
+        data: null,
+      };
+    }
+
+    for (const cart of dataCart) {
+      const cartItem = cart.toJSON();
+      if (cartItem.quantity > cartItem.product.stock) {
+        await t.rollback();
+        return {
+          error: new Error("Stock not enough"),
+          data: null,
+        };
+      }
+    }
 
     const transaction = await Transaction.create({
       id_user,
