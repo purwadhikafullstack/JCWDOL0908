@@ -31,3 +31,4 @@ src/storage/*/*
 !src/storage/avatars/.gitkeep
 !src/storage/products/.gitkeep
 !src/storage/categories/.gitkeep
+!src/storage/transactions/.gitkeep
