@@ -1,9 +1,9 @@
 import React from "react";
 
-function CustomInput({ label, formik, type, id, name }) {
+function CustomInput({ label, formik, type, id, name, isDisabled }) {
   return (
     <div className="relative grid grid-cols-8 gap-2 items-center">
-      <label className="text-left text-slate-800 text-xs font-semibold my-0 col-span-2">{label}</label>
+      <label className="text-left text-primary text-xs font-semibold my-0 col-span-2">{label}</label>
       <p className="font-semibold">:</p>
       <input
         type={type}
@@ -12,15 +12,16 @@ function CustomInput({ label, formik, type, id, name }) {
         className={
           formik.touched[name] && formik.errors[name]
             ? " placeholder:text-xs text-xs placeholder-red-500 bg-gray-100 border-2" +
-              " border-red-500 text-red-500 h-10 my-1 shadow-slate-800" +
+              " border-red-500 text-red-500 h-10 my-1 shadow-primary" +
               " sm:text-xs rounded-none focus:ring-red-500 focus:border-red-500 block w-full" +
-              " px-2 placeholder col-span-5 h-fit py-1"
-            : " placeholder:text-xs text-xs bg-gray-50 border border-gray-300 text-slate-800" +
-              " sm:text-xs rounded-none h-10 my-1 shadow-slate-800" +
+              " px-2 placeholder col-span-5 h-fit py-1 disabled:cursor-not-allowed disabled:text-primaryLight"
+            : " placeholder:text-xs text-xs bg-gray-50 border border-gray-300 text-primary" +
+              " sm:text-xs rounded-none h-10 my-1 shadow-primary" +
               " focus:ring-light focus:border-light block w-full px-2" +
-              " placeholder col-span-5 h-fit py-1"
+              " placeholder col-span-5 h-fit py-1 disabled:cursor-not-allowed disabled:text-primaryLight"
         }
         onChange={formik.handleChange}
+        disabled={isDisabled}
         value={formik.values[name]}
       />
       {formik.touched[name] && formik.errors[name] ? (

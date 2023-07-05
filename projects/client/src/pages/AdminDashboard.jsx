@@ -9,7 +9,7 @@ function AdminDashboard() {
       <div className="maxvh w-full flex flex-row justify-center items-center">
         <div className=" text-center">
           <h1
-            className="md:text-5xl font-extrabold text-slate-800 
+            className="md:text-5xl font-extrabold text-primary 
             text-3xl"
           >
             ADMIN DASHBOARD

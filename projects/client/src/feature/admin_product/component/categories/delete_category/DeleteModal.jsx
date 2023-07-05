@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { deleteCategory, getCategories } from "../../../";
+import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
 
 function DeleteModal(props) {
   const { setDeleteClicked, pageNum, singleCategory, setCategories } = props;
@@ -17,12 +18,10 @@ function DeleteModal(props) {
   return (
     <div className="modal-background">
       <div className="modal-container">
-        <button className="close-btn-modal" onClick={() => setDeleteClicked(false)}>
-          <i className="uil uil-times-circle"></i>
-        </button>
-        <div className="delete-modal-header-container">
-          <h1 className="delete-modal-header-text">Detail Data</h1>
-          <div className="delete-modal-body-container">
+        <ClosedBtnModal setModal={setDeleteClicked} />
+        <div className="modal-header-container">
+          <h1 className="modal-header-text">Detail Data</h1>
+          <div className="modal-body-container">
             <div
               className="mx-auto hover:cursor-pointer w-60 h-40 flex items-center justify-center border-2 border-slate-100
             lg:w-80 lg:h-60"

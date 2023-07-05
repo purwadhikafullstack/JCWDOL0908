@@ -1,5 +1,3 @@
-const db = require("../model");
-const { AdminLoginService } = require("../service");
 const { AdminLoginLogic } = require("../logic");
 
 const loginAdmin = async (req, res, next) => {

@@ -1,8 +1,6 @@
 const db = require("../model");
 const { User, AdminRole, Warehouse } = db;
 const { Op } = require("sequelize");
-const bcrypt = require("bcrypt");
-const { createToken } = require("../helper/CreateToken");
 
 const getAdminByUsername = async (username) => {
   const result = await User.findOne({

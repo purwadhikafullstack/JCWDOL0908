@@ -7,9 +7,10 @@ const CategoryService = require("./CategoryService");
 const ProductService = require("./ProductService");
 const CartService = require("./CartService");
 const AddressService = require("./AddressService");
-const CheckoutService = require("./CheckoutService");
 const ProductWarehouseRltService = require("./ProductWarehouseRltService");
 const ProductJournalService = require("./ProductJournalService");
+const MutationService = require("./MutationService");
+const CheckoutService = require("./CheckoutService");
 
 module.exports = {
   AdminUserMgtService,
@@ -21,7 +22,8 @@ module.exports = {
   ProductService,
   CartService,
   AddressService,
+  ProductJournalService,
+  MutationService,
   CheckoutService,
   ProductWarehouseRltService,
-  ProductJournalService,
 };

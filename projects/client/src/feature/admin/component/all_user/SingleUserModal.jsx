@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import DetailUser from "./DetailUser";
 import HeaderModal from "./HeaderModal";
+import ClosedBtnModal from "../../../../components/ClosedBtnModal";
 
 function SingleUserModal(props) {
   const singleUser = useSelector((state) => state.admin.singleUser);
@@ -9,14 +10,7 @@ function SingleUserModal(props) {
   return (
     <div className="modal-background">
       <div className="modal-container">
-        <button
-          className="close-btn-modal"
-          onClick={() => {
-            props.someFunction(false);
-          }}
-        >
-          <i className="uil uil-times-circle"></i>
-        </button>
+        <ClosedBtnModal setModal={props.someFunction} />
         <div>
           <div className="flex justify-between items-center">
             <HeaderModal singleUser={singleUser} />

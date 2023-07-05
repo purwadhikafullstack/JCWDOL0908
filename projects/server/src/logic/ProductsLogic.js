@@ -35,7 +35,7 @@ const postNewProductLogic = async (data) => {
   try {
     //checck if name already exists
     const isNameExist = await ProductService.getProductByName(product_name);
-    if (isNameExist) throw { errMsg: "name already exists", statusCode: 400 };
+    if (isNameExist) throw { errMsg: "error: name already exists", statusCode: 400 };
     // if name doesn't exist, create product
     createData = await ProductService.createProduct(
       product_name,
@@ -56,11 +56,11 @@ const postNewProductLogic = async (data) => {
       await ProductWarehouseRltService.createProductWarehouseRlt(id_product, id_warehouse, transaction);
     }
 
-    transaction.commit();
+    await transaction.commit();
     return { error: null, result };
   } catch (error) {
     await UnlinkPhoto(product_image);
-    transaction.rollback();
+    await transaction.rollback();
     console.log(error);
     return { error, result: null };
   }
@@ -70,11 +70,11 @@ const deleteProductLogic = async (id_product) => {
   const transaction = await db.sequelize.transaction();
   try {
     const response = await ProductService.deleteProduct(id_product, transaction);
-    if (response[0] !== 1) throw { errMsg: "data not found", statusCode: 404 };
-    transaction.commit();
+    if (response[0] !== 1) throw { errMsg: "error: data not found", statusCode: 404 };
+    await transaction.commit();
     return { error: null, result: response };
   } catch (error) {
-    transaction.rollback();
+    await transaction.rollback();
     console.log(error);
     return { error, result: null };
   }
@@ -90,7 +90,7 @@ const editProductLogic = async (data) => {
     // check if name already exists
     const isNameExist = await ProductService.getProductByName(product_name, id_product);
     // if name exist send error message
-    if (isNameExist) throw { errMsg: "name already exists", statusCode: 400 };
+    if (isNameExist) throw { errMsg: "error: name already exists", statusCode: 400 };
     // get current image pattern data
     const getSingleData = await ProductService.getProductById(id_product, transaction);
     const oldImage = getSingleData.dataValues.product_image;
@@ -110,11 +110,11 @@ const editProductLogic = async (data) => {
     // delete previous image pattern data
     if (product_image) await UnlinkPhoto(oldImage);
 
-    transaction.commit();
+    await transaction.commit();
     return { error: null, result };
   } catch (error) {
     await UnlinkPhoto(product_image);
-    transaction.rollback();
+    await transaction.rollback();
     console.log(error);
     return { error, result: null };
   }

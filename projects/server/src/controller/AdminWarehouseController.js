@@ -77,7 +77,7 @@ const createWarehouse = async (req, res, next) => {
       address,
       id_city,
     });
-    if (err_validation) throw error;
+    if (err_validation) throw err_validation;
 
     // start create warehouse logic
     const response = await AdminWarehouseLogic.createWarehouseLogic(warehouse_name, address, id_city, id_province);
@@ -102,7 +102,7 @@ const editWarehouse = async (req, res, next) => {
       address,
       id_city,
     });
-    if (err_validation) throw error;
+    if (err_validation) throw err_validation;
 
     // start create warehouse logic
     const response = await AdminWarehouseLogic.editWarehouseLogic(

@@ -45,6 +45,10 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: 0,
       },
+      is_reject: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 0,
+      },
       created_by: {
         type: DataTypes.INTEGER,
         references: {
@@ -63,6 +67,18 @@ module.exports = (sequelize) => {
       accepted_by: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        references: {
+          model: "users",
+          key: "id_user",
+        },
+      },
+      rejected_by: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id_user",
+        },
       },
     },
     {

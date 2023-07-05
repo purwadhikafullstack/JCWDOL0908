@@ -86,7 +86,7 @@ const updateAdminWarehouse = async (req, res, next) => {
       phoneNumber,
       id_warehouse,
     });
-    if (err_validation) throw error;
+    if (err_validation) throw err_validation;
     if (password !== "") {
       const { error, value } = AdminDataValidation.EditDataAdmin.validate({ password });
       if (error) throw error;
@@ -136,7 +136,7 @@ const createNewAdmin = async (req, res, next) => {
     });
 
     //check whether any data-validation error exist
-    if (err_validation) throw error;
+    if (err_validation) throw err_validation;
     // if error not exist, create data logic begin
     const { error, result } = await AdminUserLogic.createNewAdminLogic(
       username,

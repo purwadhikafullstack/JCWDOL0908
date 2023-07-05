@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { editCategory, getCategories } from "../../../";
 import UploadPicture from "../../UploadPicture";
+import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
 
 function EditModal(props) {
   const { setEditClicked, pageNum, setCategories, singleCategory } = props;
@@ -48,11 +49,9 @@ function EditModal(props) {
   return (
     <div className="modal-background">
       <div className="modal-container">
-        <button onClick={() => setEditClicked(false)} className="close-btn-modal">
-          <i className="uil uil-times-circle"></i>
-        </button>
+        <ClosedBtnModal setModal={setEditClicked} />
         <div>
-          <h1 className="my-4 font-bold">Edit Category</h1>
+          <h1 className="modal-header-text">Edit Category</h1>
           <form onSubmit={formik.handleSubmit} htmlFor="image" className="flex flex-col gap-4">
             <UploadPicture preview={preview} handleImageChange={handleImageChange} alt="category image" />
             <div className="grid grid-cols-3 items-center gap-2">
@@ -61,8 +60,8 @@ function EditModal(props) {
                 type="text"
                 id="category_name"
                 name="category_name"
-                className=" placeholder:text-xs text-xs bg-gray-50 border border-slate-200 text-slate-800
-                 sm:text-xs rounded-none my-1 shadow-slate-800
+                className=" placeholder:text-xs text-xs bg-gray-50 border border-slate-200 text-primary
+                 sm:text-xs rounded-none my-1 shadow-primary
                  focus:ring-light focus:border-light block w-full px-2
                  placeholder col-span-2 py-2"
                 onChange={formik.handleChange}
@@ -73,7 +72,7 @@ function EditModal(props) {
               ) : null}
             </div>
             <div className="grid grid-cols-3 gap-2 text-sm h-8">
-              <button type="submit" onClick={formik.handleSubmit} className="bg-slate-800 text-white h-full">
+              <button type="submit" onClick={formik.handleSubmit} className="bg-primary text-white h-full">
                 Submit
               </button>
             </div>

@@ -1,6 +1,10 @@
 const db = require("../model");
 const { AdminUserMgtService, AdminWarehouseService } = require("../service");
 
+const isWarehouseAdmin = (isAdmin, idRole) => {
+  return isAdmin === "true" && idRole != 1;
+};
+
 const getAllUserLogic = async (offset, limit, page) => {
   try {
     const allUserCount = await AdminUserMgtService.getAllUserCount();
@@ -20,7 +24,7 @@ const getSingleUserLogic = async (id, isAdmin, idRole) => {
   try {
     if (isAdmin === "false") {
       result = await AdminUserMgtService.getSingleUser(id);
-    } else if (isAdmin === "true" && idRole != 1) {
+    } else if (isWarehouseAdmin(isAdmin, idRole)) {
       result = await AdminWarehouseService.getSingleWarehouseAdmin(id);
     } else {
       result = await AdminUserMgtService.getSingleSuperAdmin(id);
@@ -66,7 +70,7 @@ const createNewAdminLogic = async (username, email, phone_number, password, id_w
     // get admin role ID that associated with the selected warehouse id
     const getAdminRole = await AdminUserMgtService.findAdminRoleByIdWarehouse(id_warehouse);
 
-    if (!getAdminRole) throw { errMsg: "Admin-role for this warehouse is not yet created", statusCode: 404 };
+    if (!getAdminRole) throw { errMsg: "error: Admin-role for this warehouse is not yet created", statusCode: 404 };
 
     const adminRoleId = getAdminRole.dataValues.id_role;
     const hashedPassword = await AdminUserMgtService.hashingPassword(password);
@@ -96,7 +100,7 @@ const updateAdminWarehouseLogic = async (id_user, username, email, password, pho
     // get admin role ID that associated with the selected warehouse id
     const getAdminRole = await AdminUserMgtService.findAdminRoleByIdWarehouse(id_warehouse);
 
-    if (!getAdminRole) throw { errMsg: "Admin-role for this warehouse is not yet created", statusCode: 404 };
+    if (!getAdminRole) throw { errMsg: "error: Admin-role for this warehouse is not yet created", statusCode: 404 };
     const adminRoleId = getAdminRole.dataValues.id_role;
 
     const updatePersonalData = await AdminUserMgtService.updateDataAdmin(

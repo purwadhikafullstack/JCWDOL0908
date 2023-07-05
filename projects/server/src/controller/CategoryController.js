@@ -20,7 +20,7 @@ const createNewCategory = async (req, res, next) => {
         category_name,
         category_image,
       });
-      if (err_validation) throw error;
+      if (err_validation) throw err_validation;
 
       const { error, result } = await CategoryLogic.createNewCategoryLogic(category_image, category_name);
 
@@ -49,16 +49,16 @@ const editCategory = async (req, res, next) => {
       console.log(category_image, category_name);
       //validate input data
       if (!category_image) {
-        const { error: err_validation, value } = AdminDataValidation.editCategoryWithoutImage.validate({
+        const { error: err_validation, value } = AdminDataValidation.EditCategoryWithoutImage.validate({
           category_name,
         });
-        if (err_validation) throw error;
+        if (err_validation) throw err_validation;
       } else {
         const { error: err_validation, value } = AdminDataValidation.CreateNewCategory.validate({
           category_name,
           category_image,
         });
-        if (err_validation) throw error;
+        if (err_validation) throw err_validation;
       }
 
       const { error, result } = await CategoryLogic.editCategoryLogic(category_image, category_name, id_category);

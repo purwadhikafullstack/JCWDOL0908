@@ -11,11 +11,11 @@ const loginAdmin = async (username, password) => {
     const user = await AdminLoginService.getAdminByUsername(username);
 
     // check whether the username-input match the username in DB
-    if (!user) throw { statusCode: 401, errMsg: "invalid username and password" };
+    if (!user) throw { statusCode: 401, errMsg: "error: invalid username and password" };
 
     // check whether the password-input match the password in DB
     const isPasswordMatch = await bcrypt.compare(password, user.dataValues.password);
-    if (!isPasswordMatch) throw { statusCode: 401, errMsg: "invalid username and password" };
+    if (!isPasswordMatch) throw { statusCode: 401, errMsg: "error: invalid username and password" };
 
     const { id_user, is_admin, id_role, admin_role } = user.dataValues;
     const { role_admin, id_warehouse } = admin_role.dataValues;
@@ -29,7 +29,7 @@ const loginAdmin = async (username, password) => {
       const { warehouse_name, id_city, is_deleted } = getWarehouse.dataValues.warehouse.dataValues;
 
       // check whether warehouse already deleted or not
-      if (is_deleted) throw { statusCode: 404, errMsg: "warehouse where you've assigned at is already deleted" };
+      if (is_deleted) throw { statusCode: 404, errMsg: "error: warehouse where you've assigned at is already deleted" };
 
       result = {
         id_user,
@@ -63,7 +63,7 @@ const keepLogin = async (id_user) => {
     const user = await AdminLoginService.getAdminById(id_user);
 
     // check whether the id_user match in DB
-    if (!user) throw { statusCode: 401, errMsg: "invalid admin/unauthorized" };
+    if (!user) throw { statusCode: 401, errMsg: "error: invalid admin/unauthorized" };
     const { username, is_admin, id_role, admin_role } = user.dataValues;
     const { role_admin, id_warehouse } = admin_role.dataValues;
 
@@ -76,7 +76,7 @@ const keepLogin = async (id_user) => {
       const { warehouse_name, is_deleted, id_city } = getWarehouse.dataValues.warehouse.dataValues;
 
       // check whether warehouse already deleted or not
-      if (is_deleted) throw { statusCode: 404, errMsg: "warehouse where you've assigned at already deleted" };
+      if (is_deleted) throw { statusCode: 404, errMsg: "error: warehouse where you've assigned at already deleted" };
       result = {
         id_user,
         username,

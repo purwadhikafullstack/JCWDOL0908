@@ -25,24 +25,47 @@ function ManageStock() {
   useEffect(() => {
     (async () => {
       const response = await getProductsStocks(OFFSET, LIMIT, pageNum, "", selectedCategories, userAdmin?.id_warehouse);
-      setProductsList([...response.result.productsList]);
+      setProductsList([...response.result?.productsList]);
       setTotalPage(response.result.totalPage);
     })();
-  }, [selectedCategories]);
+  }, [selectedCategories, pageNum]);
+
+  const inputOnChangeHandler = async (event) => {
+    const response = await getProductsStocks(
+      OFFSET,
+      LIMIT,
+      pageNum,
+      event.target.value,
+      selectedCategories,
+      userAdmin?.id_warehouse,
+    );
+    setProductsList([...response.result.productsList]);
+    setTotalPage(response.result.totalPage);
+  };
+
+  const filterOnChangeHandle = (event) => {
+    setSelectedCategories(event.target.value);
+  };
+
+  const refetchedData = async () => {
+    const fetchingData = await getProductsStocks(
+      OFFSET,
+      LIMIT,
+      pageNum,
+      "",
+      selectedCategories,
+      userAdmin?.id_warehouse,
+    );
+    setProductsList([...fetchingData.result.productsList]);
+  };
 
   return (
     <LayoutAdmin>
-      <div className="grid grid-rows-8 maxvh pt-2 pb-6 px-8 gap-4 ">
+      <div className="page-layout ">
         <HeaderStock
           categories={categories}
-          setSelectedCategories={setSelectedCategories}
-          selectedCategories={selectedCategories}
-          pageNum={pageNum}
-          OFFSET={OFFSET}
-          LIMIT={LIMIT}
-          userAdmin={userAdmin}
-          setProductsList={setProductsList}
-          setTotalPage={setTotalPage}
+          inputOnChangeHandler={inputOnChangeHandler}
+          filterOnChangeHandle={filterOnChangeHandle}
         />
         <BodyStock
           productsList={productsList}
@@ -50,10 +73,7 @@ function ManageStock() {
           setPageNum={setPageNum}
           pageNum={pageNum}
           userAdmin={userAdmin}
-          OFFSET={OFFSET}
-          LIMIT={LIMIT}
-          selectedCategories={selectedCategories}
-          setProductsList={setProductsList}
+          refetchedData={refetchedData}
         />
       </div>
     </LayoutAdmin>

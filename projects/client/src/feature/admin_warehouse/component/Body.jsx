@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import Pagination from "./Pagination";
 import RenderWarehouse from "./RenderWarehouse";
 import DeleteModal from "./delete_data/DeleteModal";
 import EditModal from "./edit_data/EditModal";
+import AdminPagination from "../../../components/AdminPagination";
 
 function Body(props) {
   const { pageNum, warehouses, setWarehouses, setTotalPage, setPageNum, totalPageWarehouse } = props;
   const [isDelBtnClicked, setIsDelBtnClicked] = useState(false);
   const [isEditBtnClicked, setIsEditBtnClicked] = useState(false);
   const [warehouseData, setWarehouseData] = useState({});
+
+  const deleteBtnHandler = () => {};
 
   return (
     <>
@@ -29,11 +31,11 @@ function Body(props) {
           pageNum={pageNum}
         />
       ) : null}
-      <div className="row-span-6 grid grid-rows-8">
+      <div className="row-span-6 grid grid-rows-12">
         <div className="row-span-1 flex text-center items-center">
           <h1 className="text-lg font-semibold lg:text-xl">Warehouse List</h1>
         </div>
-        <div className="row-span-6 grid grid-rows-10 gap-2 lg:gap-2">
+        <div className="row-span-10 grid grid-rows-10 gap-2 lg:gap-2">
           <div
             className="row-span-1 font-semibold grid lg:grid-cols-5
               grid-cols-6 items-center text-xs pl-2 lg:text-base"
@@ -52,7 +54,7 @@ function Body(props) {
           />
         </div>
         <div className="pagination-container">
-          <Pagination pageNum={pageNum} totalPageWarehouse={totalPageWarehouse} setPageNum={setPageNum} />
+          <AdminPagination pageNum={pageNum} setPageNum={setPageNum} totalPage={totalPageWarehouse} />
         </div>
       </div>
     </>

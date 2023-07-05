@@ -95,10 +95,10 @@ const updateStockLogic = async (id_product, id_warehouse, newStock) => {
   const transaction = await db.sequelize.transaction();
   try {
     const productStockData = await ProductWarehouseRltService.getStockProduct(id_product, id_warehouse);
-    if (!productStockData) throw { errMsg: "no product found", statusCode: 404 };
+    if (!productStockData) throw { errMsg: "error: no product found", statusCode: 404 };
     const { stock, booked_stock, id_product_warehouse } = productStockData.dataValues;
     let stockGain = newStock - stock;
-    if (stockGain === 0) throw { errMsg: "updated stock value is as same as old stock value", statusCode: 400 };
+    if (stockGain === 0) throw { errMsg: "error: updated stock value is as same as old stock value", statusCode: 400 };
     const updateStock = await ProductWarehouseRltService.updateStock(
       id_product_warehouse,
       stock,
@@ -106,7 +106,7 @@ const updateStockLogic = async (id_product, id_warehouse, newStock) => {
       newStock,
       transaction,
     );
-    if (!updateStock[0]) throw { errMsg: "internal server error, try again in other minutes", statusCode: 500 };
+    if (!updateStock[0]) throw { errMsg: "error: internal server error, try again in other minutes", statusCode: 500 };
     // id_activity : 3 => stock addition || id_activity : 2 => stock reduction
     const id_activity = stockGain > 0 ? 3 : 2;
     stockGain = Math.abs(stockGain);
@@ -130,7 +130,7 @@ const createStockLogic = async (id_product, id_warehouse) => {
   const transaction = await db.sequelize.transaction();
   try {
     const productStockData = await ProductWarehouseRltService.getStockProduct(id_product, id_warehouse);
-    if (productStockData) throw { errMsg: "data already existed", statusCode: 400 };
+    if (productStockData) throw { errMsg: "error: data already existed", statusCode: 400 };
     const createStock = await ProductWarehouseRltService.createStock(id_product, id_warehouse, transaction);
     await transaction.commit();
     return { error: null, result: createStock };
@@ -145,7 +145,7 @@ const deleteStockLogic = async (id_product, id_warehouse) => {
   const transaction = await db.sequelize.transaction();
   try {
     const deleteStock = await ProductWarehouseRltService.deleteStock(id_product, id_warehouse);
-    if (!deleteStock) throw { errMsg: "there are no product and warehouse matched", statusCode: 404 };
+    if (!deleteStock) throw { errMsg: "error: there are no product and warehouse matched", statusCode: 404 };
     await transaction.commit();
     return { error: null, result: deleteStock };
   } catch (error) {

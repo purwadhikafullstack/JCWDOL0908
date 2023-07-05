@@ -220,8 +220,12 @@ const getProducts = async (offset, limit, page, id_category) => {
       });
     }
   } else {
-    // if if offset, limit, page value is not given, get all data
-    products = await Product.findAll({ where: { is_deleted: 0 } });
+    // if offset, limit, page value is not given, get all data
+    if (!id_category) {
+      products = await Product.findAll({ where: { is_deleted: 0 } });
+    } else {
+      products = await Product.findAll({ where: { is_deleted: 0, id_category } });
+    }
   }
   return products;
 };

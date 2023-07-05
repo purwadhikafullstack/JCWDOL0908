@@ -14,7 +14,7 @@ const editWarehouseLogic = async (id_warehouse, warehouse_name, address, id_city
     if (error) throw error;
 
     // check if the road exists
-    if (!components.road) throw { errMsg: "we can't find the road", statusCode: 404 };
+    if (!components.road) throw { errMsg: "error: we can't find the road", statusCode: 404 };
 
     //check if warehouse already exist
     const isWarehouseExist = await AdminWarehouseService.checkWarehouseByNameExceptSelf(
@@ -23,7 +23,7 @@ const editWarehouseLogic = async (id_warehouse, warehouse_name, address, id_city
       id_city,
       transaction,
     );
-    if (isWarehouseExist.length > 0) throw { errMsg: "warehouse name already exists", statusCode: 400 };
+    if (isWarehouseExist.length > 0) throw { errMsg: "error: warehouse name already exists", statusCode: 400 };
 
     //edit warehouse
     const edit = await AdminWarehouseService.editWarehouse(
@@ -57,11 +57,11 @@ const createWarehouseLogic = async (warehouse_name, address, id_city) => {
     if (error) throw error;
 
     // check if the road exists
-    if (!components.road) throw { errMsg: "we can't find the road", statusCode: 404 };
+    if (!components.road) throw { errMsg: "error: we can't find the road", statusCode: 404 };
 
     //check if warehouse already exist
     const isWarehouseExist = await AdminWarehouseService.checkWarehouse(warehouse_name, id_city, transaction);
-    if (isWarehouseExist.length > 0) throw { errMsg: "warehouse already exists", statusCode: 400 };
+    if (isWarehouseExist.length > 0) throw { errMsg: "error: warehouse already exists", statusCode: 400 };
 
     //create warehouse
     const createNew = await AdminWarehouseService.createWarehouse(
@@ -95,7 +95,7 @@ const deleteWarehouseLogic = async (id_warehouse) => {
     let result = response[0];
 
     // check whether data changed exist
-    if (!result) throw { errMsg: "warehouse not found", statusCode: 404 };
+    if (!result) throw { errMsg: "error: warehouse not found", statusCode: 404 };
 
     result = "success";
     await transaction.commit();

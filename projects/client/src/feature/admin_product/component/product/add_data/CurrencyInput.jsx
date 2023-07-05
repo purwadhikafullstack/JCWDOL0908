@@ -22,8 +22,8 @@ const CurrencyInput = ({ value, onChange, name, id, formik }) => {
       name={name}
       id={id}
       className={
-        " placeholder:text-xs text-xs bg-gray-50 border border-gray-300 text-slate-800" +
-        " sm:text-xs rounded-none h-10 my-1 shadow-slate-800" +
+        " placeholder:text-xs text-xs bg-gray-50 border border-gray-300 text-primary" +
+        " sm:text-xs rounded-none h-10 my-1 shadow-primary" +
         " focus:ring-light focus:border-light block w-full px-2" +
         " placeholder col-span-5 h-fit py-1"
       }

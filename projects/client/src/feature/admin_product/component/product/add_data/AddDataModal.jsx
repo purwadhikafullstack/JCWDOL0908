@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CurrencyInput from "./CurrencyInput";
-import CustomInput from "../../CustomInput";
+import CustomInput from "../../../../../components/CustomInput";
 import CustomTextArea from "../../CustomTextArea";
 import UploadPicture from "../../UploadPicture";
-import CustomSelectCategory from "../CustomSelectCategory";
-import { getProducts, postProduct } from "../../../";
+import CustomSelectFormikHook from "../../../../../components/CustomSelectFormikHook";
+import { postProduct } from "../../../";
+import RenderCategoryOptions from "../../RenderCategoryOptions";
+import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
 
 function AddDataModal(props) {
-  const { setNewProductClicked, categories, pageNum, setProducts, OFFSET, LIMIT, selectedCategory, setTotalPate } =
-    props;
+  const { setNewProductClicked, categories, refetchedData } = props;
   const [currencyValue, setCurrencyValue] = useState(0);
   const [preview, setPreview] = useState();
   const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
@@ -53,9 +54,7 @@ function AddDataModal(props) {
       formData.append("data", JSON.stringify(data));
       const response = await postProduct(formData);
       alert(response.message);
-      const fetchedData = await getProducts(OFFSET, LIMIT, pageNum, selectedCategory);
-      setProducts([...fetchedData.result.productsList]);
-      setTotalPate(fetchedData.result.totalPage);
+      await refetchedData();
       setNewProductClicked(false);
     },
   });
@@ -63,18 +62,16 @@ function AddDataModal(props) {
   return (
     <div className="modal-background">
       <div className="modal-container">
-        <button onClick={() => setNewProductClicked(false)} className="close-btn-modal">
-          <i className="uil uil-times-circle"></i>
-        </button>
+        <ClosedBtnModal setModal={setNewProductClicked} />
         <div>
-          <h1 className="my-4 font-bold">Create Product</h1>
-          <form onSubmit={formik.handleSubmit} className="pt-4 pb-0 text-slate-800 gap-2 flex flex-col">
+          <h1 className="modal-header-text">Create Product</h1>
+          <form onSubmit={formik.handleSubmit} className="pt-4 pb-0 text-primary gap-2 flex flex-col">
             <UploadPicture preview={preview} handleImageChange={handleImageChange} alt="product image" />
             <CustomInput type="text" name="product_name" id="product_name" formik={formik} label="product name" />
             <CustomTextArea type="textarea" name="description" id="description" formik={formik} label="description" />
             <CustomInput type="number" name="weight_kg" id="weight_kg" formik={formik} label="weight (kg)" />
             <div className="relative grid grid-cols-8 gap-2 items-center">
-              <label className="text-left text-slate-800 text-xs font-medium my-0 col-span-2">price</label>
+              <label className="text-left text-primary text-xs font-medium my-0 col-span-2">price</label>
               <p>:</p>
               <CurrencyInput
                 value={currencyValue}
@@ -84,9 +81,11 @@ function AddDataModal(props) {
                 formik={formik}
               />
             </div>
-            <CustomSelectCategory formik={formik} categories={categories} label="category" name="id_category" />
+            <CustomSelectFormikHook formik={formik} label="category" name="id_category">
+              <RenderCategoryOptions categories={categories} />
+            </CustomSelectFormikHook>
             <div className="grid grid-cols-3 gap-2 text-sm h-8 mt-4">
-              <button type="submit" onClick={formik.handleSubmit} className="bg-slate-800 text-white h-full">
+              <button type="submit" onClick={formik.handleSubmit} className="bg-primary text-white h-full">
                 Submit
               </button>
             </div>

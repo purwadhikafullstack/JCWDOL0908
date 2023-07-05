@@ -4,7 +4,7 @@ function HeaderModal(props) {
   const { singleUser } = props;
   return (
     <>
-      <h1 className="delete-modal-header-text">Detail Data ID : {singleUser.id_user}</h1>
+      <h1 className="modal-header-text">Detail Data ID : {singleUser.id_user}</h1>
     </>
   );
 }

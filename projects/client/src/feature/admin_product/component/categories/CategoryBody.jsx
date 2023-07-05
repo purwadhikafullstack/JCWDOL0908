@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AddNewCategory from "./add_category/AddNewCategory";
 import { getCategories } from "../../";
 import RenderCategories from "./RenderCategories";
-import Pagination from "../Pagination";
+import AdminPagination from "../../../../components/AdminPagination";
 import DeleteModal from "./delete_category/DeleteModal";
 import EditModal from "./edit_category/EditModal";
 import { useSelector } from "react-redux";
@@ -58,7 +58,7 @@ function CategoryBody() {
       </div>
       <CreateButton admin={roleAdmin} setFunction={setNewCategoryClicked} text={"Category"} />
       <div className="pagination-container">
-        <Pagination setPageNum={setPageNum} pageNum={pageNum} totalPage={categories?.totalPage} />
+        <AdminPagination setPageNum={setPageNum} pageNum={pageNum} totalPage={categories?.totalPage} />
       </div>
     </>
   );

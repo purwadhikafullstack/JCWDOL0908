@@ -25,13 +25,13 @@ function RenderCategories(props) {
       >
         <div className="col-span-2 lg:col-span-3 text-left h-full flex items-center">
           <div className="bg-white bg-opacity-40 py-1 px-2">
-            <p className=" text-slate-800 relative z-10">{category?.category_name}</p>
+            <p className=" text-primary relative z-10">{category?.category_name}</p>
           </div>
         </div>
         <div className="h-1/3 md:h-1/4 grid grid-cols-2 gap-2">
           <button
             className="bg-slate-300 disabled:bg-white disabled:border-2 lg:disabled:border-4
-            disabled:border-slate-300 disabled:cursor-not-allowed disabled:text-slate-300"
+            disabled:border-primaryLight disabled:cursor-not-allowed disabled:text-slate-300"
             onClick={() => editBtnHandler(category)}
             disabled={roleAdmin.role_admin !== "super-admin"}
           >
@@ -40,7 +40,7 @@ function RenderCategories(props) {
           <button
             onClick={() => delBtnHandler(category)}
             className="bg-red-600 text-white disabled:bg-white disabled:border-2 lg:disabled:border-4
-            disabled:border-slate-300 disabled:cursor-not-allowed disabled:text-slate-300"
+            disabled:border-primaryLight disabled:cursor-not-allowed disabled:text-slate-300"
             disabled={roleAdmin.role_admin !== "super-admin"}
           >
             <i className="uil uil-trash-alt"></i>

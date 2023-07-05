@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../Pagination";
+import AdminPagination from "../../../../components/AdminPagination";
 import RenderProduct from "./RenderProduct";
 import EditModal from "./edit_data/EditModal";
 import { getWarehouses } from "../../../admin_warehouse/";
@@ -7,17 +7,7 @@ import { getStock } from "../../";
 import DeleteModal from "./delete_data/DeleteModal";
 
 function BodyStock(props) {
-  const {
-    productsList,
-    totalPage,
-    setPageNum,
-    pageNum,
-    userAdmin,
-    OFFSET,
-    LIMIT,
-    selectedCategories,
-    setProductsList,
-  } = props;
+  const { productsList, totalPage, setPageNum, pageNum, userAdmin, refetchedData } = props;
   const [warehouses, setWarehouses] = useState([]);
   const [singleProduct, setProduct] = useState({});
   const [isEditClicked, setEditClicked] = useState(false);
@@ -54,11 +44,7 @@ function BodyStock(props) {
           productStock={productStock}
           userAdmin={userAdmin}
           singleProduct={singleProduct}
-          OFFSET={OFFSET}
-          LIMIT={LIMIT}
-          pageNum={pageNum}
-          selectedCategories={selectedCategories}
-          setProductsList={setProductsList}
+          refetchedData={refetchedData}
         />
       ) : null}
       {isDeleteClicked ? (
@@ -68,15 +54,11 @@ function BodyStock(props) {
           productStock={productStock}
           userAdmin={userAdmin}
           singleProduct={singleProduct}
-          OFFSET={OFFSET}
-          LIMIT={LIMIT}
-          pageNum={pageNum}
-          selectedCategories={selectedCategories}
-          setProductsList={setProductsList}
+          refetchedData={refetchedData}
         />
       ) : null}
-      <div className="row-span-6 grid grid-rows-10">
-        <div className="row-span-9 grid grid-rows-10 gap-2 lg:gap-2">
+      <div className="row-span-6 grid grid-rows-12">
+        <div className="row-span-11 grid grid-rows-10 gap-2 lg:gap-2">
           <div
             className="row-span-1 font-semibold grid lg:grid-cols-5
               grid-cols-6 items-end text-xs pl-2 md:text-sm lg:text-base"
@@ -94,7 +76,7 @@ function BodyStock(props) {
           />
         </div>
         <div className="pagination-container">
-          <Pagination pageNum={pageNum} setPageNum={setPageNum} totalPage={totalPage} />
+          <AdminPagination setPageNum={setPageNum} pageNum={pageNum} totalPage={totalPage} />
         </div>
       </div>
     </>
