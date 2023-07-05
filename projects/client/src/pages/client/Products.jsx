@@ -10,17 +10,26 @@ import { useSearchParams } from "react-router-dom";
 
 function Products() {
   const [search, setSearch] = useSearchParams();
+  const categories = (search.get("categories") || '').split(",").map(Number).filter(Boolean);
   const [products, setProducts] = useState({});
   const [page, setPage] = useState(search.get("page") || 1);
   const [filter, setFilter] = useState({
     price: [0, 999999999],
-    category: [],
+    category: categories,
   });
   const [sort, setSort] = useState({
     type: search.get("sort_key") || "default",
     value: search.get("sort_condition") || "",
   });
-  
+
+  useEffect(() => {
+    setSearch((searchParams) => {
+      searchParams.set("categories", filter.category.join(","));
+      return searchParams;
+    });
+  }, [filter.category]);
+
+
   useEffect(() => {
     setSearch((searchParams) => {
       searchParams.set("page", page);
@@ -42,7 +51,6 @@ function Products() {
       return searchParams;
     });
   }, [filter.price]);
-
 
   const query = {
     page: page,
