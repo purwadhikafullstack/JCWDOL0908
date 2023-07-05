@@ -27,7 +27,7 @@ module.exports = (sequelize) => {
         },
       },
       payment_proof: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true,
       },
       is_approve: {

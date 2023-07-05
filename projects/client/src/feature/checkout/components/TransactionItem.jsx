@@ -1,6 +1,6 @@
 import { numberFormat } from "../../../helper/number_format";
 
-function TransactionItem({ transaction }) {
+function TransactionItem({ transaction, setTrigger }) {
   const {
     id_transaction,
     createdAt,
@@ -10,11 +10,13 @@ function TransactionItem({ transaction }) {
     is_canceled,
     total_price,
     transaction_product_rlts,
+    payment_proof,
   } = transaction;
 
   const { product } = transaction_product_rlts[0];
 
-  const status = is_approve ? "On Process" : is_sending ? "On Delivery" : is_accepted ? "Delivered" : is_canceled ? "Canceled" : "Pending";
+  let status = is_approve ? "On Process" : is_sending ? "On Delivery" : is_accepted ? "Success" : is_canceled ? "Canceled" : "Waiting admin approval";
+  if (!payment_proof) status = "Waiting for Payment";
 
   return (
     <div className="flex flex-col gap-1 shadow p-2 rounded-md shadow-gray-200 border">
@@ -36,7 +38,8 @@ function TransactionItem({ transaction }) {
             <span className="">{numberFormat(product.price)}</span>
             <span className="">{transaction_product_rlts[0].quantity} item</span>
             {
-              transaction_product_rlts.length > 1 && ( <span className="font-semibold">+{transaction_product_rlts.length - 1} more product</span> )
+              transaction_product_rlts.length > 1 && (
+                <span className="font-semibold">+{transaction_product_rlts.length - 1} more product</span>)
             }
           </div>
         </div>
@@ -46,10 +49,21 @@ function TransactionItem({ transaction }) {
         </div>
       </div>
       {/* button */}
-      <div className="flex sm:flex-row flex-col gap-2 mt-3 ml-auto">
-        <button className="px-2 text-primary border-b border-primary font-semibold">See Detail</button>
-        <button className="py-1 px-3  rounded-md bg-primaryLight hover:bg-primary text-white font-semibold">Upload Payment</button>
-        <button className="py-1 px-3  rounded-md bg-amber-500 hover:bg-amber-700 text-white font-semibold">Cancel</button>
+      <div className="flex flex-row gap-2 mt-3 ml-auto">
+        {/*<button className="px-2 text-primary border-b border-primary font-semibold">See Detail</button>*/}
+        {
+          !payment_proof && (
+            <>
+              <button
+                onClick={() => setTrigger({ action: "payment", transaction: transaction })}
+                className="py-1 px-3  rounded-md bg-primaryLight hover:bg-primary text-white font-semibold">Upload
+                Payment
+              </button>
+              <button className="py-1 px-3  rounded-md bg-amber-500 hover:bg-amber-700 text-white font-semibold">Cancel
+              </button>
+            </>
+          )
+        }
       </div>
     </div>
   );
