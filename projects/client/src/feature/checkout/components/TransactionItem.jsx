@@ -14,8 +14,8 @@ function TransactionItem({ transaction, setTrigger }) {
   } = transaction;
 
   const { product } = transaction_product_rlts[0];
-
-  let status = is_approve ? "On Process" : is_sending ? "On Delivery" : is_accepted ? "Success" : is_canceled ? "Canceled" : "Waiting admin approval";
+  
+  let status = is_canceled ? "Canceled" : is_accepted ? "Success" : is_sending ? "On Delivery" : is_approve ? "On Process" : "Waiting admin approval";
   if (!payment_proof) status = "Waiting for Payment";
 
   return (
