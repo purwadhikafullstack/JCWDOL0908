@@ -89,7 +89,6 @@ const calculateShipping = async (data) => {
   }
 };
 
-//  TODO: validate stock before checkout
 const createOrder = async (data) => {
   const t = await db.sequelize.transaction();
   try {

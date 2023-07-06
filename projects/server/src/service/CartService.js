@@ -165,6 +165,7 @@ const GetCart = async (data) => {
       ],
       where: {
         id_product: cart.map((item) => item.id_product),
+        is_deleted: false,
       },
       group: ["id_product"],
     });
