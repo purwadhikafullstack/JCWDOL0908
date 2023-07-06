@@ -46,12 +46,18 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: 0,
       },
-      warehouse_id: {
+      id_warehouse: {
         type: DataTypes.INTEGER,
         references: {
           model: "warehouses",
           key: "id_warehouse",
         },
+      },
+      shipping_cost: {
+        type: DataTypes.INTEGER,
+      },
+      shipping_service: {
+        type: DataTypes.STRING,
       },
     },
     {
@@ -66,6 +72,5 @@ module.exports = (sequelize) => {
     Transaction.belongsTo(models.Address, { foreignKey: "id_address" });
     Transaction.belongsTo(models.Warehouse, { foreignKey: "id_warehouse" });
   };
-
   return Transaction;
 };

@@ -1,7 +1,7 @@
 import { H3 } from "../../../components/Typo";
 import { numberFormat } from "../../../helper/number_format";
 
-function SummaryCheckout({ subTotal = 0, shipping = 0 }) {
+function SummaryCheckout({ subTotal = 0, shipping = 0, handleCheckout, stockAvailable }) {
   return (
     <div className="w-full sm:w-4/12">
       <H3>Order Summary</H3>
@@ -22,7 +22,10 @@ function SummaryCheckout({ subTotal = 0, shipping = 0 }) {
       {
         subTotal > 0 && shipping > 0 && (
           <button
-            className="px-3 py-2 flex items-center rounded-md bg-primaryLight text-white font-medium font-title hover:bg-primary w-full"
+            type="button"
+            disabled={!stockAvailable.status}
+            onClick={handleCheckout}
+            className="px-3 py-2 flex items-center rounded-md bg-primaryLight text-white font-medium font-title hover:bg-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Create Order
           </button>

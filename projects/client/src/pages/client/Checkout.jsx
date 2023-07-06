@@ -4,22 +4,33 @@ import { H3 } from "../../components/Typo";
 import { useEffect, useState } from "react";
 import ModalAddress from "../../feature/profile/components/ModalAddress";
 import { getPrimaryAddress } from "../../feature/profile";
-import { ToastError } from "../../helper/Toastify";
+import { ToastError, ToastSuccess } from "../../helper/Toastify";
 import ModalListAddress from "../../feature/checkout/components/ModalListAddress";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CartItem from "../../feature/cart/components/CartItem";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SummaryCheckout from "../../feature/checkout/components/SummaryCheckout";
 import DeliveryMethod from "../../feature/checkout/components/DeliveryMethod";
+import { createOrder } from "../../feature/checkout";
+import { setLoading } from "../../feature/LoaderSlice";
 
 function Checkout() {
+  const { user } = useSelector((state) => state.user);
   const [selectedAddress, setSelectedAddress] = useState({});
+  const [selectedWarehouse, setSelectedWarehouse] = useState({});
   const products = useSelector((state) => state.cart.cart);
+  const [stockAvailable, setStockAvailable] = useState({
+    status: true,
+    message: "",
+  });
   const [selectedCourier, setSelectedCourier] = useState({});
   const [trigger, setTrigger] = useState({
     action: "",
     address: {},
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const subTotal = products.reduce((a, b) => a + b.product.price * b.quantity, 0);
 
   const fetchPrimaryAddress = async () => {
     try {
@@ -36,14 +47,54 @@ function Checkout() {
     await fetchPrimaryAddress();
   };
 
+  const handleCheckout = async () => {
+    dispatch(setLoading(true));
+    try {
+      const carts = products.map((item) => item.id_cart);
+      await createOrder({
+        id_address: selectedAddress.id_address,
+        id_warehouse: selectedWarehouse.id_warehouse,
+        carts,
+        shipping_cost: selectedCourier?.cost?.cost[0].value,
+        shipping_service: `${selectedCourier?.code} - ${selectedCourier?.cost?.service}`,
+        total_price: subTotal + selectedCourier?.cost?.cost[0].value,
+      });
+      ToastSuccess("Checkout success");
+      setTimeout(() => {
+        navigate("/account/transaction");
+      }, 1000);
+    } catch (error) {
+      ToastError(error.message || "Failed to checkout");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      await fetchPrimaryAddress();
-    })();
-  }, []);
+    if (user?.id) {
+      (async () => {
+        await fetchPrimaryAddress();
+      })();
+    }
+  }, [user]);
 
+  useEffect(() => {
+    if (products.length > 0 && user?.id) {
+      products.forEach((product) => {
+        if (product.quantity > product.product.stock) {
+          setStockAvailable({
+            status: false,
+            message: `Stock for ${product.product.product_name} is not available` + (product.product.stock > 0 ? ` only ${product.product.stock} left remove and re add to cart` : ""),
+          });
+        }
+      });
+    }
+  }, [products, user]);
 
-  const subTotal = products.reduce((a, b) => a + b.product.price * b.quantity, 0);
+  if (!user?.id) {
+    ToastError("You must login first");
+    window.location.href = "/client";
+  }
 
   return (
     <LayoutClient>
@@ -100,7 +151,8 @@ function Checkout() {
                             >
                               Choose Another Address
                             </button>
-                            <Link to="/account/address" className="px-3 py-2 flex items-center rounded-md border text-gray-900 font-medium font-title hover:bg-gray-100">
+                            <Link to="/account/address"
+                                  className="px-3 py-2 flex items-center rounded-md border text-gray-900 font-medium font-title hover:bg-gray-100">
                               Manage Address
                             </Link>
                           </div>
@@ -114,13 +166,25 @@ function Checkout() {
                         <CartItem key={product.id_product} product={product} withAction={false} />
                       ))
                     }
+                    {
+                      !stockAvailable.status && (
+                        <div className="flex flex-col items-center justify-center py-6">
+                          <span className="text-red-500 font-title text-lg">{stockAvailable.message}</span>
+                        </div>
+                      )
+                    }
                   </div>
                   <DeliveryMethod
                     address={selectedAddress}
+                    setSelectedWarehouse={setSelectedWarehouse}
                     selectedCourier={selectedCourier}
                     setSelectedCourier={setSelectedCourier} />
                 </div>
-                <SummaryCheckout subTotal={parseInt(subTotal)} shipping={selectedCourier?.cost?.cost[0].value} />
+                <SummaryCheckout
+                  stockAvailable={stockAvailable}
+                  handleCheckout={handleCheckout}
+                  subTotal={parseInt(subTotal)}
+                  shipping={selectedCourier?.cost?.cost[0].value} />
               </>
             ) : (
               <div className="w-full flex flex-col items-center justify-center gap-3">

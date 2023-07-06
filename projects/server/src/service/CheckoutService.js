@@ -1,8 +1,22 @@
 const db = require("../model");
 const haversineFormula = require("../helper/HaversineFormula");
-const { Address, Warehouse, Cart, Product } = db;
+const {
+  Address,
+  Warehouse,
+  Cart,
+  Product,
+  Transaction,
+  TransactionProductRlt,
+} = db;
 const { getShippingCost } = require("../helper/RajaOngkir");
+const { updateBookedStock } = require("./ProductService");
+const { removeAfterCheckout, GetCart } = require("./CartService");
 
+/**
+ * Calculate shipping cost
+ * @param data
+ * @return {Promise<{data: (*|null), error: boolean}|{data: null, error}|{data: null, error: Error}>}
+ */
 const calculateShipping = async (data) => {
   try {
     const { id_address, carts, id_user } = data;
@@ -60,7 +74,10 @@ const calculateShipping = async (data) => {
 
     return {
       error: false,
-      data: results.data,
+      data: {
+        shipping: results.data,
+        warehouse: warehousesWithDistance[0],
+      },
     };
 
 
@@ -72,6 +89,99 @@ const calculateShipping = async (data) => {
   }
 };
 
+//  TODO: validate stock before checkout
+const createOrder = async (data) => {
+  const t = await db.sequelize.transaction();
+  try {
+    const { id_address, id_warehouse, carts, id_user, shipping_cost, shipping_service, total_price } = data;
+
+    // Validate stock
+    const { error: errorStock, data: dataCart } = await GetCart({
+      userID: id_user,
+    });
+
+    if (errorStock) {
+      await t.rollback();
+      return {
+        error: new Error("Failed to create transaction"),
+        data: null,
+      };
+    }
+
+    for (const cart of dataCart) {
+      const cartItem = cart.toJSON();
+      if (cartItem.quantity > cartItem.product.stock) {
+        await t.rollback();
+        return {
+          error: new Error("Stock not enough"),
+          data: null,
+        };
+      }
+    }
+
+    const transaction = await Transaction.create({
+      id_user,
+      total_price,
+      id_address,
+      id_warehouse,
+      shipping_cost,
+      shipping_service,
+    }, { transaction: t });
+
+    const productsInCart = await Cart.findAll({
+      where: {
+        id_user,
+        id_cart: carts.map((cart) => cart),
+      },
+    });
+    if (productsInCart.length === 0) {
+      await t.rollback();
+      return {
+        error: new Error("Failed to create transaction"),
+        data: null,
+      };
+    }
+    const transactionDetails = productsInCart.map((product) => {
+      return {
+        id_transaction: transaction.id_transaction,
+        id_product: product?.id_product,
+        quantity: product?.quantity,
+      };
+    });
+
+    const transactionProductRlt = await TransactionProductRlt.bulkCreate(transactionDetails, { transaction: t });
+
+    // if error, rollback
+    if (!transactionProductRlt) {
+      await t.rollback();
+      return {
+        error: new Error("Failed to create transaction"),
+        data: null,
+      };
+    }
+
+    // update product booked stock
+    await updateBookedStock(transactionDetails, id_warehouse, t);
+    // delete cart
+    await removeAfterCheckout(id_user);
+    await t.commit();
+    const transactionData = await Transaction.findByPk(transaction.id_transaction);
+
+    return {
+      error: false,
+      data: transactionData,
+    };
+  } catch (error) {
+    console.log("error D:", error);
+    await t.rollback();
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 module.exports = {
   calculateShipping,
+  createOrder,
 };

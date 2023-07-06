@@ -5,24 +5,19 @@ import ProfileContainer from "../../../feature/profile/components/ProfileContain
 import { H3 } from "../../../components/Typo";
 import FieldBio from "../../../feature/profile/components/FieldBio";
 import { Form, Formik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PhotoForm from "../../../feature/profile/components/PhotoForm";
 import { UpdateBio } from "../../../feature/profile/";
 import { setLoading } from "../../../feature/LoaderSlice";
 import { ToastError, ToastSuccess } from "../../../helper/Toastify";
 import { BioValidation } from "../../../validation/User";
 import { setUser } from "../../../feature/auth/slice/UserSlice";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const { user } = useSelector((state) => state.user);
   const [isUpdate, setIsUpdate] = useState(false);
   const dispatch = useDispatch();
-
-  // protected route
-  if (!user?.id) {
-    return <h1>Forbidden</h1>;
-  }
-
   const handleSubmit = async (values) => {
     dispatch(setLoading(true));
     try {
@@ -43,6 +38,11 @@ function Profile() {
     }
   };
 
+  if (!user?.id) {
+    ToastError("You must login first");
+    window.location.href = "/client";
+  }
+
   return (
     <LayoutClient>
       <Jumbotron title="Account | Bio Data" />
@@ -52,7 +52,6 @@ function Profile() {
 
           <PhotoForm user={user} />
 
-          {/*TODO : bisa dipisah*/}
           <Formik
             initialValues={{ username: user?.username || "", email: user?.email, phone: user?.phone_number || "" }}
             onSubmit={handleSubmit}

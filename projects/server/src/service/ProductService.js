@@ -276,6 +276,21 @@ const updateProduct = async (
   return result;
 };
 
+const updateBookedStock = async (transactionDetails, id_warehouse, t) => {
+  const bulkUpdateQuery = `
+  UPDATE product_warehouse_rlt
+  SET booked_stock = booked_stock + CASE id_product
+    ${transactionDetails
+          .map((details) => `WHEN ${details.id_product} THEN ${details.quantity}`)
+          .join("\n")}
+    END
+  WHERE id_product IN (${transactionDetails.map((details) => details.id_product).join(",")})
+    AND id_warehouse = ${id_warehouse};
+`;
+
+  await sequelize.query(bulkUpdateQuery, { transaction: t });
+};
+
 module.exports = {
   getProductsCount,
   getProducts,
@@ -286,4 +301,5 @@ module.exports = {
   getProductById,
   listProducts,
   getProduct,
+  updateBookedStock,
 };
