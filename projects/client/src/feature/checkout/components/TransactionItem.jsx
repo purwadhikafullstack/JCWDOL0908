@@ -1,4 +1,5 @@
 import { numberFormat } from "../../../helper/number_format";
+import defaultImage from "../../../images/empty.jpg";
 
 function TransactionItem({ transaction, setTrigger }) {
   const {
@@ -14,9 +15,10 @@ function TransactionItem({ transaction, setTrigger }) {
   } = transaction;
 
   const { product } = transaction_product_rlts[0];
-  
+
   let status = is_canceled ? "Canceled" : is_accepted ? "Success" : is_sending ? "On Delivery" : is_approve ? "On Process" : "Waiting admin approval";
   if (!payment_proof) status = "Waiting for Payment";
+  const image_url = process.env.REACT_APP_SERVER_URL + product.product_image || defaultImage;
 
   return (
     <div className="flex flex-col gap-1 shadow p-2 rounded-md shadow-gray-200 border">
@@ -27,10 +29,10 @@ function TransactionItem({ transaction, setTrigger }) {
       </div>
       <div className="flex sm:flex-row flex-col justify-between">
         <div className="flex flex-row gap-2">
-          <div className="flex w-[90px]">
+          <div className="flex w-[90px] h-[90px]">
             <img
-              className="w-full h-full rounded-md"
-              src="https://via.placeholder.com/80"
+              className="w-full h-full rounded-md object-cover"
+              src={image_url}
               alt="product" />
           </div>
           <div className="flex flex-col">
