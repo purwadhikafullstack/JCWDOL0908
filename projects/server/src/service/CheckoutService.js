@@ -89,7 +89,6 @@ const calculateShipping = async (data) => {
   }
 };
 
-//  TODO: validate stock before checkout
 const createOrder = async (data) => {
   const t = await db.sequelize.transaction();
   try {
@@ -181,7 +180,82 @@ const createOrder = async (data) => {
   }
 };
 
+/**
+ * Store payment proof
+ * @param data
+ * @return {Promise<{data: (*|null), error: boolean}|{data: null, error}|{data: null, error: Error}>}
+ */
+const storePaymentProof = async (data) => {
+  try {
+    const { id_transaction, payment_proof } = data;
+    const transaction = await Transaction.findByPk(id_transaction);
+    if (!transaction) {
+      return {
+        error: new Error("Transaction not found"),
+        data: null,
+      };
+    }
+    transaction.payment_proof = payment_proof;
+    await transaction.save();
+    return {
+      error: false,
+      data: transaction,
+    };
+  } catch (error) {
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
+/**
+ * Get transaction by id
+ * @param data
+ * @return {Promise<{data: {metadata: {total: number, total_page: number, page: number, page_size: number}, transactions: *}, error: boolean}|{data: null, error}>}
+ */
+const getTransactions = async (data) => {
+  try {
+    const { id_user, page, limit } = data;
+    const offset = (page - 1) * limit;
+    const { count, rows } = await Transaction.findAndCountAll({
+      where: {
+        id_user,
+      },
+      include: {
+        model: TransactionProductRlt,
+        include: { model: Product },
+      },
+      limit,
+      offset,
+      order: [["createdAt", "DESC"]],
+    });
+
+    const metadata = {
+      total: parseInt(count),
+      page: parseInt(page),
+      page_size: parseInt(limit),
+      total_page: Math.ceil(count / limit),
+    };
+
+    return {
+      error: false,
+      data: {
+        metadata,
+        transactions: rows,
+      },
+    };
+  } catch (error) {
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 module.exports = {
   calculateShipping,
   createOrder,
+  storePaymentProof,
+  getTransactions,
 };

@@ -26,6 +26,7 @@ import Products from "./pages/client/Products";
 import ProductDetail from "./pages/client/ProductDetail";
 import Cart from "./pages/client/Cart";
 import Checkout from "./pages/client/Checkout";
+import Transaction from "./pages/client/profile/Transaction";
 
 function App() {
   // const [message, setMessage] = useState("");
@@ -72,6 +73,7 @@ function App() {
         {/*User Route*/}
         <Route path="/account" element={<Profile />} />
         <Route path="/account/address" element={<Address />} />
+        <Route path="/account/transactions" element={<Transaction />} />
         <Route path="/account/reset-password" element={<ResetPassword />} />
         <Route path="/logout" element={<Logout />} />
 

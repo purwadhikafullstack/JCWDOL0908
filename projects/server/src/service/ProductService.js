@@ -80,6 +80,7 @@ const listProducts = async (data) => {
       ],
       where: {
         id_product: productIds,
+        is_deleted: false,
       },
       group: ["id_product"],
     });
