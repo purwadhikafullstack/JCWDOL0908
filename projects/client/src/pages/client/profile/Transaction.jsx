@@ -11,6 +11,7 @@ import { setLoading } from "../../../feature/LoaderSlice";
 import { ToastError } from "../../../helper/Toastify";
 import Pagination from "../../../components/Pagination";
 import ModalPayment from "../../../feature/checkout/components/ModalPayment";
+import CancelOrder from "../../../feature/checkout/components/CancelOrder";
 
 function Transaction() {
   const [search, setSearch] = useSearchParams();
@@ -55,6 +56,11 @@ function Transaction() {
       <ModalPayment
         isOpen={trigger.action === "payment"}
         onClose={() => setTrigger({ action: "", transaction: {} })}
+        setTrigger={setTrigger}
+        transaction={trigger.transaction}
+      />
+      <CancelOrder
+        isOpen={trigger.action === "cancel"}
         setTrigger={setTrigger}
         transaction={trigger.transaction}
       />

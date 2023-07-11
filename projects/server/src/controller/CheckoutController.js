@@ -130,9 +130,63 @@ const getOrders = async (req, res, next) => {
   }
 };
 
+const acceptTransaction = async (req, res, next) => {
+  try {
+    const {  user } = req;
+    const { id } = req.params;
+
+    const { error, data } = await CheckoutService.acceptTransaction({
+      id_transaction: id,
+      id_user: user.id,
+    });
+
+    if (error) {
+      return res.status(400).json({
+        message: error.message,
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Transaction accepted successfully",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+const cancelTransaction = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { id } = req.params;
+
+    const { error, data } = await CheckoutService.cancelTransaction({
+      id_transaction: id,
+      id_user: user.id,
+    });
+
+    if (error) {
+      return res.status(400).json({
+        message: error.message,
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Transaction canceled successfully",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   checkShippingCoast,
   createOrder,
   payOrder,
   getOrders,
+  acceptTransaction,
+  cancelTransaction,
 };
