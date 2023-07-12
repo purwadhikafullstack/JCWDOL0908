@@ -1,26 +1,42 @@
-require("dotenv/config");
+const { join } = require("path");
+require("dotenv").config({ path: join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
-const { join } = require("path");
-
+const {
+  UserRouter,
+  AdminRouter,
+  AdminLoginRouter,
+  AdminWarehouseRouter,
+  AuthRouter,
+  CategoryRouter,
+  CartRouter,
+  ProductRouter,
+  AddressRouter,
+  ProductWarehouseRltRouter,
+  MutationRouter,
+  CheckoutRouter,
+} = require("./router");
+const db = require("./model");
+const bearerToken = require("express-bearer-token");
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
+app.use(cors());
+app.use(bearerToken());
+
+// Init Database
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("Synced db.");
   })
-);
+  .catch((err) => {
+    console.log("Failed to sync db: " + err.message);
+  });
 
 app.use(express.json());
+app.use("/", express.static(__dirname + "/public"));
 
 //#region API ROUTES
-
-// ===========================
-// NOTE : Add your routes here
-
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
 });
@@ -30,6 +46,21 @@ app.get("/api/greetings", (req, res, next) => {
     message: "Hello, Student !",
   });
 });
+// ===========================
+// NOTE : Add your routes here
+
+app.use("/api/users", UserRouter);
+app.use("/api/admin", AdminRouter);
+app.use("/api/admin-login", AdminLoginRouter);
+app.use("/api/admin-warehouse", AdminWarehouseRouter);
+app.use("/api/auth", AuthRouter);
+app.use("/api/categories", CategoryRouter);
+app.use("/api/products", ProductRouter);
+app.use("/api/cart", CartRouter);
+app.use("/api/address", AddressRouter);
+app.use("/api/products-stocks", ProductWarehouseRltRouter);
+app.use("/api/mutation", MutationRouter);
+app.use("/api/checkout", CheckoutRouter);
 
 // ===========================
 
@@ -45,12 +76,18 @@ app.use((req, res, next) => {
 // error
 app.use((err, req, res, next) => {
   if (req.path.includes("/api/")) {
-    console.error("Error : ", err.stack);
-    res.status(500).send("Error !");
+    console.error("Error : ", err);
+    if (err.statusCode && err.message) {
+      return res.status(err.statusCode).send(err.message);
+    }
+    return res.status(500).send(err);
   } else {
     next();
   }
 });
+
+// access storage
+app.use("/storage", express.static(join(__dirname, "storage")));
 
 //#endregion
 
