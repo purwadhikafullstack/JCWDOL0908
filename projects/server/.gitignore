@@ -20,3 +20,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+.idea
+
+# Ignore all files directly within "src/storage"
+src/storage/*/*
+
+# Exclude the ".gitkeep" files in each subdirectory to keep them
+!src/storage/avatars/.gitkeep
+!src/storage/products/.gitkeep
+!src/storage/categories/.gitkeep
+!src/storage/transactions/.gitkeep
