@@ -4,7 +4,7 @@ import { Field, Form, Formik } from "formik";
 import FieldPassword from "../../../components/FieldPassword";
 import { UserVerification } from "../../../validation/User";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../../feature/LoaderSlice";
 import { ToastError, ToastSuccess } from "../../../helper/Toastify";
 import { VerifyAccount } from "../../../feature/auth";
@@ -14,6 +14,7 @@ function Verification() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [token, setToken] = useState("");
+  const user  = useSelector((state) => state.user);
   // const token = new URLSearchParams(location.search).get("q");
 
   useEffect(() => {
@@ -21,6 +22,9 @@ function Verification() {
     const token = uri.substring(uri.lastIndexOf("?q") + 1);
     // remove "?q="
     setToken(token.substring(2));
+    if (user?.email) {
+      navigate("/");
+    }
   }, []);
 
   const handleSubmit = async (values) => {

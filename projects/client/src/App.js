@@ -69,6 +69,7 @@ function App() {
         {/*Auth User Route*/}
         <Route path="/client" element={<LoginClient />} />
         <Route path="/verify" element={<VerificationAuth />} />
+        <Route path="/reset-password" element={<VerificationAuth />} />
 
         {/*User Route*/}
         <Route path="/account" element={<Profile />} />
