@@ -28,7 +28,7 @@ const deleteWarehouse = async (req, res, next) => {
     if (error?.errMsg) return res.status(error.statusCode).send({ message: error.errMsg, isSuccess: false });
     if (error) return res.status(500).send({ isSuccess: false, message: "internal server error", error });
 
-    return res.status(202).send({ isSuccess: true, message: "warehouse deleted" });
+    return res.status(202).send({ isSuccess: true, message: "warehouse deleted", result });
   } catch (error) {
     // unknown error
     next(error);

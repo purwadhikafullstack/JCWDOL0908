@@ -10,6 +10,7 @@ const ProductWarehouseRltController = require("./ProductWarehouseRltController")
 const CartController = require("./CartController");
 const MutationController = require("./MutationController");
 const CheckoutController = require("./CheckoutController");
+const ProductJournalController = require("./ProductJournalController");
 
 module.exports = {
   UserController,
@@ -24,4 +25,5 @@ module.exports = {
   CartController,
   MutationController,
   CheckoutController,
+  ProductJournalController,
 };

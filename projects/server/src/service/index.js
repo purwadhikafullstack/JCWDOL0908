@@ -11,6 +11,7 @@ const ProductWarehouseRltService = require("./ProductWarehouseRltService");
 const ProductJournalService = require("./ProductJournalService");
 const MutationService = require("./MutationService");
 const CheckoutService = require("./CheckoutService");
+const TransactionService = require("./TransactionService");
 
 module.exports = {
   AdminUserMgtService,
@@ -26,4 +27,5 @@ module.exports = {
   MutationService,
   CheckoutService,
   ProductWarehouseRltService,
+  TransactionService,
 };

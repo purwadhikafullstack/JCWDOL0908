@@ -101,13 +101,13 @@ function StockMutationBody(props) {
         </SelectFilter>
       </form>
       <div className="row-span-10 grid grid-rows-9 gap-2 lg:gap-2">
-        <RenderBodyData>
-          {mutationList.length ? (
+        {mutationList.length ? (
+          <RenderBodyData>
             <RenderMutationData dataList={mutationList} singleItemClickedHandler={singleItemClickedHandler} />
-          ) : (
-            <NoData text="Data" />
-          )}
-        </RenderBodyData>
+          </RenderBodyData>
+        ) : (
+          <NoData text="Data" />
+        )}
       </div>
       <div className="row-span-1 grid grid-cols-2 items-center">
         <button

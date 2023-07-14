@@ -22,10 +22,17 @@ const insertNewMutation = async (id_user, id_product, quantity, from_id_warehous
   return newRequest;
 };
 
-const updateStockAndBookedStock = async (id_product_warehouse, newStock, stock, booked_stock, transaction) => {
+const updateStockAndBookedStock = async (
+  id_product_warehouse,
+  newStock,
+  stock,
+  newBookedStock,
+  booked_stock,
+  transaction,
+) => {
   const update = await ProductWarehouseRlt.update(
-    { stock: newStock, booked_stock },
-    { where: { id_product_warehouse, stock }, transaction },
+    { stock: newStock, booked_stock: newBookedStock },
+    { where: { id_product_warehouse, stock, booked_stock }, transaction },
   );
   return update;
 };
@@ -64,8 +71,9 @@ const fetchDatas = async (data) => {
   let condition = conditionQuery(id_warehouse, mutationType);
   condition = statusConditionQuery(status, condition);
   const result = await sequelize.query(
-    `SELECT mp.*, p.product_name, u.username as creator, 
-     w.warehouse_name as from_warehouse, ww.warehouse_name as to_warehouse 
+    `SELECT mp.*, p.product_name, u.username as creator,
+     w.warehouse_name as from_warehouse, ww.warehouse_name as to_warehouse,
+     w.is_deleted as requested_deleted, ww.is_deleted as requester_deleted 
      FROM mutation_processes mp 
      JOIN warehouses w ON mp.from_id_warehouse = w.id_warehouse
      JOIN warehouses ww ON mp.to_id_warehouse = ww.id_warehouse
@@ -130,14 +138,6 @@ const updateIsAccept = async (id_mutation, accepted_by, transaction) => {
   return update;
 };
 
-const returnStock = async (id_product_warehouse, stock, booked_stock, newStock, newBookedStock, transaction) => {
-  const returnStock = await ProductWarehouseRlt.update(
-    { stock: newStock, booked_stock: newBookedStock },
-    { where: { id_product_warehouse, stock, booked_stock }, transaction },
-  );
-  return returnStock;
-};
-
 const updateStock = async (id_product_warehouse, stock, booked_stock, newStock, transaction) => {
   const updateStock = await ProductWarehouseRlt.update(
     { stock: newStock },
@@ -146,12 +146,31 @@ const updateStock = async (id_product_warehouse, stock, booked_stock, newStock, 
   return updateStock;
 };
 
-const returnBookedStock = async (id_product_warehouse, booked_stock, newBookedStock, transaction) => {
-  const returnStock = await ProductWarehouseRlt.update(
-    { booked_stock: newBookedStock },
-    { where: { id_product_warehouse, booked_stock }, transaction },
-  );
-  return returnStock;
+const findMutationByWarehouseId = async (id_warehouse) => {
+  const mutation = await MutationProcess.findAll({
+    where: {
+      [Op.or]: [{ from_id_warehouse: id_warehouse }, { to_id_warehouse: id_warehouse }],
+      is_sending: 1,
+      is_approve: 1,
+      is_accepted: 0,
+    },
+  });
+  return mutation;
+};
+
+const findMutationByProductAndWarehouse = async (id_product, from_id_warehouse, to_id_warehouse) => {
+  const mutationData = await MutationProcess.findAll({
+    where: {
+      from_id_warehouse,
+      to_id_warehouse,
+      id_product,
+      [Op.or]: [
+        { is_approve: 0, is_reject: 0 },
+        { is_approve: 1, is_accepted: 0 },
+      ],
+    },
+  });
+  return mutationData;
 };
 
 module.exports = {
@@ -162,8 +181,8 @@ module.exports = {
   findMutationByPk,
   updateIsApprove,
   updateIsReject,
-  returnStock,
   updateIsAccept,
   updateStock,
-  returnBookedStock,
+  findMutationByWarehouseId,
+  findMutationByProductAndWarehouse,
 };

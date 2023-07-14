@@ -25,23 +25,11 @@ function UpdateModal(props) {
 
   const LastUpdatedBy = () => {
     if (singleData.is_accepted) {
-      return (
-        <>
-          <FieldDataRender textLabel="accepted at" value={dateFormatting(singleData.updatedAt)} />
-        </>
-      );
+      return <FieldDataRender textLabel="shipped at" value={dateFormatting(singleData.updatedAt)} />;
     } else if (singleData.is_reject) {
-      return (
-        <>
-          <FieldDataRender textLabel="rejected at" value={dateFormatting(singleData.updatedAt)} />
-        </>
-      );
+      return <FieldDataRender textLabel="rejected at" value={dateFormatting(singleData.updatedAt)} />;
     } else if (singleData.is_approve) {
-      return (
-        <>
-          <FieldDataRender textLabel="approve and send at" value={dateFormatting(singleData.updatedAt)} />
-        </>
-      );
+      return <FieldDataRender textLabel="approved and sent at" value={dateFormatting(singleData.updatedAt)} />;
     } else return <></>;
   };
 
