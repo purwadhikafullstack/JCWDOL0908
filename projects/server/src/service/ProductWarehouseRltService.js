@@ -167,6 +167,13 @@ const getWarehouseWhichProvideProduct = async (id_product) => {
   }
 };
 
+const getSetOfProductsInWarehouse = async (listOfProductsId, id_warehouse) => {
+  const products = await ProductWarehouseRlt.findAll({
+    where: { id_warehouse, id_product: listOfProductsId },
+  });
+  return products;
+};
+
 module.exports = {
   createProductWarehouseRlt,
   getProductsCountWithNameAndCateogryFilter,
@@ -180,6 +187,7 @@ module.exports = {
   getProductsCountWithoutFilter,
   getProductWarehouseRlt,
   getProductsInWarehouse,
+  getSetOfProductsInWarehouse,
   getStockProduct,
   updateStock,
   createStock,

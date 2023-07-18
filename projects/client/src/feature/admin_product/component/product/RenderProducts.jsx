@@ -41,13 +41,13 @@ function RenderProducts(props) {
             className="bg-slate-300 disabled:bg-white disabled:border-2 lg:disabled:border-4
             disabled:border-primaryLight disabled:cursor-not-allowed disabled:text-slate-300"
             onClick={() => editBtnHandler(product)}
-            disabled={isItNotSuperAdmin()}
+            // disabled={isItNotSuperAdmin()}
           >
             <i className="uil uil-pen"></i>
           </button>
           <button
             onClick={() => delBtnHandler(product)}
-            className="bg-red-600 text-white disabled:bg-white disabled:border-2 lg:disabled:border-4
+            className="bg-red-600 text-white disabled:bg-white disabled:border-2 lg:disabled:border-2
             disabled:border-primaryLight disabled:cursor-not-allowed disabled:text-slate-300"
             disabled={isItNotSuperAdmin()}
           >

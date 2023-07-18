@@ -5,13 +5,12 @@ const createNewMutationRequestLogic = async (data) => {
   const { id_user, id_product, quantity, from_id_warehouse, to_id_warehouse } = data;
   const transaction = await db.sequelize.transaction();
   try {
+    if (from_id_warehouse === to_id_warehouse) throw { errMsg: "error: bad request", statusCode: 400 };
     const findExistingMutation = await MutationService.findMutationByProductAndWarehouse(
       id_product,
       from_id_warehouse,
       to_id_warehouse,
     );
-
-    if (from_id_warehouse === to_id_warehouse) throw { errMsg: "error: bad request", statusCode: 400 };
 
     if (findExistingMutation.length)
       throw {
@@ -124,7 +123,7 @@ const approvingMutationLogic = async (input) => {
       transaction,
     );
     if (!updateIsApprove[0] && !updateStockAndBookedStock[0]) throw { errMsg: "error: not found", statusCode: 404 };
-    let resultant_quantity = stock;
+    let resultant_quantity = newStock;
     const insertNewJournal = await ProductJournalService.insertNewJournal(
       mutationData.id_product,
       mutationData.from_id_warehouse,

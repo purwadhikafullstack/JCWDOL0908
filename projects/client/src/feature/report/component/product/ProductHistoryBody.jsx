@@ -109,9 +109,8 @@ function ProductHistoryBody(props) {
 
   const selectFilterOnChange = (e) => {
     const subFilterName = e.target.id.split("-")[0];
-    const filterChange = {};
-    filterChange[subFilterName] = e.target.value;
-    setFilterState({ ...filterState, ...filterChange });
+    const filterChange = { [subFilterName]: e.target.value };
+    setFilterState((prevState) => ({ ...prevState, ...filterChange }));
   };
 
   const isWarehouseFilterDisabled = () => {

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import AdminPagination from "../../../../components/AdminPagination";
 import RenderBodyData from "../../../../components/RenderBodyData";
 import AddModal from "./add_request/AddModal";
-import { getWarehouses } from "../../../admin_warehouse";
 import SelectFilter from "../../../../components/SelectFilter";
 import RenderWarehouse from "../../../admin/component/all_admin/edit_data/RenderWarehouse";
 import { getMutationRequests } from "../../";
@@ -11,7 +10,7 @@ import NoData from "../../../../components/NoData";
 import UpdateModal from "./update_mutation/UpdateModal";
 
 function StockMutationBody(props) {
-  const { admin } = props;
+  const { admin, warehouses } = props;
   const [createNewRequest, setNewRequest] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -20,19 +19,11 @@ function StockMutationBody(props) {
     mutationType: "",
     status: "",
   });
-  const [warehouses, SetWarehouses] = useState([]);
   const [mutationList, setMutationList] = useState([]);
   const [singleItemClicked, setSingleItemClicked] = useState(false);
   const [singleData, setSingleData] = useState({});
   const OFFSET = 7;
   const LIMIT = 7;
-
-  useEffect(() => {
-    (async () => {
-      const response = await getWarehouses("");
-      SetWarehouses([...response?.result]);
-    })();
-  }, []);
 
   useEffect(() => {
     (async () => {
@@ -47,15 +38,15 @@ function StockMutationBody(props) {
   };
 
   const warehouseOnChange = async (e) => {
-    setFilterState({ ...filterState, id_warehouse: e.target.value });
+    setFilterState((prevState) => ({ ...prevState, id_warehouse: e.target.value }));
   };
 
   const mutationOnChange = async (e) => {
-    setFilterState({ ...filterState, mutationType: e.target.value });
+    setFilterState((prevState) => ({ ...prevState, mutationType: e.target.value }));
   };
 
   const statusOnChange = async (e) => {
-    setFilterState({ ...filterState, status: e.target.value });
+    setFilterState((prevState) => ({ ...prevState, status: e.target.value }));
   };
 
   const singleItemClickedHandler = (singleData) => {
@@ -100,7 +91,7 @@ function StockMutationBody(props) {
           <option value={"done"}>shipped</option>
         </SelectFilter>
       </form>
-      <div className="row-span-10 grid grid-rows-9 gap-2 lg:gap-2">
+      <div className="row-span-9 grid grid-rows-8 gap-2 lg:gap-2">
         {mutationList.length ? (
           <RenderBodyData>
             <RenderMutationData dataList={mutationList} singleItemClickedHandler={singleItemClickedHandler} />

@@ -105,6 +105,19 @@ const getWarehouseWhichProvideProduct = async (req, res, next) => {
   }
 };
 
+const getSetOfProductsInWarehouse = async (req, res, next) => {
+  try {
+    const { id_warehouse } = req.params;
+    let { listOfProductsId } = req.query;
+    listOfProductsId = JSON.parse(listOfProductsId);
+    const result = await ProductWarehouseRltService.getSetOfProductsInWarehouse(listOfProductsId, id_warehouse);
+    return res.status(200).send({ isSuccess: true, message: "success fetched data", result });
+  } catch (error) {
+    // unknown error
+    next(error);
+  }
+};
+
 module.exports = {
   getTotalStockProducts,
   getStockProduct,
@@ -112,4 +125,5 @@ module.exports = {
   createStock,
   deleteStock,
   getWarehouseWhichProvideProduct,
+  getSetOfProductsInWarehouse,
 };

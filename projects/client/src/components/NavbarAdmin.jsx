@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import NavbarRenderIcon from "./NavbarRenderIcon";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoggedInAdminDataBack } from "../feature/admin_auth/slice/AdminLogInSlice";
 
 function NavbarAdmin() {
   const [toggleNav, setToggleNav] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const admin = useSelector((state) => state.adminLogin.loggedInAdminData);
 
   const listNav = [
     {
@@ -61,13 +62,14 @@ function NavbarAdmin() {
         }
       >
         <div className="relative">
-          <h1
+          <div
             onClick={() => navigate("/admin/dashboard")}
             className="invisible md:visible md:text-lg text-primary
-            md:pt-10 md:pb-8 scale-y-110 font-bold lg:text-2xl hover:cursor-pointer font-title"
+            md:pt-4 md:pb-4 scale-y-110 font-bold lg:text-2xl hover:cursor-pointer font-title text-center"
           >
-            WarehouseKu
-          </h1>
+            <h1>warehouse</h1>
+            <h1 className="font-bold font-body text-sm">{admin.username}</h1>
+          </div>
           <ul
             id="navbar-items"
             className="grid grid-cols-3 gap-4 text-lg text-primary md:grid 

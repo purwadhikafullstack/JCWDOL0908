@@ -121,7 +121,7 @@ function AddModal(props) {
             />
             <CustomSelectFormikHook
               formik={formik}
-              label="requester-warehouse"
+              label="to-warehouse"
               name="to_id_warehouse"
               isDisabled={admin?.id_warehouse}
             >
@@ -145,7 +145,7 @@ function AddModal(props) {
             </CustomSelectFormikHook>
             <CustomSelectFormikHook
               formik={formik}
-              label="requested-warehouse"
+              label="from-warehouse"
               name="from_id_warehouse"
               additionalFunction={fromWarehouseChange}
             >

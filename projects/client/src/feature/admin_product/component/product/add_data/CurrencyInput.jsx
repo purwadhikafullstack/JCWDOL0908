@@ -1,6 +1,6 @@
 import React from "react";
 
-const CurrencyInput = ({ value, onChange, name, id, formik }) => {
+const CurrencyInput = ({ value, onChange, name, id, formik, disabled }) => {
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     // Remove non-digit characters from the input value
@@ -25,7 +25,7 @@ const CurrencyInput = ({ value, onChange, name, id, formik }) => {
         " placeholder:text-xs text-xs bg-gray-50 border border-gray-300 text-primary" +
         " sm:text-xs rounded-none h-10 my-1 shadow-primary" +
         " focus:ring-light focus:border-light block w-full px-2" +
-        " placeholder col-span-5 h-fit py-1"
+        " placeholder col-span-5 h-fit py-1 disabled:cursor-not-allowed disabled:text-primaryLight"
       }
       value={
         !value
@@ -39,6 +39,7 @@ const CurrencyInput = ({ value, onChange, name, id, formik }) => {
       }
       onChange={handleInputChange}
       placeholder="0"
+      disabled={disabled}
     />
   );
 };

@@ -14,7 +14,7 @@ function CustomSelectFormikHook(props) {
               " border-red-500 text-red-500 h-10 my-1 shadow-primary" +
               " sm:text-xs rounded-none focus:ring-red-500 focus:border-red-500 block w-full" +
               " px-2 placeholder col-span-5 h-fit py-1 disabled:cursor-not-allowed disabled:text-primaryLight"
-            : " placeholder:text-xs text-xs bg-gray-50 border border-gray-300 text-primary" +
+            : " placeholder:text-xs text-xs bg-slate-50 border border-gray-300 text-primary" +
               " sm:text-xs rounded-none h-10 my-1 shadow-primary" +
               " focus:ring-light focus:border-light block w-full px-2" +
               " placeholder col-span-5 h-fit py-1 disabled:cursor-not-allowed disabled:text-primaryLight"

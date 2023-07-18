@@ -80,6 +80,7 @@ function ProductBody(props) {
           setEditClicked={setEditClicked}
           categories={categories}
           refetchedData={refetchedData}
+          admin={admin}
         />
       ) : null}
       {isDeleteClicked ? (

@@ -21,7 +21,7 @@ WHERE id_warehouse=${id_warehouse} AND id_product=pj.id_product
 AND updatedAt BETWEEN '${lastMonth.startDate}' AND '${lastMonth.endDate}'
 ORDER BY updatedAt DESC LIMIT 1) as qty_before, 
 SUM(IF(pj.id_activity = 3 OR pj.id_activity = 4,pj.quantity,0 )) as total_addition,
-SUM(IF(pj.id_activity = 2 OR pj.id_activity = 5,pj.quantity,0 )) as total_substraction,
+SUM(IF(pj.id_activity = 2 OR pj.id_activity = 5 OR pj.id_activity = 1,pj.quantity,0 )) as total_substraction,
 (SELECT resultant_quantity FROM product_journal 
 WHERE id_warehouse=${id_warehouse} AND id_product=pj.id_product
 AND updatedAt BETWEEN '${currentMonth.startDate}' AND '${currentMonth.endDate}'

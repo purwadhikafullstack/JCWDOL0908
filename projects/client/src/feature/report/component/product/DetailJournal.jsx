@@ -53,7 +53,7 @@ function DetailJournal(props) {
         } item(s) to ${singleData.resultant_quantity} item(s).`,
         `${singleData.quantity} item(s) of ${singleJournal.product_name}, has been added to the ${
           singleJournal.warehouse_name
-        }-warehouse. This addition occurred as a result of the approval and dispatch of a mutation request from another warehouse on ${new Date(
+        }-warehouse. This addition occurred as the warehouse receiving a mutationed-product from another warehouse on ${new Date(
           singleData.updatedAt,
         ).toLocaleString()}. Consequently, the stock level has increased from ${
           index === detailJournal.length - 1
@@ -62,7 +62,7 @@ function DetailJournal(props) {
         } item(s) into ${singleData.resultant_quantity} item(s).`,
         `${singleData.quantity} item(s) of ${singleJournal.product_name}, was reducted in ${
           singleJournal.warehouse_name
-        }-warehouse as mutation's request was approved and sent to another warehouse at ${new Date(
+        }-warehouse as mutation-request was approved and the product(s) were sent from this warehouse to another warehouse at ${new Date(
           singleData.updatedAt,
         ).toLocaleString()}. stock decrease from ${
           index === detailJournal.length - 1
@@ -76,7 +76,7 @@ function DetailJournal(props) {
         }. The initial stock level begins at 0 item.`,
       ];
       return (
-        <div className="w-full pr-1 md:px-4 flex gap-2 py-1 md:gap-4">
+        <div key={index + 1} className="w-full pr-1 md:px-4 flex gap-2 py-1 md:gap-4">
           <h1 className="font-bold">{index + 1}.</h1>
           <h1>{activityAndMessage[singleData.id_activity - 1]}</h1>
         </div>

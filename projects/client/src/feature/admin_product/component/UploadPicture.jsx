@@ -1,6 +1,6 @@
 import React from "react";
 
-function UploadPicture({ preview, handleImageChange, alt }) {
+function UploadPicture({ preview, handleImageChange, alt, disabled }) {
   return (
     <label>
       <div
@@ -20,6 +20,7 @@ function UploadPicture({ preview, handleImageChange, alt }) {
           className="w-full hidden"
           accept="image/png, image/jpeg, image/jpg"
           onChange={handleImageChange}
+          disabled={disabled}
         />
         <i className={`uil uil-image-upload ${!preview ? " text-8xl text-primary" : "hidden"}`}></i>
       </div>
