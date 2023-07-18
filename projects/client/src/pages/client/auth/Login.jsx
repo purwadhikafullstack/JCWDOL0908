@@ -3,11 +3,14 @@ import BannerLogin from "../../../images/banner/login.avif";
 import { useState } from "react";
 import RegisterForm from "../../../feature/auth/components/RegisterForm";
 import LoginForm from "../../../feature/auth/components/LoginForm";
+import ResetForm from "../../../feature/auth/components/ResetForm";
 
 const RenderForm = ({ page, handlePage }) => {
   switch (page) {
     case "register":
       return <RegisterForm handlePage={handlePage} />;
+    case "reset":
+      return <ResetForm handlePage={handlePage} />;
     default:
       return <LoginForm handlePage={handlePage} />;
   }

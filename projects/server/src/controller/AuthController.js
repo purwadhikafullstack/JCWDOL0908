@@ -135,9 +135,39 @@ const VerifyUser = async (req, res, next) => {
   }
 };
 
+const ForgotPassword = async (req, res, next) => {
+  try {
+    const { body } = req;
+
+    // validate the request body
+    const { error: error_validation } = UserValidation.ForgotPassword.validate(body);
+    if (error_validation) {
+      return res.status(400).json({
+        message: error_validation.details[0].message,
+        data: null,
+      });
+    }
+
+    const { error, data } = await AuthService.resetPassword(body);
+    if (error) {
+      return res.status(400).json({
+        message: "User verified successfully",
+        data: null,
+      });
+    }
+    return res.status(202).json({
+      message: "User verified successfully",
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   AuthUser,
   KeepLogin,
   VerifyUser,
   RegisterUser,
+  ForgotPassword,
 };

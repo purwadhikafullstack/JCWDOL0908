@@ -68,10 +68,10 @@ function App() {
 
             <Route path="/shopping-cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
-
             {/*Auth User Route*/}
             <Route path="/client" element={<LoginClient />} />
             <Route path="/verify" element={<VerificationAuth />} />
+            <Route path="/reset-password" element={<VerificationAuth />} />
 
             {/*User Route*/}
             <Route path="/account" element={<Profile />} />

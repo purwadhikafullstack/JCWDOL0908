@@ -19,4 +19,17 @@ const VerifyMail = (email, token) => {
   };
 };
 
-module.exports = { VerifyMail };
+const resetPassword = (email, token) => {
+  const template = fs.readFileSync(path.join(__dirname, "../mail/forgotMail.html"), "utf-8");
+  const verifyLink = `${process.env.CLIENT_URL}/reset-password/?q=${token}`;
+  const updatedTemplate = template.replace(/{{verificationLink}}/g, verifyLink);
+
+  return {
+    from: `admin <${process.env.MAIL_USERNAME}>`,
+    to: email,
+    subject: "Reset Password",
+    html: updatedTemplate,
+  };
+};
+
+module.exports = { VerifyMail, resetPassword };

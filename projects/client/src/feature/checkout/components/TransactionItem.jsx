@@ -1,31 +1,38 @@
 import { numberFormat } from "../../../helper/number_format";
 import defaultImage from "../../../images/empty.jpg";
+import { ToastError, ToastSuccess } from "../../../helper/Toastify";
+import { acceptOrder } from "../api/accpetOrder";
 
 function TransactionItem({ transaction, setTrigger }) {
   const {
     id_transaction,
     createdAt,
-    is_approve,
-    is_sending,
-    is_accepted,
-    is_canceled,
+    status_order,
     total_price,
     transaction_product_rlts,
-    payment_proof,
   } = transaction;
 
   const { product } = transaction_product_rlts[0];
 
-  let status = is_canceled ? "Canceled" : is_accepted ? "Success" : is_sending ? "On Delivery" : is_approve ? "On Process" : "Waiting admin approval";
-  if (!payment_proof) status = "Waiting for Payment";
+
   const image_url = process.env.REACT_APP_SERVER_URL + product.product_image || defaultImage;
+
+  const handleConfirmReceived = async () => {
+    try {
+      await acceptOrder(id_transaction);
+      setTrigger({ action: "", transaction: {} });
+      ToastSuccess("Order has been confirmed");
+    } catch (error) {
+      ToastError(error.message || "Something went wrong");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-1 shadow p-2 rounded-md shadow-gray-200 border">
       <div className="flex sm:flex-row flex-col gap-3">
         <div className="hidden sm:flex"><span className="font-bold pr-1">Order ID:</span> {id_transaction}</div>
         <div><span className="font-bold sm:ml-auto ml-0 pr-1">Date: </span> {createdAt.slice(0, 10)}</div>
-        <div><span className="font-bold sm:ml-auto ml-0 pr-1">Status:  </span> {status}</div>
+        <div><span className="font-bold sm:ml-auto ml-0 pr-1">Status:  </span> {status_order}</div>
       </div>
       <div className="flex sm:flex-row flex-col justify-between">
         <div className="flex flex-row gap-2">
@@ -43,6 +50,11 @@ function TransactionItem({ transaction, setTrigger }) {
               transaction_product_rlts.length > 1 && (
                 <span className="font-semibold">+{transaction_product_rlts.length - 1} more product</span>)
             }
+            {
+              status_order === "rejected" && (
+                <span className="text-red-500">Rejected by admin, please upload payment again</span>
+              )
+            }
           </div>
         </div>
         <div className="flex sm:flex-col flex-row border-l sm:pl-3 pl-0 min-w-[120px]">
@@ -54,16 +66,29 @@ function TransactionItem({ transaction, setTrigger }) {
       <div className="flex flex-row gap-2 mt-3 ml-auto">
         {/*<button className="px-2 text-primary border-b border-primary font-semibold">See Detail</button>*/}
         {
-          !payment_proof && (
+          (status_order === "waiting-for-payment" || status_order === "rejected") && (
             <>
               <button
                 onClick={() => setTrigger({ action: "payment", transaction: transaction })}
-                className="py-1 px-3  rounded-md bg-primaryLight hover:bg-primary text-white font-semibold">Upload
-                Payment
+                className="py-1 px-3 rounded-md bg-primaryLight hover:bg-primary text-white font-semibold"
+              >
+                Upload Payment
               </button>
-              <button className="py-1 px-3  rounded-md bg-amber-500 hover:bg-amber-700 text-white font-semibold">Cancel
+              <button
+                onClick={() => setTrigger({ action: "cancel", transaction: transaction })}
+                className="py-1 px-3 rounded-md bg-amber-500 hover:bg-amber-700 text-white font-semibold">
+                Cancel
               </button>
             </>
+          )
+        }
+        {
+          status_order === "sending" && (
+            <button
+              onClick={handleConfirmReceived}
+              className="py-1 px-3  rounded-md bg-primaryLight hover:bg-primary text-white font-semibold">
+              Confirm Received
+            </button>
           )
         }
       </div>
