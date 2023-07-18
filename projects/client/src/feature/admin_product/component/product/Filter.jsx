@@ -2,7 +2,7 @@ import React from "react";
 import RenderCategoryOptions from "./add_data/RenderCategoryOptions";
 
 function Filter(props) {
-  const { setSelectedCategory, categories, setPageNum, OFFSET, LIMIT } = props;
+  const { setSelectedCategory, categories } = props;
 
   const onChangeHandle = async (event) => {
     const id_category = parseInt(event.target.value);

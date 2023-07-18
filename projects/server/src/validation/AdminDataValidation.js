@@ -31,7 +31,7 @@ const CreateNewCategory = Joi.object({
   category_image: Joi.string().max(255).required(),
 });
 
-const editCategoryWithoutImage = Joi.object({
+const EditCategoryWithoutImage = Joi.object({
   category_name: Joi.string().required(),
 });
 
@@ -44,7 +44,7 @@ const CreateNewProduct = Joi.object({
   product_image: Joi.string().max(105).required(),
 });
 
-const editProductWithoutImage = Joi.object({
+const EditProductWithoutImage = Joi.object({
   product_name: Joi.string().max(45).required(),
   description: Joi.string().max(255),
   weight_kg: Joi.number().required(),
@@ -59,6 +59,6 @@ module.exports = {
   phoneRegExp,
   CreateNewCategory,
   CreateNewProduct,
-  editCategoryWithoutImage,
-  editProductWithoutImage,
+  EditCategoryWithoutImage,
+  EditProductWithoutImage,
 };

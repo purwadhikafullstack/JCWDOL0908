@@ -57,28 +57,30 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/products/:id" element={<ProductDetail />} />
+        {!loggedInAdmin.isLoggedIn && (
+          <>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
 
-        <Route path="/shopping-cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
+            <Route path="/shopping-cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            {/*Auth User Route*/}
+            <Route path="/client" element={<LoginClient />} />
+            <Route path="/verify" element={<VerificationAuth />} />
+            <Route path="/reset-password" element={<VerificationAuth />} />
 
-        {/*Auth User Route*/}
-        <Route path="/client" element={<LoginClient />} />
-        <Route path="/verify" element={<VerificationAuth />} />
-        <Route path="/reset-password" element={<VerificationAuth />} />
-
-        {/*User Route*/}
-        <Route path="/account" element={<Profile />} />
-        <Route path="/account/address" element={<Address />} />
-        <Route path="/account/transactions" element={<Transaction />} />
-        <Route path="/account/reset-password" element={<ResetPassword />} />
-        <Route path="/logout" element={<Logout />} />
-
-        {!loggedInAdmin.isLoggedIn && <Route path="/admin-login" element={<AdminLogin />} />}
+            {/*User Route*/}
+            <Route path="/account" element={<Profile />} />
+            <Route path="/account/address" element={<Address />} />
+            <Route path="/account/transactions" element={<Transaction />} />
+            <Route path="/account/reset-password" element={<ResetPassword />} />
+            <Route path="/logout" element={<Logout />} />
+          </>
+        )}
         {loggedInAdmin.isLoggedIn && loggedInAdmin.is_admin ? (
           <>
             {loggedInAdmin.id_role === 1 ? (

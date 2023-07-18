@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RenderAdminsData from "./all_admin/RenderAdminsData";
-import Pagination from "./all_admin/Pagination";
 import AddNewAdmin from "./all_admin/create_data/AddNewAdmin";
 import DeleteAdminModal from "./all_admin/delete_data/DeleteAdminModal";
 import EditAdminModal from "./all_admin/edit_data/EditAdminModal";
+import AdminPagination from "../../../components/AdminPagination";
 import { getAllAdmin, getSingleWarehouseAdmin, getWarehouseCities } from "../";
 
 function ManageAdmin(props) {
-  let { page } = props;
+  const { page, setPage } = props;
   const dispatch = useDispatch();
   const [editClicked, setEditClicked] = useState(false);
   const [deletedClicked, setDeleteClicked] = useState(false);
@@ -39,14 +39,6 @@ function ManageAdmin(props) {
     getDataWarehouseCities();
   }, [editClicked]);
 
-  const addPageNum = () => {
-    props.setPage(page + 1);
-  };
-
-  const minusPageNum = () => {
-    props.setPage(page - 1);
-  };
-
   const allAdmin = useSelector((state) => state.admin.allAdmin);
 
   return (
@@ -56,28 +48,26 @@ function ManageAdmin(props) {
         <AddNewAdmin setNewAdminClicked={setNewAdminClicked} warehouseCities={warehouseCities} page={page} />
       ) : null}
       {deletedClicked ? <DeleteAdminModal setDeleteClicked={setDeleteClicked} page={page} /> : null}
-      <div className="row-span-6 grid grid-rows-8 gap-2">
-        <div className="row-span-6 grid grid-rows-6">
-          <div className="row-span-1 flex text-center items-center">
-            <h1 className="text-lg font-semibold lg:text-xl">Admin-Warehouse List</h1>
-          </div>
-          <div className=" row-span-5 grid grid-rows-8 gap-3 lg:gap-2">
-            <div
-              className="row-span-1 font-semibold grid lg:grid-cols-5
+      <div className="row-span-6 grid grid-rows-12">
+        <div className="row-span-1 flex text-center items-center">
+          <h1 className="text-lg font-semibold lg:text-xl">Admin-Warehouse List</h1>
+        </div>
+        <div className="row-span-9 grid grid-rows-9 gap-3 lg:gap-2">
+          <div
+            className="row-span-1 font-semibold grid lg:grid-cols-5
               grid-cols-6 items-center text-xs pl-2 lg:text-base"
-            >
-              <p className="col-span-1">name</p>
-              <p className="hidden lg:inline lg:col-span-1">phone</p>
-              <p className="col-span-2 text-center lg:text-left lg:col-span-1">warehouse</p>
-              <p className="col-span-2 lg:col-span-1">location</p>
-              <p className="text-right">action</p>
-            </div>
-            <RenderAdminsData allAdmin={allAdmin} editBtnHndler={editBtnHndler} setDeleteClicked={setDeleteClicked} />
+          >
+            <p className="col-span-1">name</p>
+            <p className="hidden lg:inline lg:col-span-1">phone</p>
+            <p className="col-span-2 text-center lg:text-left lg:col-span-1">warehouse</p>
+            <p className="col-span-2 lg:col-span-1">location</p>
+            <p className="text-right">action</p>
           </div>
+          <RenderAdminsData allAdmin={allAdmin} editBtnHndler={editBtnHndler} setDeleteClicked={setDeleteClicked} />
         </div>
         <div className="row-span-1 grid items-center">
           <button
-            className="bg-slate-800 text-white px-2 py-1 text-base 
+            className="bg-primary text-white px-2 py-1 text-base 
           font-semibold lg:w-1/3"
             onClick={() => setNewAdminClicked(true)}
           >
@@ -85,7 +75,7 @@ function ManageAdmin(props) {
           </button>
         </div>
         <div className="pagination-container">
-          <Pagination minusPageNum={minusPageNum} page={page} addPageNum={addPageNum} allAdmin={allAdmin} />
+          <AdminPagination pageNum={page} setPageNum={setPage} totalPage={allAdmin.totalPage} />
         </div>
       </div>
     </>

@@ -17,6 +17,7 @@ function FormLogin() {
   const onSubmit = async (values, action) => {
     const result = await dispatch(loggingInAdmin(values.username, values.password));
     if (result) navigate("/admin/dashboard");
+    navigate(0);
   };
 
   return (
@@ -26,7 +27,7 @@ function FormLogin() {
           <Form className="flex flex-col gap-4">
             <CustomForm placeholder="username" name="username" type="text" id="username" />
             <CustomForm placeholder="password" name="password" type="password" id="password" />
-            <button className="p-1 bg-slate-800 text-white hover:bg-slate-950" type="submit">
+            <button className="p-1 bg-primary text-white hover:bg-slate-800" type="submit">
               login
             </button>
           </Form>

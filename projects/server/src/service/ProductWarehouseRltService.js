@@ -1,5 +1,5 @@
 const db = require("../model");
-const { sequelize, ProductWarehouseRlt, Product } = db;
+const { sequelize, ProductWarehouseRlt, Product, Warehouse, City } = db;
 const { Op } = require("sequelize");
 const { QueryTypes } = require("sequelize");
 
@@ -131,6 +131,42 @@ const deleteStock = async (id_product, id_warehouse, transaction) => {
   return deleteData;
 };
 
+const getProductWarehouseRlt = async (id_product, id_warehouse) => {
+  const getRelation = await ProductWarehouseRlt.findOne({ where: { is_deleted: 0, id_product, id_warehouse } });
+  return getRelation;
+};
+
+const getProductsInWarehouse = async (id_warehouse) => {
+  const products = await ProductWarehouseRlt.findAll({ where: { id_warehouse } });
+  return products;
+};
+
+const getWarehouseWhichProvideProduct = async (id_product) => {
+  try {
+    let getWarehouses = await ProductWarehouseRlt.findAll({
+      where: { is_deleted: 0, id_product, stock: { [Op.gt]: 0 } },
+      include: {
+        model: Warehouse,
+        include: { model: City, attributes: ["city", "type_city"] },
+        attributes: ["warehouse_name"],
+      },
+    });
+    getWarehouses = getWarehouses.map((warehouse) => {
+      const { warehouse_name, city } = warehouse.dataValues.warehouse.dataValues;
+      return {
+        ...warehouse.dataValues,
+        warehouse_name: warehouse_name,
+        city: city.dataValues.city,
+        type_city: city.dataValues.type_city,
+      };
+    });
+    return { error: null, result: getWarehouses };
+  } catch (error) {
+    console.log(error);
+    return { error, result: null };
+  }
+};
+
 module.exports = {
   createProductWarehouseRlt,
   getProductsCountWithNameAndCateogryFilter,
@@ -140,7 +176,10 @@ module.exports = {
   getProductsCountWithCategoryFilter,
   getProductsWithCategoryFilter,
   getProductsWithoutFilter,
+  getWarehouseWhichProvideProduct,
   getProductsCountWithoutFilter,
+  getProductWarehouseRlt,
+  getProductsInWarehouse,
   getStockProduct,
   updateStock,
   createStock,

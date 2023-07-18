@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import RenderCity from "../edit_data/RenderCity";
 import RenderWarehouse from "../edit_data/RenderWarehouse";
 import { createNewAdmin, getAllAdmin, getWarehousesInCities } from "../../../";
+import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
 
 function AddNewAdmin(props) {
   const { setNewAdminClicked, warehouseCities, page } = props;
@@ -52,11 +53,9 @@ function AddNewAdmin(props) {
   return (
     <div className="modal-background">
       <div className="modal-container">
-        <button onClick={() => setNewAdminClicked(false)} className="close-btn-modal">
-          <i className="uil uil-times-circle"></i>
-        </button>
+        <ClosedBtnModal setModal={setNewAdminClicked} />
         <div>
-          <h1 className="my-4 font-bold">Create Warehouse Admin</h1>
+          <h1 className="modal-header-text">Create Warehouse Admin</h1>
           <Formik
             initialValues={{
               username: "",
@@ -97,7 +96,7 @@ function AddNewAdmin(props) {
                   </CustomSelect>
                   <div className="row-start-8 row-span-1">
                     <div className="grid grid-cols-2 gap-8 text-sm h-5/6 mt-4">
-                      <button className="bg-slate-800 text-white" type="submit">
+                      <button className="bg-primary text-white" type="submit">
                         Create
                       </button>
                     </div>

@@ -50,7 +50,7 @@ const postNewProduct = async (req, res, next) => {
       data = { ...data, product_image };
 
       const { error: err_validation, value } = await AdminDataValidation.CreateNewProduct.validate({ ...data });
-      if (err_validation) throw error;
+      if (err_validation) throw err_validation;
 
       const { error, result } = await ProductsLogic.postNewProductLogic(data);
 
@@ -126,16 +126,16 @@ const editProduct = async (req, res, next) => {
       let data = JSON.parse(req.body.data);
 
       if (!product_image) {
-        const { error: err_validation, value } = await AdminDataValidation.editProductWithoutImage.validate({
+        const { error: err_validation, value } = await AdminDataValidation.EditProductWithoutImage.validate({
           ...data,
         });
-        if (err_validation) throw error;
+        if (err_validation) throw err_validation;
       } else {
         const { error: err_validation, value } = await AdminDataValidation.CreateNewProduct.validate({
           ...data,
           product_image,
         });
-        if (err_validation) throw error;
+        if (err_validation) throw err_validation;
       }
 
       const { error, result } = await ProductsLogic.editProductLogic({ ...data, product_image, id_product });

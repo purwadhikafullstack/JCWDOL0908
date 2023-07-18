@@ -2,24 +2,16 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import UploadPicture from "../../UploadPicture";
-import CustomInput from "../../CustomInput";
+import CustomInput from "../../../../../components/CustomInput";
 import CustomTextArea from "../../CustomTextArea";
 import CurrencyInput from "../add_data/CurrencyInput";
-import CustomSelectCategory from "../CustomSelectCategory";
-import { editProduct, getProducts } from "../../../";
+import CustomSelectFormikHook from "../../../../../components/CustomSelectFormikHook";
+import { editProduct } from "../../../";
+import RenderCategoryOptions from "../../RenderCategoryOptions";
+import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
 
 function EditModal(props) {
-  const {
-    singleProduct,
-    setEditClicked,
-    pageNum,
-    setProducts,
-    OFFSET,
-    LIMIT,
-    selectedCategory,
-    setTotalPate,
-    categories,
-  } = props;
+  const { singleProduct, setEditClicked, categories, refetchedData } = props;
 
   const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const [currencyValue, setCurrencyValue] = useState(
@@ -71,9 +63,7 @@ function EditModal(props) {
       formData.append("data", JSON.stringify(data));
       const editResponse = await editProduct(formData, id_product);
       alert(editResponse.message);
-      const fetchedData = await getProducts(OFFSET, LIMIT, pageNum, selectedCategory);
-      setProducts([...fetchedData.result.productsList]);
-      setTotalPate(fetchedData.result.totalPage);
+      await refetchedData();
       setEditClicked(false);
     },
   });
@@ -81,18 +71,16 @@ function EditModal(props) {
   return (
     <div className="modal-background">
       <div className="modal-container">
-        <button onClick={() => setEditClicked(false)} className="close-btn-modal">
-          <i className="uil uil-times-circle"></i>
-        </button>
+        <ClosedBtnModal setModal={setEditClicked} />
         <div>
-          <h1 className="my-4 font-bold">Edit Product</h1>
-          <form onSubmit={formik.handleSubmit} className="pt-4 pb-0 text-slate-800 gap-2 flex flex-col">
+          <h1 className="modal-header-text">Edit Product</h1>
+          <form onSubmit={formik.handleSubmit} className="pt-4 pb-0 text-primary gap-2 flex flex-col">
             <UploadPicture preview={preview} handleImageChange={handleImageChange} alt="product image" />
             <CustomInput type="text" name="product_name" id="product_name" formik={formik} label="product name" />
             <CustomTextArea type="textarea" name="description" id="description" formik={formik} label="description" />
             <CustomInput type="number" name="weight_kg" id="weight_kg" formik={formik} label="weight (kg)" />
             <div className="relative grid grid-cols-8 gap-2 items-center">
-              <label className="text-left text-slate-800 text-xs font-semibold my-0 col-span-2">price</label>
+              <label className="text-left text-primary text-xs font-semibold my-0 col-span-2">price</label>
               <p className="font-semibold">:</p>
               <CurrencyInput
                 value={currencyValue}
@@ -102,9 +90,11 @@ function EditModal(props) {
                 formik={formik}
               />
             </div>
-            <CustomSelectCategory formik={formik} categories={categories} label="category" name="id_category" />
+            <CustomSelectFormikHook formik={formik} categories={categories} label="category" name="id_category">
+              <RenderCategoryOptions categories={categories} />
+            </CustomSelectFormikHook>
             <div className="grid grid-cols-3 gap-2 text-sm h-8 mt-4">
-              <button type="submit" onClick={formik.handleSubmit} className="bg-slate-800 text-white h-full">
+              <button type="submit" onClick={formik.handleSubmit} className="bg-primary text-white h-full">
                 Submit
               </button>
             </div>

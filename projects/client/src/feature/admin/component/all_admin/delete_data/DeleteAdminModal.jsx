@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RenderSingleAdminToDelete from "./RenderSingleAdminToDelete";
 import { deleteUserData, getAllAdmin } from "../../../../../feature/admin";
+import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
 
 function DeleteAdminModal(props) {
   const { setDeleteClicked, page } = props;
@@ -18,12 +19,10 @@ function DeleteAdminModal(props) {
   return (
     <div className="modal-background">
       <div className="modal-container">
-        <button onClick={() => props.setDeleteClicked(false)} className="close-btn-modal">
-          <i className="uil uil-times-circle"></i>
-        </button>
-        <div className="delete-modal-header-container">
-          <h1 className="delete-modal-header-text">Detail Admin</h1>
-          <div className="delete-modal-body-container">
+        <ClosedBtnModal setModal={setDeleteClicked} />
+        <div className="modal-header-container">
+          <h1 className="modal-header-text">Detail Admin</h1>
+          <div className="modal-body-container">
             <RenderSingleAdminToDelete singleData={singleData} />
           </div>
           <h3 className="text-center">

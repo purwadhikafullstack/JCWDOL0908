@@ -8,7 +8,7 @@ function RenderUsers(props) {
     return string.length > 12 ? string.slice(0, 10) + "..." : string;
   };
 
-  return allUserData.dataAll.map((data) => {
+  return allUserData?.dataAll?.map((data) => {
     return (
       <div
         key={data.id_user}

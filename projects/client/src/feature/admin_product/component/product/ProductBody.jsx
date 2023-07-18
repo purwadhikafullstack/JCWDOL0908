@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../Pagination";
+import AdminPagination from "../../../../components/AdminPagination";
 import Filter from "../Filter";
 import AddDataModal from "./add_data/AddDataModal";
 import { getCategories, getProducts } from "../../";
@@ -7,8 +7,8 @@ import RenderProducts from "./RenderProducts";
 import { useSelector } from "react-redux";
 import DeleteModal from "./delete_data/DeleteModal";
 import EditModal from "./edit_data/EditModal";
-import NoData from "./NoData";
 import { useNavigate } from "react-router-dom";
+import NoData from "../../../../components/NoData";
 
 function ProductBody(props) {
   const { admin } = props;
@@ -55,44 +55,35 @@ function ProductBody(props) {
     setSelectedCategory(id_category);
   };
 
+  const refetchedData = async () => {
+    const fetchedData = await getProducts(OFFSET, LIMIT, pageNum, selectedCategory);
+    setProducts([...fetchedData.result.productsList]);
+    setTotalPate(fetchedData.result.totalPage);
+  };
+
+  const isItNotSuperAdmin = () => {
+    return admin?.role_admin !== "super-admin";
+  };
+
   return (
     <>
       {isNewProductClicked ? (
         <AddDataModal
           setNewProductClicked={setNewProductClicked}
           categories={categories}
-          pageNum={pageNum}
-          setProducts={setProducts}
-          OFFSET={OFFSET}
-          LIMIT={LIMIT}
-          selectedCategory={selectedCategory}
-          setTotalPate={setTotalPate}
+          refetchedData={refetchedData}
         />
       ) : null}
       {isEditClicked ? (
         <EditModal
           singleProduct={singleProduct}
           setEditClicked={setEditClicked}
-          pageNum={pageNum}
-          setProducts={setProducts}
-          OFFSET={OFFSET}
-          LIMIT={LIMIT}
-          selectedCategory={selectedCategory}
-          setTotalPate={setTotalPate}
           categories={categories}
+          refetchedData={refetchedData}
         />
       ) : null}
       {isDeleteClicked ? (
-        <DeleteModal
-          setDeleteClicked={setDeleteClicked}
-          singleProduct={singleProduct}
-          pageNum={pageNum}
-          setProducts={setProducts}
-          OFFSET={OFFSET}
-          LIMIT={LIMIT}
-          selectedCategory={selectedCategory}
-          setTotalPate={setTotalPate}
-        />
+        <DeleteModal setDeleteClicked={setDeleteClicked} singleProduct={singleProduct} refetchedData={refetchedData} />
       ) : null}
       <div className="product-and-category-body-container grid grid-rows-10">
         <div className="row-span-1 flex items-end text-sm">
@@ -108,32 +99,32 @@ function ProductBody(props) {
               setEditClicked={setEditClicked}
             />
           ) : (
-            <NoData />
+            <NoData text="Product" />
           )}
         </div>
       </div>
       <div className="row-span-1 flex gap-4 justify-between text-center items-end ">
         <button
           onClick={() => setNewProductClicked(true)}
-          className="bg-slate-800 text-white px-2 py-1 text-base 
+          className="bg-primary text-white px-2 py-1 text-base 
           font-semibold lg:w-1/5 disabled:bg-white disabled:border-[3px] 
-          disabled:border-slate-300 disabled:cursor-not-allowed disabled:text-slate-300"
-          disabled={admin?.role_admin !== "super-admin"}
+          disabled:border-primaryLight disabled:cursor-not-allowed disabled:text-slate-300"
+          disabled={isItNotSuperAdmin()}
         >
           <i className="uil uil-plus"></i> New Product
         </button>
         <button
           onClick={() => navigate("/admin/dashboard/product-management/stock")}
-          className="bg-white text-slate-800 px-2 py-1 text-base border-2 border-slate-800
-          hover:bg-slate-800 hover:text-white font-semibold lg:w-1/5 
+          className="bg-white text-primary px-2 py-1 text-base border-2 border-primary
+          hover:bg-primary hover:text-white font-semibold lg:w-1/5 
           disabled:bg-white disabled:border-2 lg:disabled:border-4
-          disabled:border-slate-300 disabled:cursor-not-allowed disabled:text-slate-300"
+          disabled:border-primaryLight disabled:cursor-not-allowed disabled:text-slate-300"
         >
           Manage Stock
         </button>
       </div>
       <div className="pagination-container">
-        <Pagination setPageNum={setPageNum} pageNum={pageNum} totalPage={totalPage} />
+        <AdminPagination setPageNum={setPageNum} pageNum={pageNum} totalPage={totalPage} />
       </div>
     </>
   );

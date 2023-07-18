@@ -21,7 +21,7 @@ function UploadPicture({ preview, handleImageChange, alt }) {
           accept="image/png, image/jpeg, image/jpg"
           onChange={handleImageChange}
         />
-        <i className={`uil uil-image-upload ${!preview ? " text-8xl text-slate-800" : "hidden"}`}></i>
+        <i className={`uil uil-image-upload ${!preview ? " text-8xl text-primary" : "hidden"}`}></i>
       </div>
     </label>
   );

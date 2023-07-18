@@ -1,5 +1,13 @@
 const db = require("../model");
-const { AdminWarehouseService, AdminUserMgtService } = require("../service");
+const {
+  AdminWarehouseService,
+  AdminUserMgtService,
+  TransactionService,
+  MutationService,
+  ProductWarehouseRltService,
+  ProductService,
+  ProductJournalService,
+} = require("../service");
 
 const editWarehouseLogic = async (id_warehouse, warehouse_name, address, id_city) => {
   const transaction = await db.sequelize.transaction();
@@ -14,7 +22,7 @@ const editWarehouseLogic = async (id_warehouse, warehouse_name, address, id_city
     if (error) throw error;
 
     // check if the road exists
-    if (!components.road) throw { errMsg: "we can't find the road", statusCode: 404 };
+    if (!components.road) throw { errMsg: "error: we can't find the road", statusCode: 404 };
 
     //check if warehouse already exist
     const isWarehouseExist = await AdminWarehouseService.checkWarehouseByNameExceptSelf(
@@ -23,7 +31,7 @@ const editWarehouseLogic = async (id_warehouse, warehouse_name, address, id_city
       id_city,
       transaction,
     );
-    if (isWarehouseExist.length > 0) throw { errMsg: "warehouse name already exists", statusCode: 400 };
+    if (isWarehouseExist.length > 0) throw { errMsg: "error: warehouse name already exists", statusCode: 400 };
 
     //edit warehouse
     const edit = await AdminWarehouseService.editWarehouse(
@@ -57,11 +65,11 @@ const createWarehouseLogic = async (warehouse_name, address, id_city) => {
     if (error) throw error;
 
     // check if the road exists
-    if (!components.road) throw { errMsg: "we can't find the road", statusCode: 404 };
+    if (!components.road) throw { errMsg: "error: we can't find the road", statusCode: 404 };
 
     //check if warehouse already exist
     const isWarehouseExist = await AdminWarehouseService.checkWarehouse(warehouse_name, id_city, transaction);
-    if (isWarehouseExist.length > 0) throw { errMsg: "warehouse already exists", statusCode: 400 };
+    if (isWarehouseExist.length > 0) throw { errMsg: "error: warehouse already exists", statusCode: 400 };
 
     //create warehouse
     const createNew = await AdminWarehouseService.createWarehouse(
@@ -73,13 +81,41 @@ const createWarehouseLogic = async (warehouse_name, address, id_city) => {
       transaction,
     );
 
+    const id_warehouse = createNew.dataValues.id_warehouse;
+
     // create new admin role of the new warehouse
     const createNewAdminRole = await AdminUserMgtService.createAdminRoleWarehouse(
       createNew.dataValues.id_warehouse,
       transaction,
     );
+
+    let getProducts = await ProductService.getProducts();
+
+    if (!getProducts.length) {
+      await transaction.commit();
+      return { error: null, result: createNewAdminRole };
+    }
+
+    result = [];
+
+    for (let iter = 0; iter < getProducts.length; iter++) {
+      const id_product = getProducts[iter].dataValues.id_product;
+      const quantity = 0;
+      const resultant_quantity = 0;
+      const id_activity = 6; // initializing product stock, always start 0
+      await ProductWarehouseRltService.createProductWarehouseRlt(id_product, id_warehouse, transaction);
+      const response = await ProductJournalService.insertNewJournal(
+        id_product,
+        id_warehouse,
+        id_activity,
+        quantity,
+        resultant_quantity,
+        transaction,
+      );
+      result.push(response);
+    }
     await transaction.commit();
-    return { error: null, result: createNewAdminRole };
+    return { error: null, result };
   } catch (error) {
     await transaction.rollback();
     console.log(error);
@@ -89,17 +125,45 @@ const createWarehouseLogic = async (warehouse_name, address, id_city) => {
 
 const deleteWarehouseLogic = async (id_warehouse) => {
   const transaction = await db.sequelize.transaction();
+  let result;
   try {
+    const getTransactionWarehouse = await TransactionService.getTransactionsByWarehouseId(id_warehouse);
+
+    if (getTransactionWarehouse.length)
+      throw {
+        errMsg: "error: can't delete warehouse which an on-going transaction still exists",
+        statusCode: 400,
+      };
+    const getMutationWarehouse = await MutationService.findMutationByWarehouseId(id_warehouse);
+
+    if (getMutationWarehouse.length)
+      throw {
+        errMsg: "error: can't delete warehouse which an on-going mutation still exists",
+        statusCode: 400,
+      };
     // delete warehouse
-    const response = await AdminWarehouseService.deleteWarehouseById(id_warehouse, transaction);
-    let result = response[0];
+    const deleteWarehouse = await AdminWarehouseService.deleteWarehouseById(id_warehouse, transaction);
+    result = deleteWarehouse[0];
+
+    // delete products in the warehouses
+    let findProducts = await ProductWarehouseRltService.getProductsInWarehouse(id_warehouse);
+    findProducts = findProducts.map((productWarehouse) => {
+      return productWarehouse.dataValues;
+    });
+
+    result = [];
+
+    for (let i = 0; i < findProducts.length; i++) {
+      const { id_product, id_warehouse } = findProducts[i];
+      const response = await ProductWarehouseRltService.deleteStock(id_product, id_warehouse, transaction);
+      result.push(response);
+    }
 
     // check whether data changed exist
-    if (!result) throw { errMsg: "warehouse not found", statusCode: 404 };
+    if (!result) throw { errMsg: "error: warehouse not found", statusCode: 404 };
 
-    result = "success";
     await transaction.commit();
-    return { error: null, result };
+    return { error: null, result: findProducts };
   } catch (error) {
     await transaction.rollback();
     console.log(error);

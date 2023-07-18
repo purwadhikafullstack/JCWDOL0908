@@ -19,7 +19,7 @@ function RenderAdminsData(props) {
       <div
         key={data.id_user}
         className="row-span-1 bg-slate-100 grid lg:grid-cols-5
-                grid-cols-6 items-center text-xs pl-2 lg:text-base"
+        grid-cols-6 items-center text-xs pl-2 lg:text-base"
       >
         <p className="col-span-1">{cutString(data.username)}</p>
         <p className="hidden lg:inline lg:col-span-1">{data.phone_number}</p>
@@ -31,7 +31,7 @@ function RenderAdminsData(props) {
         </p>
         <div className="col-span-1 grid grid-cols-2 h-full lg:grid-cols-4">
           <button
-            className="col-span-1 bg-slate-300 text-slate-800 h-full lg:col-start-3"
+            className="col-span-1 bg-slate-300 text-primary h-full lg:col-start-3"
             onClick={() => editBtnHndler(data.id_user)}
           >
             <i className="uil uil-pen"></i>

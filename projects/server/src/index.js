@@ -10,9 +10,12 @@ const {
   AuthRouter,
   CategoryRouter,
   CartRouter,
-  AddressRouter,
   ProductRouter,
+  AddressRouter,
+  ProductWarehouseRltRouter,
+  MutationRouter,
   CheckoutRouter,
+  ProductJournalRouter,
 } = require("./router");
 const db = require("./model");
 const bearerToken = require("express-bearer-token");
@@ -56,7 +59,10 @@ app.use("/api/categories", CategoryRouter);
 app.use("/api/products", ProductRouter);
 app.use("/api/cart", CartRouter);
 app.use("/api/address", AddressRouter);
+app.use("/api/products-stocks", ProductWarehouseRltRouter);
+app.use("/api/mutation", MutationRouter);
 app.use("/api/checkout", CheckoutRouter);
+app.use("/api/products-journal", ProductJournalRouter);
 
 // ===========================
 

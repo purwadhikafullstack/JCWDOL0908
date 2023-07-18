@@ -12,27 +12,27 @@ function NavbarAdmin() {
   const listNav = [
     {
       class: "uil uil-cog",
-      text: "user-mgt",
+      text: "user",
       navlink: "/admin/dashboard/user-management",
     },
     {
       class: "uil uil-estate",
-      text: "warehouse-mgt",
+      text: "warehouse",
       navlink: "/admin/dashboard/warehouse-management",
     },
     {
       class: "uil uil-suitcase",
-      text: "product-mgt",
+      text: "prod. & cat.",
       navlink: "/admin/dashboard/product-management",
     },
     {
       class: "uil uil-file-graph",
-      text: "product-order",
+      text: "prod-order",
       navlink: "/admin/dashboard/order",
     },
     {
       class: "uil uil-analytics",
-      text: "product-report",
+      text: "report",
       navlink: "/admin/dashboard/report",
     },
   ];
@@ -40,7 +40,11 @@ function NavbarAdmin() {
   const logoutBtnHandler = () => {
     localStorage.removeItem("admin_token");
     dispatch(setLoggedInAdminDataBack());
-    navigate("/admin-login");
+    navigate("/");
+  };
+
+  const onClickNavbarBtn = async (navItem) => {
+    navigate(navItem.navlink);
   };
 
   return (
@@ -48,30 +52,34 @@ function NavbarAdmin() {
       <div
         className={
           toggleNav
-            ? `visible z-50 md:top-0 md:left-0 absolute bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
-            rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-screen md:shadow-slate-800 md:shadow-md
+            ? `visible z-50 md:top-0 md:left-0 absolute bottom-0 w-full px-4 shadow-primary shadow-2xl 
+            rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-screen md:shadow-primary md:shadow-md
             md:py-0 lg:px-10 md:fixed md:visible bg-slate-50 md:rounded-none`
-            : `invisible z-50 md:top-0 md:left-0 absolute bottom-0 w-full px-4 shadow-slate-800 shadow-2xl 
-            rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-screen md:shadow-slate-800 md:shadow-md
+            : `invisible z-50 md:top-0 md:left-0 absolute bottom-0 w-full px-4 shadow-primary shadow-2xl 
+            rounded-t-2xl md:px-6 md:w-fit md:col-span-2 md:h-screen md:shadow-primary md:shadow-md
             md:py-0 lg:px-10 md:fixed md:visible bg-slate-50 md:rounded-none`
         }
       >
         <div className="relative">
           <h1
             onClick={() => navigate("/admin/dashboard")}
-            className="invisible md:visible md:text-lg text-slate-800
-      md:pt-10 md:pb-8 scale-y-110 font-bold lg:text-2xl hover:cursor-pointer font-title"
+            className="invisible md:visible md:text-lg text-primary
+            md:pt-10 md:pb-8 scale-y-110 font-bold lg:text-2xl hover:cursor-pointer font-title"
           >
             WarehouseKu
           </h1>
           <ul
-            className="grid grid-cols-3 gap-4 text-lg text-slate-700 md:grid 
-      md:grid-rows-6 md:grid-cols-1 md:gap-6 lg:gap-8 md:text-2xl py-4 lg:text-3xl"
+            id="navbar-items"
+            className="grid grid-cols-3 gap-4 text-lg text-primary md:grid 
+            md:grid-rows-6 md:grid-cols-1 md:gap-0 md:text-2xl py-4 lg:text-3xl"
           >
-            <NavbarRenderIcon listNav={listNav} />
-            <li className="text-center text-red-600 hover:text-red-900 hover:cursor-pointer" onClick={logoutBtnHandler}>
+            <NavbarRenderIcon listNav={listNav} onClickNavbarBtn={onClickNavbarBtn} />
+            <li
+              className="text-center md:py-4 text-red-600 hover:text-white hover:bg-red-600 hover:cursor-pointer"
+              onClick={logoutBtnHandler}
+            >
               <i className="uil uil-signout"></i>
-              <h2 className=" text-sm md:text-lg">logout</h2>
+              <h2 className="text-base md:text-lg lg:text-xl">logout</h2>
             </li>
           </ul>
           <span
@@ -88,11 +96,11 @@ function NavbarAdmin() {
         className={
           toggleNav
             ? `invisible absolute bottom-2 right-2 text-2xl text-center
-            md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-slate-800
+            md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-primary
              self-center text-white rounded-full flex flex-row justify-center
               items-center`
             : `visible absolute bottom-2 right-2 text-2xl text-center
-            md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-slate-800
+            md:invisible hover:cursor-pointer z-0 h-10 w-10 bg-primary
              self-center text-white rounded-full flex flex-row justify-center
               items-center`
         }
