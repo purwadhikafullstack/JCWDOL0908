@@ -61,7 +61,7 @@ function Checkout() {
       });
       ToastSuccess("Checkout success");
       setTimeout(() => {
-        navigate("/account/transaction");
+        navigate("/account/transactions");
       }, 1000);
     } catch (error) {
       ToastError(error.message || "Failed to checkout");

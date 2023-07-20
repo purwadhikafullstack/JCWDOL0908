@@ -95,8 +95,13 @@ function AddModal(props) {
     let filteredWarehouse = [...fromWarehouse].filter((warehouse) => {
       return warehouse.id_warehouse === warehouse_selected;
     });
-    setQuantity(1);
-    setMaxQty(filteredWarehouse[0].stock);
+    if (!filteredWarehouse.length) {
+      setQuantity(1);
+      setMaxQty(0);
+    } else {
+      setQuantity(1);
+      setMaxQty(filteredWarehouse[0].stock - filteredWarehouse[0].booked_stock);
+    }
   };
 
   return (
@@ -116,7 +121,7 @@ function AddModal(props) {
             />
             <CustomSelectFormikHook
               formik={formik}
-              label="requester-warehouse"
+              label="to-warehouse"
               name="to_id_warehouse"
               isDisabled={admin?.id_warehouse}
             >
@@ -140,7 +145,7 @@ function AddModal(props) {
             </CustomSelectFormikHook>
             <CustomSelectFormikHook
               formik={formik}
-              label="requested-warehouse"
+              label="from-warehouse"
               name="from_id_warehouse"
               additionalFunction={fromWarehouseChange}
             >
@@ -149,7 +154,13 @@ function AddModal(props) {
             <MaxQty maxQty={maxQty} />
             <AddOrDecrease addQty={addQty} decreaseQty={decreaseQty} qty={quantity} maxQty={maxQty} />
             <div className="grid grid-cols-3 gap-2 text-sm h-8 mt-4">
-              <button type="submit" onClick={formik.handleSubmit} className="bg-primary text-white h-full">
+              <button
+                disabled={formik.values.from_id_warehouse === ""}
+                type="submit"
+                onClick={formik.handleSubmit}
+                className="bg-primary text-white h-full disabled:cursor-not-allowed disabled:bg-slate-100
+                disabled:text-primaryLight"
+              >
                 Submit
               </button>
             </div>

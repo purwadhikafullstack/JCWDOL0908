@@ -25,23 +25,11 @@ function UpdateModal(props) {
 
   const LastUpdatedBy = () => {
     if (singleData.is_accepted) {
-      return (
-        <>
-          <FieldDataRender textLabel="accepted at" value={dateFormatting(singleData.updatedAt)} />
-        </>
-      );
+      return <FieldDataRender textLabel="shipped at" value={dateFormatting(singleData.updatedAt)} />;
     } else if (singleData.is_reject) {
-      return (
-        <>
-          <FieldDataRender textLabel="rejected at" value={dateFormatting(singleData.updatedAt)} />
-        </>
-      );
+      return <FieldDataRender textLabel="rejected at" value={dateFormatting(singleData.updatedAt)} />;
     } else if (singleData.is_approve) {
-      return (
-        <>
-          <FieldDataRender textLabel="approve and send at" value={dateFormatting(singleData.updatedAt)} />
-        </>
-      );
+      return <FieldDataRender textLabel="approved and sent at" value={dateFormatting(singleData.updatedAt)} />;
     } else return <></>;
   };
 
@@ -92,12 +80,12 @@ function UpdateModal(props) {
         <div className="modal-header-container">
           <h1 className="modal-header-text">Detail Requests</h1>
           <div className="modal-body-container gap-1">
-            <FieldDataRender textLabel="created by" value={singleData.creator} />
-            <FieldDataRender textLabel="requester-warehouse" value={singleData.to_warehouse} />
-            <FieldDataRender textLabel="requested-warehouse" value={singleData.from_warehouse} />
+            <FieldDataRender textLabel="from-warehouse" value={singleData.from_warehouse} />
+            <FieldDataRender textLabel="to-warehouse" value={singleData.to_warehouse} />
             <FieldDataRender textLabel="product" value={singleData.product_name} />
             <FieldDataRender textLabel="quantity" value={singleData.quantity} />
             <FieldDataRender textLabel="status" value={statusMutation()} />
+            <FieldDataRender textLabel="created by" value={singleData.creator} />
             <FieldDataRender textLabel="created at" value={dateFormatting(singleData.createdAt)} />
             <LastUpdatedBy />
             {admin.id_role === 1 || admin.id_warehouse === singleData.from_id_warehouse ? (

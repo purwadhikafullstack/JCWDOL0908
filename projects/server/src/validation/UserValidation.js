@@ -28,10 +28,15 @@ const UpdatePassword = Joi.object({
   newPassword: Joi.string().pattern(/^(?=.*[0-9]).{6,}$/).required(),
 });
 
+const ForgotPassword = Joi.object({
+  email: Joi.string().email().required(),
+});
+
 module.exports = {
   RegisterUser,
   VerifyUser,
   AuthUser,
   UpdateBio,
   UpdatePassword,
+  ForgotPassword,
 };

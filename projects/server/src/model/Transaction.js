@@ -26,25 +26,14 @@ module.exports = (sequelize) => {
           key: "id_address",
         },
       },
+      status_order: {
+        type: DataTypes.STRING,
+        defaultValue: "waiting-for-payment",
+        allowNull: true,
+      },
       payment_proof: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
-      is_approve: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: 0,
-      },
-      is_sending: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: 0,
-      },
-      is_accepted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: 0,
-      },
-      is_canceled: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: 0,
       },
       id_warehouse: {
         type: DataTypes.INTEGER,

@@ -21,7 +21,7 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
       weight_kg: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
       },
       price: {
         type: DataTypes.INTEGER,

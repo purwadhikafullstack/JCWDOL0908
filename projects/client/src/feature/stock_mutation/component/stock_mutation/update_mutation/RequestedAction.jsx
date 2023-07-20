@@ -16,13 +16,24 @@ function RequestedAction(props) {
             className="font-bold text-xs md:text-sm lg:text-base 
           grid grid-cols-2 w-1/2 md:w-1/3 gap-2 md:gap-4 items-center"
           >
-            <button className="bg-primary h-full py-1 text-white" onClick={approveBtnHandler}>
+            <button
+              className="bg-primary h-full py-1 text-white disabled:cursor-not-allowed
+              disabled:bg-slate-100 disabled:text-primaryLight"
+              onClick={approveBtnHandler}
+              disabled={singleData.requester_deleted}
+            >
               approve
             </button>
             <button className="bg-red-800 h-full py-1 text-white" onClick={rejectBtnHandler}>
               reject
             </button>
           </div>
+          {singleData.requester_deleted ? (
+            <h1 className="text-red-800 text-center text-xs md:text-sm w-5/6 md:w-2/3 mt-8">
+              you must <i className="font-bold">reject</i> this request! Due to the requester-warehouse have been
+              deleted/unoperated.
+            </h1>
+          ) : null}
         </div>
       )}
     </>

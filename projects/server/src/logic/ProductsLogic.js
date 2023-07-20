@@ -1,4 +1,9 @@
-const { ProductService, AdminWarehouseService, ProductWarehouseRltService } = require("../service");
+const {
+  ProductService,
+  AdminWarehouseService,
+  ProductWarehouseRltService,
+  ProductJournalService,
+} = require("../service");
 const { UnlinkPhoto } = require("../helper/Multer");
 const db = require("../model");
 
@@ -53,7 +58,18 @@ const postNewProductLogic = async (data) => {
     // give the relation between created product with all warehouses
     for (let iter = 0; iter < getWarehouses.length; iter++) {
       const id_warehouse = getWarehouses[iter].dataValues.id_warehouse;
+      const quantity = 0;
+      const resultant_quantity = 0;
+      const id_activity = 6; // initializing product stock, always start 0
       await ProductWarehouseRltService.createProductWarehouseRlt(id_product, id_warehouse, transaction);
+      await ProductJournalService.insertNewJournal(
+        id_product,
+        id_warehouse,
+        id_activity,
+        quantity,
+        resultant_quantity,
+        transaction,
+      );
     }
 
     await transaction.commit();

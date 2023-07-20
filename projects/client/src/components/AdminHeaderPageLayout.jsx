@@ -13,7 +13,7 @@ function AdminHeaderPageLayout(props) {
         className="font-semibold text-2xl pt-8 row-span-2 
        text-primary lg:text-3xl font-title"
       >
-        {firstSubPageClicked ? headerTitle[0] : headerTitle[1]} Management
+        {firstSubPageClicked ? headerTitle[0] : headerTitle[1]} {forPage === "report" ? "" : "Management"}
       </h1>
       {isItForWarehousePage() ? (
         <div className="grid grid-cols-2 row-span-1 row-start-4 gap-20 lg:grid-cols-4 lg:gap-8">
