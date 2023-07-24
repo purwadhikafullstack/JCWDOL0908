@@ -14,7 +14,7 @@ function Body(props) {
 
   return (
     <div className="row-span-6 grid grid-rows-12">
-      {isCategoryClicked && <>{isSuperAdmin() ? <CategoryBody /> : <RestrictedContent />}</>}
+      {isCategoryClicked && <>{isSuperAdmin() ? <CategoryBody admin={admin} /> : <RestrictedContent />}</>}
       {isProductClicked && <ProductBody admin={admin} />}
     </div>
   );

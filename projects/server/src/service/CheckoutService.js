@@ -196,6 +196,7 @@ const storePaymentProof = async (data) => {
       };
     }
     transaction.payment_proof = payment_proof;
+    transaction.status_order = "payment-confirmation";
     await transaction.save();
     return {
       error: false,
@@ -253,9 +254,88 @@ const getTransactions = async (data) => {
   }
 };
 
+const acceptTransaction = async (data) => {
+  try {
+    const { id_transaction, id_user } = data;
+    const transaction = await Transaction.findOne({
+      where: {
+        id_transaction,
+        id_user,
+      },
+    });
+    if (!transaction) {
+      return {
+        error: new Error("Transaction not found"),
+        data: null,
+      };
+    }
+    transaction.status_order = "shipped";
+    await transaction.save();
+    return {
+      error: false,
+      data: transaction,
+    };
+  } catch (error) {
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
+const cancelTransaction = async (data) => {
+  const t = await db.sequelize.transaction();
+  try {
+    const { id_transaction, id_user } = data;
+    const transaction = await Transaction.findOne({
+      where: {
+        id_transaction,
+        id_user,
+      },
+    });
+    if (!transaction || transaction.status_order === "cancelled") {
+      return {
+        error: new Error("Transaction not found"),
+        data: null,
+      };
+    }
+
+    transaction.status_order = "cancelled";
+    await transaction.save({ transaction: t });
+
+    const transactionProductRlt = await TransactionProductRlt.findAll({
+      where: {
+        id_transaction,
+      },
+    });
+
+    const transactionDetails = transactionProductRlt.map((product) => {
+      return {
+        id_transaction: transaction.id_transaction,
+        id_product: product?.id_product,
+        quantity: -product?.quantity,
+      };
+    });
+
+    await updateBookedStock(transactionDetails, transaction.id_warehouse, t);
+    await t.commit();
+    return {
+      error: false,
+      data: transaction,
+    };
+  } catch (error) {
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 module.exports = {
   calculateShipping,
   createOrder,
   storePaymentProof,
   getTransactions,
+  acceptTransaction,
+  cancelTransaction,
 };

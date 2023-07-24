@@ -42,9 +42,11 @@ function App() {
   // }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("admin_token")) dispatch(keepAdminLoggedIn());
-    const userToken = Storage.getToken();
-    dispatch(KeepUser(userToken));
+    (async () => {
+      if (localStorage.getItem("admin_token")) await dispatch(keepAdminLoggedIn());
+      const userToken = Storage.getToken();
+      dispatch(KeepUser(userToken));
+    })();
   }, []);
 
   /**
@@ -53,34 +55,36 @@ function App() {
   if (!isChecked) {
     return <div>Loading...</div>;
   }
-
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/products/:id" element={<ProductDetail />} />
-
-        <Route path="/shopping-cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-
-        {/*Auth User Route*/}
-        <Route path="/client" element={<LoginClient />} />
-        <Route path="/verify" element={<VerificationAuth />} />
-
-        {/*User Route*/}
-        <Route path="/account" element={<Profile />} />
-        <Route path="/account/address" element={<Address />} />
-        <Route path="/account/transactions" element={<Transaction />} />
-        <Route path="/account/reset-password" element={<ResetPassword />} />
-        <Route path="/logout" element={<Logout />} />
-
-        {!loggedInAdmin.isLoggedIn && <Route path="/admin-login" element={<AdminLogin />} />}
-        {loggedInAdmin.isLoggedIn && loggedInAdmin.is_admin ? (
+        {!loggedInAdmin?.isLoggedIn && (
           <>
-            {loggedInAdmin.id_role === 1 ? (
+            <Route path="/" element={<Homepage />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
+
+            <Route path="/shopping-cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            {/*Auth User Route*/}
+            <Route path="/client" element={<LoginClient />} />
+            <Route path="/verify" element={<VerificationAuth />} />
+            <Route path="/reset-password" element={<VerificationAuth />} />
+
+            {/*User Route*/}
+            <Route path="/account" element={<Profile />} />
+            <Route path="/account/address" element={<Address />} />
+            <Route path="/account/transactions" element={<Transaction />} />
+            <Route path="/account/reset-password" element={<ResetPassword />} />
+            <Route path="/logout" element={<Logout />} />
+          </>
+        )}
+        {loggedInAdmin?.isLoggedIn && loggedInAdmin?.is_admin ? (
+          <>
+            {loggedInAdmin?.id_role === 1 ? (
               <>
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/dashboard/user-management" element={<UserManagement />} />

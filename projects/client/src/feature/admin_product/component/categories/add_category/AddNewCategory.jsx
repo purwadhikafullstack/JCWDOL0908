@@ -1,49 +1,11 @@
-import React, { useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { getCategories, postCategory } from "../../../";
+import React from "react";
 import UploadPicture from "../../UploadPicture";
 import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
+import { useAddCategory } from "../../../util/useAddCategory";
 
 function AddNewCategory(props) {
   const { setNewCategoryClicked, pageNum, setCategories } = props;
-  const [preview, setPreview] = useState();
-  const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
-
-  const handleImageChange = (event) => {
-    const newImg = document.querySelector("#image_preview");
-    const selected = event.target.files[0];
-    if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      setPreview(selected);
-      let reader = new FileReader();
-      reader.onloadend = () => {
-        const imgUrl = reader.result;
-        newImg.src = imgUrl;
-      };
-      reader.readAsDataURL(selected);
-    }
-  };
-
-  const validationSchema = Yup.object().shape({
-    category_name: Yup.string().required("required"),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      category_name: "",
-    },
-    validationSchema,
-    onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append("photo", preview);
-      formData.append("data", JSON.stringify(values));
-      const response = await postCategory(formData);
-      alert(response.message);
-      const refetchData = await getCategories(pageNum);
-      await setCategories({ ...refetchData });
-      setNewCategoryClicked(false);
-    },
-  });
+  const { preview, handleImageChange, formik } = useAddCategory(setNewCategoryClicked, pageNum, setCategories);
 
   return (
     <div className="modal-background">
@@ -71,7 +33,12 @@ function AddNewCategory(props) {
               ) : null}
             </div>
             <div className="grid grid-cols-3 gap-2 text-sm h-8">
-              <button type="submit" onClick={formik.handleSubmit} className="bg-primary text-white h-full">
+              <button
+                id="add-category-btn"
+                type="submit"
+                onClick={formik.handleSubmit}
+                className="bg-primary text-white h-full btn-disabled"
+              >
                 Submit
               </button>
             </div>

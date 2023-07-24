@@ -10,6 +10,9 @@ const AddressRouter = require("./AddressRouter");
 const ProductWarehouseRltRouter = require("./ProductWarehouseRltRouter");
 const MutationRouter = require("./MutationRouter");
 const CheckoutRouter = require("./CheckoutRouter");
+const ProductJournalRouter = require("./ProductJournalRouter");
+const AdminTransactionRouter = require("./AdminTransactionRouter");
+const SalesRouter = require("./SalesRouter");
 
 module.exports = {
   UserRouter,
@@ -24,4 +27,7 @@ module.exports = {
   ProductWarehouseRltRouter,
   MutationRouter,
   CheckoutRouter,
+  ProductJournalRouter,
+  AdminTransactionRouter,
+  SalesRouter,
 };

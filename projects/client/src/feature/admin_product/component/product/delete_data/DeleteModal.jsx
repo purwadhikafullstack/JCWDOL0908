@@ -9,10 +9,12 @@ function DeleteModal(props) {
   const [preview, setPreview] = useState(`${REACT_APP_SERVER_URL + singleProduct.product_image}`);
 
   const deleteDataHandler = async () => {
-    console.log(singleProduct.id_product);
+    const deleteProductBtn = document.getElementsByClassName("delete-modal-confirmation-btn");
+    deleteProductBtn.disabled = true;
     const response = await deleteProduct(singleProduct.id_product);
     alert(response.message);
     await refetchedData();
+    deleteProductBtn.disabled = false;
     setDeleteClicked(false);
   };
 
@@ -42,7 +44,7 @@ function DeleteModal(props) {
             Are you sure want to <i className="font-bold">delete</i> this data?
           </h3>
           <div className="w-full flex justify-center">
-            <button className="delete-modal-confirmation-btn" onClick={deleteDataHandler}>
+            <button className="delete-modal-confirmation-btn btn-disabled" onClick={deleteDataHandler}>
               Delete
             </button>
           </div>

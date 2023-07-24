@@ -93,3 +93,8 @@
   @apply font-semibold text-primary grid grid-rows-4 md:grid-rows-2
   md:grid-cols-2 items-start gap-2 text-xl lg:text-4xl md:text-3xl lg:gap-6 py-2;
 }
+
+.btn-disabled {
+  @apply disabled:bg-white disabled:border-2
+  disabled:border-primaryLight disabled:cursor-not-allowed disabled:text-slate-300;
+}

@@ -68,3 +68,13 @@ export const getWarehouseWhichProvideProduct = async (id_product) => {
     alert(error.response.data.message);
   }
 };
+
+export const getListOfProductsInWarehouse = async (listOfProduct, id_warehouse) => {
+  try {
+    const response = await axiosInstanceStockUpdate.get(`/${id_warehouse}/products?listOfProductsId=${listOfProduct}`);
+    return response.data;
+  } catch (error) {
+    console.log(error.response?.data);
+    alert(error.response.data.message);
+  }
+};

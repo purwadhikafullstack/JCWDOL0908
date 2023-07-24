@@ -65,8 +65,11 @@ const deleteUserLogic = async (id) => {
 
 const createNewAdminLogic = async (username, email, phone_number, password, id_warehouse) => {
   const transaction = await db.sequelize.transaction();
-  let newRole;
   try {
+    const isUsernameExists = await AdminUserMgtService.findDataByUsername(username);
+
+    if (isUsernameExists.length > 0) throw { errMsg: "error: username already exists", statusCode: 400 };
+
     // get admin role ID that associated with the selected warehouse id
     const getAdminRole = await AdminUserMgtService.findAdminRoleByIdWarehouse(id_warehouse);
 
@@ -94,12 +97,15 @@ const createNewAdminLogic = async (username, email, phone_number, password, id_w
 const updateAdminWarehouseLogic = async (id_user, username, email, password, phoneNumber, id_warehouse) => {
   const transaction = await db.sequelize.transaction();
   try {
+    const isUsernameExists = await AdminUserMgtService.findDataByUsernameExceptSelf(username, id_user);
+    console.log(isUsernameExists);
+    if (isUsernameExists.length > 0) throw { errMsg: "error: username already exists", statusCode: 400 };
+
     // check whether there is a password change
     if (password !== "") await AdminUserMgtService.updateDataAdminPassword(id_user, password, transaction);
 
     // get admin role ID that associated with the selected warehouse id
     const getAdminRole = await AdminUserMgtService.findAdminRoleByIdWarehouse(id_warehouse);
-
     if (!getAdminRole) throw { errMsg: "error: Admin-role for this warehouse is not yet created", statusCode: 404 };
     const adminRoleId = getAdminRole.dataValues.id_role;
 
@@ -115,6 +121,7 @@ const updateAdminWarehouseLogic = async (id_user, username, email, password, pho
     await transaction.commit();
     return { error: null, result: updatePersonalData };
   } catch (error) {
+    console.log(error);
     await transaction.rollback();
     return { error, result: null };
   }

@@ -96,6 +96,7 @@ const updateStockLogic = async (id_product, id_warehouse, newStock) => {
   try {
     const productStockData = await ProductWarehouseRltService.getStockProduct(id_product, id_warehouse);
     if (!productStockData) throw { errMsg: "error: no product found", statusCode: 404 };
+    console.log(productStockData.dataValues);
     const { stock, booked_stock, id_product_warehouse } = productStockData.dataValues;
     let stockGain = newStock - stock;
     if (stockGain === 0) throw { errMsg: "error: updated stock value is as same as old stock value", statusCode: 400 };
@@ -115,6 +116,7 @@ const updateStockLogic = async (id_product, id_warehouse, newStock) => {
       id_warehouse,
       id_activity,
       stockGain,
+      newStock,
       transaction,
     );
     await transaction.commit();
@@ -132,6 +134,20 @@ const createStockLogic = async (id_product, id_warehouse) => {
     const productStockData = await ProductWarehouseRltService.getStockProduct(id_product, id_warehouse);
     if (productStockData) throw { errMsg: "error: data already existed", statusCode: 400 };
     const createStock = await ProductWarehouseRltService.createStock(id_product, id_warehouse, transaction);
+
+    const quantity = 0;
+    const resultant_quantity = 0;
+    const id_activity = 6; // initializing product stock, always start 0
+
+    await ProductJournalService.insertNewJournal(
+      id_product,
+      id_warehouse,
+      id_activity,
+      quantity,
+      resultant_quantity,
+      transaction,
+    );
+
     await transaction.commit();
     return { error: null, result: createStock };
   } catch (error) {
@@ -169,4 +185,4 @@ module.exports = {
 // id_activity : 3 => stock addition
 // id_activity : 4 => mutation in
 // id_activity : 5 => mutation out
-// id_activity : 6 => warehouse delete
+// id_activity : 6 => initializing stock

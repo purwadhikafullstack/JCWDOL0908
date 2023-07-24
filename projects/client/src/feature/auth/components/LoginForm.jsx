@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import FieldPassword from "../../../components/FieldPassword";
 import Storage from "../../../helper/Storage";
 import { KeepUser } from "../slice/UserSlice";
+
 const { loginWithEmailAndPassword } = require("../../auth");
 
 const LoginForm = ({ handlePage }) => {
@@ -62,7 +63,10 @@ const LoginForm = ({ handlePage }) => {
             Sign Up
           </button>
         </p>
-        <button className="text-secondary">Reset Password?</button>
+        <button
+          onClick={() => handlePage("reset")}
+          className="text-secondary">Reset Password?
+        </button>
       </div>
     </>
   );

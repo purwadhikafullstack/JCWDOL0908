@@ -136,6 +136,11 @@ const getProductWarehouseRlt = async (id_product, id_warehouse) => {
   return getRelation;
 };
 
+const getProductsInWarehouse = async (id_warehouse) => {
+  const products = await ProductWarehouseRlt.findAll({ where: { id_warehouse } });
+  return products;
+};
+
 const getWarehouseWhichProvideProduct = async (id_product) => {
   try {
     let getWarehouses = await ProductWarehouseRlt.findAll({
@@ -148,7 +153,6 @@ const getWarehouseWhichProvideProduct = async (id_product) => {
     });
     getWarehouses = getWarehouses.map((warehouse) => {
       const { warehouse_name, city } = warehouse.dataValues.warehouse.dataValues;
-      console.log(city);
       return {
         ...warehouse.dataValues,
         warehouse_name: warehouse_name,
@@ -163,6 +167,13 @@ const getWarehouseWhichProvideProduct = async (id_product) => {
   }
 };
 
+const getSetOfProductsInWarehouse = async (listOfProductsId, id_warehouse) => {
+  const products = await ProductWarehouseRlt.findAll({
+    where: { id_warehouse, id_product: listOfProductsId },
+  });
+  return products;
+};
+
 module.exports = {
   createProductWarehouseRlt,
   getProductsCountWithNameAndCateogryFilter,
@@ -175,6 +186,8 @@ module.exports = {
   getWarehouseWhichProvideProduct,
   getProductsCountWithoutFilter,
   getProductWarehouseRlt,
+  getProductsInWarehouse,
+  getSetOfProductsInWarehouse,
   getStockProduct,
   updateStock,
   createStock,

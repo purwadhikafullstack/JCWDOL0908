@@ -1,57 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import RenderWarehouseOption from "../RenderWarehouseOption";
-import { createNewStock, getStock, updateStock } from "../../../";
 import SubmitButton from "./SubmitButton";
 import AddOrDecrease from "./AddOrDecrease";
 import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
+import { useEditStock } from "../../../util/useEditStock";
 
 function EditModal(props) {
   const { setEditClicked, warehouses, userAdmin, productStock, singleProduct, refetchedData } = props;
-
-  const isItWarehouseAdmin = () => {
-    return userAdmin?.id_warehouse;
-  };
-
-  const idWarehouse = userAdmin?.id_warehouse;
-
-  const initialValues = isItWarehouseAdmin() ? idWarehouse : "";
-  const [selectedWarehouses, setWarehouse] = useState(initialValues);
-  const [stockQty, setStock] = useState(productStock.stock);
-
-  const onChangeSelect = async (event) => {
-    const response = await getStock(singleProduct.id_product, event.target.value);
-    setStock(response?.result?.stock);
-    setWarehouse(event.target.value);
-  };
-
-  const doesStockDataNotExistOnThisWarehouse = () => {
-    return stockQty === undefined && selectedWarehouses;
-  };
-
-  const createStockBtnHandler = async () => {
-    const response = await createNewStock(singleProduct.id_product, selectedWarehouses);
-    if (!response.isSuccess) return;
-    alert(response.message);
-    const fetchedData = await getStock(singleProduct.id_product, selectedWarehouses);
-    setStock(fetchedData?.result?.stock);
-    setWarehouse(selectedWarehouses);
-  };
-
-  const submitBtnHandler = async () => {
-    const response = await updateStock(singleProduct.id_product, selectedWarehouses, stockQty);
-    if (!response.isSuccess) return setEditClicked(false);
-    alert(response.message);
-    await refetchedData();
-    setEditClicked(false);
-  };
-
-  const addQty = () => {
-    setStock((stockQty) => stockQty + 1);
-  };
-
-  const decreaseQty = () => {
-    setStock((stockQty) => stockQty - 1);
-  };
+  const {
+    selectedWarehouses,
+    stockQty,
+    onChangeSelect,
+    doesStockDataNotExistOnThisWarehouse,
+    createStockBtnHandler,
+    submitBtnHandler,
+    addQty,
+    decreaseQty,
+    isItWarehouseAdmin,
+  } = useEditStock(userAdmin, singleProduct, productStock, refetchedData, setEditClicked);
 
   return (
     <div className="modal-background">

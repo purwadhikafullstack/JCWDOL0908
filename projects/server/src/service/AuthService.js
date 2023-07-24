@@ -199,9 +199,55 @@ const VerifyUser = async (data) => {
   }
 };
 
+const resetPassword = async (data) => {
+  const t = await db.sequelize.transaction();
+  try {
+    const { email } = data;
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return {
+        error: new Error("User not found"),
+        data: null,
+      };
+    }
+
+    // Generate token for email verification
+    const token = await GenerateToken(email);
+
+    user.user_token = token;
+    await user.save({ transaction: t });
+
+    // Send email verification
+    const mail = RegisterMail.resetPassword(email, token);
+    const send = await Mailer.Transport.sendMail(mail);
+
+    if (!send) {
+      console.log("Email failed to send");
+      await t.rollback();
+      return {
+        error: new Error("Email failed to send"),
+        data: null,
+      };
+    }
+
+    await t.commit();
+    return {
+      error: null,
+      data: user,
+    };
+  } catch (error) {
+    await t.rollback();
+    return {
+      error,
+      data: null,
+    };
+  }
+};
+
 module.exports = {
   MakeAuthService,
   KeepLoginService,
   CreateUserWithEmail,
   VerifyUser,
+  resetPassword,
 };

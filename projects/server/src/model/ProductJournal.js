@@ -33,6 +33,9 @@ module.exports = (sequelize) => {
       quantity: {
         type: DataTypes.INTEGER,
       },
+      resultant_quantity: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
       tableName: "product_journal",

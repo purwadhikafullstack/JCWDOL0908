@@ -16,7 +16,7 @@ function CreateButton(props) {
         disabled:border-primaryLight disabled:cursor-not-allowed disabled:text-slate-300"
         disabled={isItNotSuperAdmin()}
       >
-        <i className="uil uil-plus"></i> New {text}
+        <i className="uil uil-plus"></i> {text}
       </button>
     </div>
   );

@@ -8,10 +8,13 @@ function DeleteModal(props) {
   const [preview, setPreview] = useState(`${REACT_APP_SERVER_URL + singleCategory.category_image}`);
 
   const deleteDataHandler = async () => {
+    const deleteCategoryBtn = document.getElementsByClassName("delete-modal-confirmation-btn");
+    deleteCategoryBtn.disabled = true;
     const response = await deleteCategory(singleCategory.id_category);
     alert(response.message);
     const fetchedData = await getCategories(pageNum);
     await setCategories({ ...fetchedData });
+    deleteCategoryBtn.disabled = false;
     setDeleteClicked(false);
   };
 
@@ -42,7 +45,7 @@ function DeleteModal(props) {
           Are you sure want to <i className="font-bold">delete</i> this data?
         </h3>
         <div className="w-full flex justify-center">
-          <button className="delete-modal-confirmation-btn" onClick={deleteDataHandler}>
+          <button className="delete-modal-confirmation-btn btn-disabled" onClick={deleteDataHandler}>
             Delete
           </button>
         </div>

@@ -12,6 +12,6 @@ export const updateAdminWarehouse = async (data) => {
     );
     return response.data;
   } catch (error) {
-    alert(error.response.data.message);
+    return error.response.data;
   }
 };

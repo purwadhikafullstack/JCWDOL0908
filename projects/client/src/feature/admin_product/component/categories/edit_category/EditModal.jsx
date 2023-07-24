@@ -1,50 +1,16 @@
-import React, { useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { editCategory, getCategories } from "../../../";
+import React from "react";
 import UploadPicture from "../../UploadPicture";
 import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
+import { useEditCategory } from "../../../util/useEditCategory";
 
 function EditModal(props) {
   const { setEditClicked, pageNum, setCategories, singleCategory } = props;
-  const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const [preview, setPreview] = useState(`${REACT_APP_SERVER_URL + singleCategory.category_image}`);
-  const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
-
-  const handleImageChange = (event) => {
-    const newImg = document.querySelector("#image_preview");
-    const selected = event.target.files[0];
-    if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      setPreview(selected);
-      let reader = new FileReader();
-      reader.onloadend = () => {
-        const imgUrl = reader.result;
-        newImg.src = imgUrl;
-      };
-      reader.readAsDataURL(selected);
-    }
-  };
-
-  const validationSchema = Yup.object().shape({
-    category_name: Yup.string().required("required"),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      category_name: singleCategory.category_name,
-    },
-    validationSchema,
-    onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append("photo", preview);
-      formData.append("data", JSON.stringify(values));
-      const response = await editCategory(formData, singleCategory.id_category);
-      alert(response.message);
-      const refetchData = await getCategories(pageNum);
-      await setCategories({ ...refetchData });
-      setEditClicked(false);
-    },
-  });
+  const { preview, handleImageChange, formik } = useEditCategory(
+    setEditClicked,
+    pageNum,
+    setCategories,
+    singleCategory,
+  );
 
   return (
     <div className="modal-background">
@@ -72,7 +38,12 @@ function EditModal(props) {
               ) : null}
             </div>
             <div className="grid grid-cols-3 gap-2 text-sm h-8">
-              <button type="submit" onClick={formik.handleSubmit} className="bg-primary text-white h-full">
+              <button
+                id="edit-category-btn"
+                type="submit"
+                onClick={formik.handleSubmit}
+                className="bg-primary text-white h-full btn-disabled"
+              >
                 Submit
               </button>
             </div>
