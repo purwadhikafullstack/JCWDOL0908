@@ -6,7 +6,7 @@ import Body from "../feature/stock_mutation/component/Body";
 function ProductOrder() {
   const [isMutationClicked, setMutationClicked] = useState(true);
   const [isOrderClicked, setOrderClicked] = useState(false);
-  const headerTitle = ["Stock Mutation", "Order"];
+  const headerTitle = ["Stock Mutation", "User's Order"];
   return (
     <LayoutAdmin>
       <div className="page-layout">

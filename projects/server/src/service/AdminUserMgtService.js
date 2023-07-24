@@ -114,6 +114,16 @@ const createNewAdmin = async (username, email, phone_number, password, id_role, 
   return result;
 };
 
+const findDataByUsername = async (username) => {
+  const result = await User.findAll({ where: { username } });
+  return result;
+};
+
+const findDataByUsernameExceptSelf = async (username, id_user) => {
+  const result = await User.findAll({ where: { username, id_user: { [Op.not]: id_user } } });
+  return result;
+};
+
 module.exports = {
   getAllUserCount,
   getAllUser,
@@ -128,4 +138,6 @@ module.exports = {
   createAdminRoleWarehouse,
   deleteUser,
   createNewAdmin,
+  findDataByUsername,
+  findDataByUsernameExceptSelf,
 };

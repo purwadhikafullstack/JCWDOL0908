@@ -17,6 +17,7 @@ const {
   CheckoutRouter,
   ProductJournalRouter,
   AdminTransactionRouter,
+  SalesRouter,
 } = require("./router");
 const db = require("./model");
 const bearerToken = require("express-bearer-token");
@@ -65,6 +66,7 @@ app.use("/api/mutation", MutationRouter);
 app.use("/api/checkout", CheckoutRouter);
 app.use("/api/products-journal", ProductJournalRouter);
 app.use("/api/admin-transaction", AdminTransactionRouter);
+app.use("/api/sales", SalesRouter);
 
 // ===========================
 

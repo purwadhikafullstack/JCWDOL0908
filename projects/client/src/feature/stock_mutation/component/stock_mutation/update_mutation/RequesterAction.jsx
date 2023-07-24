@@ -16,7 +16,11 @@ function RequesterAction(props) {
             className="font-bold text-xs md:text-sm lg:text-base 
           grid grid-cols-1 w-1/3 md:w-1/4 gap-2 md:gap-4 items-center"
           >
-            <button className="bg-primary h-full py-1 text-white" onClick={acceptBtnHandler}>
+            <button
+              id="accept-mutation-btn"
+              className="bg-primary h-full py-1 text-white btn-disabled"
+              onClick={acceptBtnHandler}
+            >
               yes
             </button>
           </div>

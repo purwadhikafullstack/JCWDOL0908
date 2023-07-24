@@ -42,9 +42,11 @@ function App() {
   // }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("admin_token")) dispatch(keepAdminLoggedIn());
-    const userToken = Storage.getToken();
-    dispatch(KeepUser(userToken));
+    (async () => {
+      if (localStorage.getItem("admin_token")) await dispatch(keepAdminLoggedIn());
+      const userToken = Storage.getToken();
+      dispatch(KeepUser(userToken));
+    })();
   }, []);
 
   /**
@@ -53,11 +55,10 @@ function App() {
   if (!isChecked) {
     return <div>Loading...</div>;
   }
-
   return (
     <div>
       <Routes>
-        {!loggedInAdmin.isLoggedIn && (
+        {!loggedInAdmin?.isLoggedIn && (
           <>
             <Route path="/" element={<Homepage />} />
             <Route path="/admin-login" element={<AdminLogin />} />
@@ -81,9 +82,9 @@ function App() {
             <Route path="/logout" element={<Logout />} />
           </>
         )}
-        {loggedInAdmin.isLoggedIn && loggedInAdmin.is_admin ? (
+        {loggedInAdmin?.isLoggedIn && loggedInAdmin?.is_admin ? (
           <>
-            {loggedInAdmin.id_role === 1 ? (
+            {loggedInAdmin?.id_role === 1 ? (
               <>
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/dashboard/user-management" element={<UserManagement />} />

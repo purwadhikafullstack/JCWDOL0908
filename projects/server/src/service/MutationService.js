@@ -68,12 +68,16 @@ const fetchDatas = async (data) => {
   const result = await sequelize.query(
     `SELECT mp.*, p.product_name, u.username as creator,
      w.warehouse_name as from_warehouse, ww.warehouse_name as to_warehouse,
-     w.is_deleted as requested_deleted, ww.is_deleted as requester_deleted 
+     w.is_deleted as requested_deleted, ww.is_deleted as requester_deleted,
+     uu.username as approver, uuu.username as rejector, uuuu.username as acceptor
      FROM mutation_processes mp 
      JOIN warehouses w ON mp.from_id_warehouse = w.id_warehouse
      JOIN warehouses ww ON mp.to_id_warehouse = ww.id_warehouse
      JOIN products p ON mp.id_product = p.id_product
      JOIN users u ON mp.created_by = u.id_user
+     LEFT JOIN users uu ON mp.approved_by = uu.id_user
+     LEFT JOIN users uuu ON mp.rejected_by = uuu.id_user
+     LEFT JOIN users uuuu ON mp.accepted_by = uuuu.id_user
      WHERE ${condition} ORDER BY mp.updatedAt DESC 
      LIMIT ${offset * (page - 1)},${limit} `,
     { type: QueryTypes.SELECT },

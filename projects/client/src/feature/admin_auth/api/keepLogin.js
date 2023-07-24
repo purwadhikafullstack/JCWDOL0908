@@ -7,6 +7,7 @@ export function keepAdminLoggedIn() {
       await dispatch(setLoggedInAdminData({ ...response.data.result, isLoggedIn: true }));
       localStorage.setItem("admin_token", response.data.token);
     } catch (error) {
+      localStorage.removeItem("admin_token");
       alert(error.response.data.message);
     }
   };

@@ -11,7 +11,7 @@ function RenderOrderProducts(props) {
   };
 
   return orderData?.map((data) => {
-    const total = data.total_price + data.shipping_cost;
+    const total = data.total_price;
     return (
       <div
         key={data.id_transaction}
@@ -21,7 +21,7 @@ function RenderOrderProducts(props) {
       >
         <p className="col-span-1 font-semibold">{data.user}</p>
         <p className="col-span-2 text-center lg:col-span-1">{data.shipping_service}</p>
-        <p className="hidden lg:inline lg:col-span-1 lg:text-center">{currencyFormat(data.total_price)}</p>
+        <p className="hidden lg:inline lg:col-span-1 lg:text-center">{currencyFormat(data.products_price)}</p>
         <p className="hidden lg:inline lg:col-span-1 lg:text-center">{currencyFormat(data.shipping_cost)}</p>
         <p className="col-span-2 md:col-span-2 lg:col-span-1 text-center">{currencyFormat(total)}</p>
         <p className="col-span-1 text-center">{data.status_order}</p>

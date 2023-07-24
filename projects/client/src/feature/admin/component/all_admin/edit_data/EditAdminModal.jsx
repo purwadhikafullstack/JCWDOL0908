@@ -1,63 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
 import CustomForm from "../../../../../components/CustomForm";
 import CustomSelect from "../../../../../components/CustomSelect";
 import ConfirmationModal from "./ConfirmationModal";
 import RenderCity from "./RenderCity";
 import RenderWarehouse from "./RenderWarehouse";
-import { getAllAdmin, getWarehousesInCities, updateAdminWarehouse } from "../../../../../feature/admin";
 import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
+import { useEditAdmin } from "../../../util/useEditAdmin";
 
 function EditAdminModal(props) {
   const { warehouseCities, setModal, page } = props;
-  const [selectCity, setCity] = useState();
-  const [secondButtonValue, setSecondButtonValue] = useState(false);
-  const [warehouses, setWarehouses] = useState([]);
-  const [confirmationModal, setConfirmationModal] = useState(false);
-  const dispatch = useDispatch();
-  const singleData = useSelector((state) => state.admin.singleAdminWarehouse);
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-  const passwordRegex = /^(?=.*\d).{6,}$/;
-
-  const getDataWarehouse = async (input) => {
-    const data = await getWarehousesInCities(input);
-    setWarehouses([...data]);
-  };
-
-  useEffect(() => {
-    getDataWarehouse(selectCity);
-  }, [selectCity]);
-
-  useEffect(() => {
-    getDataWarehouse(singleData.id_city);
-  }, []);
-
-  const editSchema = Yup.object().shape({
-    username: Yup.string().required("must not blank").min(5, "username must be at least 5 chars length"),
-    email: Yup.string().required("must not blank").email("invalid email format"),
-    password: Yup.string()
-      .min(6, "password is too short - at least 6 chars minimum")
-      .matches(passwordRegex, "must contain 1 number"),
-    phoneNumber: Yup.string().required("must not blank").matches(phoneRegExp, "phone number is not valid"),
-    id_city: Yup.number("required").required("required"),
-    id_warehouse: Yup.number("required").required("required"),
-  });
-
-  const onSubmit = async (values, action) => {
-    if (secondButtonValue) {
-      setConfirmationModal(true);
-      setSecondButtonValue(false);
-    } else {
-      const result = await updateAdminWarehouse({ id_user: singleData.id_user, ...values });
-      alert("success edit data");
-      setConfirmationModal(false);
-      await dispatch(getAllAdmin(page));
-      setModal(false);
-    }
-  };
+  const {
+    setCity,
+    setSecondButtonValue,
+    warehouses,
+    confirmationModal,
+    setConfirmationModal,
+    singleData,
+    editSchema,
+    onSubmit,
+  } = useEditAdmin(setModal, page);
 
   return (
     <div className="modal-background">

@@ -17,14 +17,18 @@ function RequestedAction(props) {
           grid grid-cols-2 w-1/2 md:w-1/3 gap-2 md:gap-4 items-center"
           >
             <button
-              className="bg-primary h-full py-1 text-white disabled:cursor-not-allowed
-              disabled:bg-slate-100 disabled:text-primaryLight"
+              id="approve-mutation-btn"
+              className="bg-primary h-full py-1 text-white btn-disabled"
               onClick={approveBtnHandler}
               disabled={singleData.requester_deleted}
             >
               approve
             </button>
-            <button className="bg-red-800 h-full py-1 text-white" onClick={rejectBtnHandler}>
+            <button
+              id="reject-mutation-btn"
+              className="bg-red-800 h-full py-1 text-white btn-disabled"
+              onClick={rejectBtnHandler}
+            >
               reject
             </button>
           </div>
