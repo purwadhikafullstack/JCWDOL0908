@@ -9,7 +9,7 @@ function Body(props) {
   return (
     <div className="row-span-6 grid grid-rows-12">
       {isProductHistoryClicked && <ProductHistoryBody admin={admin} />}
-      {isSalesReportClicked && <SalesReportBody />}
+      {isSalesReportClicked && <SalesReportBody admin={admin} />}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import RenderWarehouseOption from "../RenderWarehouseOption";
-import { deleteStock, getProductsStocks, getStock } from "../../../";
+import { deleteStock, getStock } from "../../../";
 import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
 
 function DeleteModal(props) {

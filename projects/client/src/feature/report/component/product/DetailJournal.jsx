@@ -75,6 +75,7 @@ function DetailJournal(props) {
           singleJournal.product_name
         }. The initial stock level begins at 0 item.`,
       ];
+
       return (
         <div key={index + 1} className="w-full pr-1 md:px-4 flex gap-2 py-1 md:gap-4">
           <h1 className="font-bold">{index + 1}.</h1>

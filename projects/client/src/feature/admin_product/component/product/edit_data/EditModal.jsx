@@ -1,76 +1,22 @@
-import React, { useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import React from "react";
 import UploadPicture from "../../UploadPicture";
 import CustomInput from "../../../../../components/CustomInput";
 import CustomTextArea from "../../CustomTextArea";
 import CurrencyInput from "../add_data/CurrencyInput";
 import CustomSelectFormikHook from "../../../../../components/CustomSelectFormikHook";
-import { editProduct } from "../../../";
 import RenderCategoryOptions from "../../RenderCategoryOptions";
 import ClosedBtnModal from "../../../../../components/ClosedBtnModal";
+import { useEditProduct } from "../../../util/useEditProduct";
 
 function EditModal(props) {
   const { singleProduct, setEditClicked, categories, refetchedData, admin } = props;
 
-  const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
-  const [currencyValue, setCurrencyValue] = useState(
-    new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(singleProduct.price),
+  const { currencyValue, setCurrencyValue, preview, handleImageChange, formik, isItNotSuperAdmin } = useEditProduct(
+    singleProduct,
+    setEditClicked,
+    refetchedData,
+    admin,
   );
-  const [preview, setPreview] = useState(`${REACT_APP_SERVER_URL + singleProduct.product_image}`);
-  const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
-  const validationSchema = Yup.object().shape({
-    product_name: Yup.string().min(3).max(45).required("required"),
-    description: Yup.string().max(255),
-    weight_kg: Yup.number().required("required"),
-    id_category: Yup.number().required("required"),
-  });
-
-  const handleImageChange = (event) => {
-    const newImg = document.querySelector("#image_preview");
-    const selected = event.target.files[0];
-    if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      setPreview(selected);
-      let reader = new FileReader();
-      reader.onloadend = () => {
-        const imgUrl = reader.result;
-        newImg.src = imgUrl;
-      };
-      reader.readAsDataURL(selected);
-    }
-  };
-
-  const formik = useFormik({
-    initialValues: {
-      product_name: singleProduct.product_name,
-      description: singleProduct.description,
-      weight_kg: singleProduct.weight_kg,
-      id_category: singleProduct.id_category,
-    },
-    validationSchema,
-    onSubmit: async (values) => {
-      let price = currencyValue.replace(/[^0-9]/g, "");
-      price = parseInt(price);
-      const id_product = singleProduct.id_product;
-      const data = { ...values, price };
-      const formData = new FormData();
-      formData.append("photo", preview);
-      formData.append("data", JSON.stringify(data));
-      const editResponse = await editProduct(formData, id_product);
-      alert(editResponse.message);
-      await refetchedData();
-      setEditClicked(false);
-    },
-  });
-
-  const isItNotSuperAdmin = () => {
-    return admin?.role_admin !== "super-admin";
-  };
 
   return (
     <div className="modal-background">
@@ -132,6 +78,7 @@ function EditModal(props) {
             </CustomSelectFormikHook>
             <div className="grid grid-cols-3 gap-2 text-sm h-8 mt-4">
               <button
+                id="edit-product-btn"
                 type="submit"
                 onClick={formik.handleSubmit}
                 className="bg-primary text-white h-full disabled:cursor-not-allowed

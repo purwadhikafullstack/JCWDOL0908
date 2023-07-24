@@ -12,6 +12,7 @@ const MutationController = require("./MutationController");
 const CheckoutController = require("./CheckoutController");
 const ProductJournalController = require("./ProductJournalController");
 const AdminTransactionController = require("./AdminTransactionController");
+const SalesController = require("./SalesController");
 
 module.exports = {
   UserController,
@@ -28,4 +29,5 @@ module.exports = {
   CheckoutController,
   ProductJournalController,
   AdminTransactionController,
+  SalesController,
 };

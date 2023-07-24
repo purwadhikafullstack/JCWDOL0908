@@ -46,7 +46,6 @@ const editCategory = async (req, res, next) => {
       }
       const category_image = req?.uniqueUrl;
       const { category_name } = JSON.parse(req.body.data);
-      console.log(category_image, category_name);
       //validate input data
       if (!category_image) {
         const { error: err_validation, value } = AdminDataValidation.EditCategoryWithoutImage.validate({
@@ -92,7 +91,6 @@ const getCategories = async (req, res, next) => {
 
 const deleteCategory = async (req, res, next) => {
   const { id_category } = req.params;
-  console.log(id_category);
   try {
     const { error, result } = await CategoryLogic.deleteCategoryLogic(id_category);
 

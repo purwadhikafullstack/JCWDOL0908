@@ -1,63 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import CustomForm from "../../../../components/CustomForm";
 import RenderProvince from "../../../../feature/admin_warehouse/component/add_data/RenderProvince";
 import RenderCity from "../../../../feature/admin_warehouse/component/add_data/RenderCity";
 import CustomSelect from "../../../../components/CustomSelect";
-import { editWarehouse, getCitiesByProvinces, getProvinces, getWarehouses } from "../../../../feature/admin_warehouse";
 import ClosedBtnModal from "../../../../components/ClosedBtnModal";
+import { useEditWarehouse } from "../../util/useEditWarehouse";
 
 function EditModal(props) {
   const { setIsEditBtnClicked, warehouseData, setWarehouses, pageNum } = props;
-  const [provinceList, setProvinceList] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState();
-  const [cityList, setCityList] = useState([]);
-  const addressRegex = /^[A-Za-z\s]+$/;
-
-  useEffect(() => {
-    (async () => {
-      const provinces = await getProvinces();
-      setProvinceList([...provinces]);
-      setSelectedProvince(`${warehouseData.id_province}:::${warehouseData.province}`);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (selectedProvince) {
-        const cities = await getCitiesByProvinces(selectedProvince.split(":::")[0]);
-        setCityList([...cities]);
-      }
-    })();
-  }, [selectedProvince]);
-
-  const editWarehouseSchema = Yup.object().shape({
-    warehouse_name: Yup.string().required("must not blank"),
-    address: Yup.string().required("must not blank").matches(addressRegex, "alphabet only"),
-    id_province: Yup.string("required").required("required"),
-    id_city: Yup.string("required").required("required"),
-  });
-
-  const onSubmit = async (values, action) => {
-    let { id_province, id_city, warehouse_name } = values;
-    const [idProvince, province] = id_province.split(":::");
-    let [idCity, city] = id_city.split(":::");
-    idCity = parseInt(idCity);
-    const address = `${values.address}, ${city}, ${province}`;
-    const data = {
-      id_warehouse: warehouseData.id_warehouse,
-      address,
-      id_province: idProvince,
-      id_city: idCity,
-      warehouse_name,
-    };
-    const response = await editWarehouse(data);
-    const fetching = await getWarehouses(pageNum);
-    setWarehouses([...fetching.result]);
-    alert(response.data.message);
-    setIsEditBtnClicked(false);
-  };
+  const { provinceList, setSelectedProvince, cityList, editWarehouseSchema, onSubmit } = useEditWarehouse(
+    setIsEditBtnClicked,
+    warehouseData,
+    setWarehouses,
+    pageNum,
+  );
 
   return (
     <div className="modal-background">
@@ -95,7 +52,7 @@ function EditModal(props) {
                   <div className="invisible"></div>
                   <div className=" row-span-1">
                     <div className="grid grid-cols-2 gap-8 text-sm h-5/6 mt-4">
-                      <button className="bg-primary text-white" type="submit">
+                      <button id="edit-warehouse-btn" className="bg-primary text-white btn-disabled" type="submit">
                         Submit
                       </button>
                     </div>

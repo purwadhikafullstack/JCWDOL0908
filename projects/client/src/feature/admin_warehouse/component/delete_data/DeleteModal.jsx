@@ -7,12 +7,15 @@ function DeleteModal(props) {
   const { setIsDelBtnClicked, warehouseData, setWarehouses, pageNum, setTotalPage } = props;
 
   const delBtnHandler = async (id_warehouse) => {
+    const deleteWarehouseBtn = document.getElementsByClassName("delete-modal-confirmation-btn");
+    deleteWarehouseBtn.disabled = true;
     const deleteData = await deleteWarehouse(id_warehouse);
     alert(deleteData.message);
     const data = await getWarehouses(pageNum);
     const { result, totalPage } = data;
     setTotalPage(totalPage);
     setWarehouses([...result]);
+    deleteWarehouseBtn.disabled = false;
     setIsDelBtnClicked(false);
   };
 

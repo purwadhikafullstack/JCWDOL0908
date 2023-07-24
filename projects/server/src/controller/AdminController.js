@@ -77,7 +77,6 @@ const getSpecWarehouseByIdCity = async (req, res, next) => {
 
 const updateAdminWarehouse = async (req, res, next) => {
   const { id_user, username, email, password, phoneNumber, id_warehouse } = req.body;
-  let newRole;
   try {
     // validating data
     const { error: err_validation, value } = AdminDataValidation.EditDataAdmin.validate({
@@ -88,11 +87,11 @@ const updateAdminWarehouse = async (req, res, next) => {
     });
     if (err_validation) throw err_validation;
     if (password !== "") {
-      const { error, value } = AdminDataValidation.EditDataAdmin.validate({ password });
-      if (error) throw error;
+      const { error: err_validation_password, value } = AdminDataValidation.EditDataAdmin.validate({ password });
+      if (err_validation_password) throw err_validation_password;
     }
 
-    const { error, result } = AdminUserLogic.updateAdminWarehouseLogic(
+    const { error, result } = await AdminUserLogic.updateAdminWarehouseLogic(
       id_user,
       username,
       email,
@@ -100,11 +99,10 @@ const updateAdminWarehouse = async (req, res, next) => {
       phoneNumber,
       id_warehouse,
     );
-
-    if (error?.errMsg) res.status(error.statusCode).send({ message: error.errMsg, isSuccess: false });
+    if (error?.errMsg) return res.status(error.statusCode).send({ message: error.errMsg, isSuccess: false });
     if (error) return res.status(500).send({ message: "internal server error", isSuccess: false, error });
 
-    return res.status(204).send({ isSuccess: true, message: "data updated", result });
+    return res.status(202).send({ isSuccess: true, message: "data updated", result });
   } catch (error) {
     // unknown error
     next(error);

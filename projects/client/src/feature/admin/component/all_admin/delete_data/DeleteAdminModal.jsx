@@ -10,9 +10,12 @@ function DeleteAdminModal(props) {
   const singleData = useSelector((state) => state.admin.singleUser);
 
   const delButtonHandler = async (id_user) => {
+    const deleteAdminBtn = document.getElementsByClassName("delete-modal-confirmation-btn");
+    deleteAdminBtn.disabled = true;
     const result = await deleteUserData(id_user);
     alert(result.message);
     await dispatch(getAllAdmin(page));
+    deleteAdminBtn.disabled = false;
     setDeleteClicked(false);
   };
 
@@ -28,7 +31,10 @@ function DeleteAdminModal(props) {
           <h3 className="text-center">
             Are you sure want to <i className="font-bold">delete</i> this data?
           </h3>
-          <button className="delete-modal-confirmation-btn" onClick={() => delButtonHandler(singleData.id_user)}>
+          <button
+            className="delete-modal-confirmation-btn btn-disabled"
+            onClick={() => delButtonHandler(singleData.id_user)}
+          >
             Delete
           </button>
         </div>

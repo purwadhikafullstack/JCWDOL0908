@@ -6,7 +6,7 @@ function RenderAdminsData(props) {
   const { allAdmin, editBtnHndler, setDeleteClicked } = props;
   const dispatch = useDispatch();
   const cutString = (string) => {
-    return string.length > 15 ? string.slice(0, 10) + "..." : string;
+    return string.length > 12 ? string.slice(0, 12) + "..." : string;
   };
 
   const delBtnHandler = async (id_user, id_role) => {

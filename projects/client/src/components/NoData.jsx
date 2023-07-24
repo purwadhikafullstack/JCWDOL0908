@@ -4,7 +4,7 @@ function NoData(props) {
   const { text } = props;
   return (
     <div
-      className="h-full w-full row-span-4 md:row-span-auto text-primary
+      className="h-full w-full row-span-full md:row-span-auto text-primary
     md:col-span-2 grid items-center text-center text-2xl md:text-3xl lg:text-4xl
     font-bold"
     >

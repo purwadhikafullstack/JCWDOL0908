@@ -1,56 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import CustomForm from "../../../../components/CustomForm";
 import CustomSelect from "../../../../components/CustomSelect";
 import RenderProvince from "./RenderProvince";
 import RenderCity from "./RenderCity";
-import { createNewWarehouse, getCitiesByProvinces, getProvinces, getWarehouses } from "../..";
 import ClosedBtnModal from "../../../../components/ClosedBtnModal";
-//hooks formik
+import { useAddWarehouse } from "../../util/useAddWarehouse";
+
 function AddDataModal(props) {
   const { setIsCreateBtnClicked, pageNum, setWarehouses } = props;
-  const addressRegex = /^[A-Za-z\s]+$/;
-  const [provinceList, setProvinceList] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState();
-  const [cityList, setCityList] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      const provinces = await getProvinces();
-      setProvinceList([...provinces]);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (selectedProvince) {
-        const cities = await getCitiesByProvinces(selectedProvince.split(":::")[0]);
-        setCityList([...cities]);
-      }
-    })();
-  }, [selectedProvince]);
-
-  const createWarehouseSchema = Yup.object().shape({
-    warehouse_name: Yup.string().required("must not blank"),
-    address: Yup.string().required("must not blank").matches(addressRegex, "alphabet only"),
-    id_province: Yup.string("required").required("required"),
-    id_city: Yup.string("required").required("required"),
-  });
-
-  const onSubmit = async (values, action) => {
-    let { id_province, id_city, warehouse_name } = values;
-    const [idProvince, province] = id_province.split(":::");
-    let [idCity, city] = id_city.split(":::");
-    idCity = parseInt(idCity);
-    const address = `${values.address}, ${city}, ${province}`;
-    const data = { address, id_province: idProvince, id_city: idCity, warehouse_name };
-    const response = await createNewWarehouse(data);
-    const fetching = await getWarehouses(pageNum);
-    setWarehouses([...fetching.result]);
-    alert(response.data.message);
-    setIsCreateBtnClicked(false);
-  };
+  const { provinceList, setSelectedProvince, cityList, createWarehouseSchema, onSubmit } = useAddWarehouse(
+    setIsCreateBtnClicked,
+    pageNum,
+    setWarehouses,
+  );
 
   return (
     <div className="modal-background">
@@ -96,7 +59,7 @@ function AddDataModal(props) {
                   </CustomSelect>
                   <div className=" row-span-1 row-start-8">
                     <div className="grid grid-cols-2 gap-8 text-sm h-5/6 mt-4">
-                      <button className="bg-primary text-white" type="submit">
+                      <button id="add-warehouse-btn" className="bg-primary text-white btn-disabled" type="submit">
                         Create
                       </button>
                     </div>

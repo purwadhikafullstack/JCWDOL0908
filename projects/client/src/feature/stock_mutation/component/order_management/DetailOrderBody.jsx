@@ -58,7 +58,7 @@ function DetailOrderBody({ singleOrder, productsStock }) {
           {new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
-          }).format(singleOrder.total_price + singleOrder.shipping_cost)}
+          }).format(singleOrder.total_price)}
         </p>
       </div>
       <div className="grid grid-cols-12 gap-2 items-center">

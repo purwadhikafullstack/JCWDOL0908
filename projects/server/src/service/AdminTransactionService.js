@@ -26,6 +26,9 @@ const getUsersTransactions = async (dataInput) => {
         id_warehouse,
         status_order,
       },
+      attributes: {
+        include: [[sequelize.literal("total_price - shipping_cost"), "products_price"]],
+      },
       include: [
         { model: User, attributes: ["username"] },
         {
@@ -47,6 +50,9 @@ const getUsersTransactions = async (dataInput) => {
     data = await Transaction.findAll({
       where: {
         status_order,
+      },
+      attributes: {
+        include: [[sequelize.literal("total_price - shipping_cost"), "products_price"]],
       },
       include: [
         { model: User, attributes: ["username"] },
